@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>谕心 · 掷钱问路动画 Demo</title>
+<style>
+  html,body{margin:0;padding:0;background:#05060f;font-family:'PingFang SC','Microsoft YaHei',sans-serif;}
+  .phone{position:relative;width:402px;height:874px;margin:24px auto;overflow:hidden;border-radius:6px;
+    background:linear-gradient(175deg,#1D1E3C 0%,#12132B 45%,#0A0B1A 100%);}
+  .halo{position:absolute;left:50%;top:-300px;width:1120px;height:820px;margin-left:-560px;
+    background:radial-gradient(ellipse at 50% 50%,rgba(110,100,196,.16),rgba(110,100,196,0) 68%);pointer-events:none;}
+  .lb{position:absolute;left:50%;top:96px;transform:translateX(-50%);height:32px;padding:0 18px;border-radius:16px;
+    display:flex;align-items:center;background:rgba(13,14,34,.8);border:1px solid rgba(232,201,138,.2);
+    font:600 13px 'PingFang SC',sans-serif;color:#E8C98A;letter-spacing:.12em;white-space:nowrap;z-index:6;}
+  .skip{position:absolute;left:0;bottom:96px;width:100%;text-align:center;
+    font:400 13px 'PingFang SC',sans-serif;color:#5F6689;letter-spacing:.12em;z-index:6;}
+  #stage{position:absolute;left:0;top:0;width:402px;height:874px;}
+  .combo{position:absolute;left:50%;top:640px;transform:translateX(-50%);height:36px;padding:0 22px;border-radius:18px;
+    display:flex;align-items:center;background:rgba(13,14,34,.85);border:1px solid rgba(232,201,138,.45);
+    font:700 17px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#F2DFA8;letter-spacing:.14em;opacity:0;transition:opacity .3s;z-index:5;white-space:nowrap;}
+  .ground{position:absolute;left:50%;top:530px;width:280px;height:120px;transform:translate(-50%,-50%);
+    background:radial-gradient(ellipse,rgba(232,201,138,.2),rgba(232,201,138,0) 70%);transition:opacity .3s;}
+  .dust{position:absolute;border-radius:50%;background:#FFE9BC;pointer-events:none;}
+  .ring{position:absolute;border-radius:50%;border:2px solid rgba(255,217,138,.85);pointer-events:none;}
+  .coin{position:absolute;width:76px;height:76px;border-radius:50%;
+    background:radial-gradient(circle at 32% 26%,#F9ECBF 0%,#E8CD8B 26%,#C9A259 56%,#8A6530 82%,#6B4C22 100%);
+    box-shadow:inset 0 0 0 2.5px rgba(255,246,220,.3),inset 0 0 0 4px rgba(92,64,24,.45),
+               inset 0 -6px 10px rgba(40,24,4,.4),0 10px 22px rgba(0,0,0,.45);
+    transform-style:preserve-3d;}
+  .coin::before{content:"";position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(90,62,20,.5);}
+  .coin .hole{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%);
+    background:linear-gradient(135deg,#7A5A28,#4E3616);border-radius:2px;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.6),0 0 0 1.5px rgba(255,246,220,.25);}
+  .coin .ch{position:absolute;font:700 13px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#5C3D14;}
+  .coin .ch.t{left:50%;top:11px;transform:translateX(-50%);}
+  .coin .ch.b{left:50%;bottom:11px;transform:translateX(-50%);}
+  .coin .ch.l{left:11px;top:50%;transform:translateY(-50%);}
+  .coin .ch.r{right:11px;top:50%;transform:translateY(-50%);}
+  .coin .yu{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    font:700 30px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#5C3D14;}
+  .coin .sq{position:absolute;width:6px;height:6px;transform:rotate(45deg);background:rgba(92,61,20,.4);border-radius:1px;}
+  .face{position:absolute;inset:0;backface-visibility:hidden;}
+  .face.b{transform:rotateY(180deg);}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="halo"></div>
+  <div class="lb" id="lb">掷钱问路 · 动画演示</div>
+  <div class="ground" id="ground"></div>
+  <div id="stage"></div>
+  <div class="combo" id="combo"></div>
+  <div class="skip">演示循环播放 · 轻触可重新起卦</div>
+</div>
+<script>
+(function(){
+  const stage = document.getElementById('stage');
+  const combo = document.getElementById('combo');
+  const ground = document.getElementById('ground');
+  const lb = document.getElementById('lb');
+  const CY = 470;               // 落点基准
+  const HOME = [                // 待掷品字布局 [x, y, rot]
+    {x:163, y:CY-60, r:-5},
+    {x:100, y:CY,    r:7},
+    {x:226, y:CY,    r:-9},
+  ];
+  let coins = [];
+
+  function makeCoin(i){
+    const el = document.createElement('div');
+    el.className = 'coin';
+    el.innerHTML =
+      '<div class="face f">' +
+        '<span class="ch t">谕</span><span class="ch r">心</span><span class="ch b">通</span><span class="ch l">宝</span>' +
+        '<span class="hole"></span></div>' +
+      '<div class="face b"><span class="yu">谕</span></div>';
+    stage.appendChild(el);
+    return {el, i, x:HOME[i].x, y:HOME[i].y, rot:HOME[i].r};
+  }
+
+  function spark(x, y, s, o){
+    const d = document.createElement('div');
+    d.className = 'dust';
+    d.style.cssText = 'left:'+x+'px;top:'+y+'px;width:'+s+'px;height:'+s+'px;opacity:'+o+';';
+    stage.appendChild(d);
+    return d;
+  }
+  function ringFx(x, y, w, h){
+    const d = document.createElement('div');
+    d.className = 'ring';
+    d.style.cssText = 'left:'+x+'px;top:'+y+'px;width:'+w+'px;height:'+h+'px;';
+    stage.appendChild(d);
+    return d;
+  }
+
+  const ease = t => 1 - Math.pow(1 - t, 3);
+  const easeIn = t => t * t;
+
+  function place(c, tilt){
+    c.el.style.left = c.x + 'px';
+    c.el.style.top = c.y + 'px';
+    c.el.style.transform = 'rotate(' + c.rot + 'deg) rotateY(' + tilt + 'deg)';
+  }
+
+  // 一轮：4.6s
+  function toss(){
+    combo.style.opacity = 0;
+    ground.style.opacity = 1;
+    lb.textContent = '01 · 聚气起势';
+    // 清理上一轮的粒子
+    stage.querySelectorAll('.dust,.ring').forEach(n => n.remove());
+
+    coins.forEach(c => { c.x = HOME[c.i].x; c.y = HOME[c.i].y; c.rot = HOME[c.i].r; place(c, 0); });
+
+    // 随机本轮结果：true=正（字面朝上）
+    const faces = [0,1,2].map(() => Math.random() < 0.5);
+    // 每枚的抛物线参数
+    const P = coins.map((c, i) => ({
+      apex: 210 - i * 34 + Math.random() * 26,          // 起跳高度
+      spin: (2 + Math.floor(Math.random() * 2)) * 360 + (faces[i] ? 0 : 180),
+      delay: i * 90 + Math.random() * 60,
+      dx: (Math.random() - .5) * 26,
+      air: 760 + Math.random() * 160,                    // 滞空 ms
+    }));
+
+    // 聚气粒子
+    const sparks = [];
+    for (let k = 0; k < 14; k++) {
+      const c = coins[k % 3];
+      const s = spark(c.x + 30 + (Math.random()-.5)*46, c.y + 20 + Math.random()*30,
+                      1.5 + Math.random()*2, .5 + Math.random()*.4);
+      sparks.push({el:s, t0:performance.now() + Math.random()*400, dur:520 + Math.random()*300,
+                   x0:parseFloat(s.style.left), y0:parseFloat(s.style.top)});
+    }
+
+    const T0 = performance.now();
+    const PHASE_AIR = 430;        // 起势结束、开始腾空
+    // 每枚币的实际落地时刻 → 阶段标签按真实时机切换
+    const landT = P.map(p => PHASE_AIR + p.delay + p.air);
+    const minLand = Math.min.apply(null, landT);
+    const maxLand = Math.max.apply(null, landT);
+
+    function frame(now){
+      const t = now - T0;
+
+      // 聚气粒子上升
+      sparks.forEach(s => {
+        const p = (now - s.t0) / s.dur;
+        if (p < 0) return;
+        if (p >= 1) { s.el.style.opacity = 0; return; }
+        s.el.style.top = (s.y0 - p * 44) + 'px';
+        s.el.style.opacity = (parseFloat(s.el.style.opacity) || .8) * (1 - p);
+      });
+
+      coins.forEach((c, i) => {
+        const p = P[i];
+        const lt = t - PHASE_AIR - p.delay;
+        if (lt < 0) {                       // 蓄力下沉
+          const q = Math.min(t / PHASE_AIR, 1);
+          c.y = HOME[i].y + q * 3;
+          place(c, 0);
+          return;
+        }
+        const u = lt / p.air;
+        if (u >= 1.18) {                    // 已落定
+          c.y = HOME[i].y; place(c, faces[i] ? 0 : 180);
+          return;
+        }
+        if (u < 1) {                        // 滞空：抛物线 + 旋转
+          const h = Math.sin(Math.PI * u) * p.apex;
+          c.y = HOME[i].y - h;
+          c.x = HOME[i].x + p.dx * u;
+          c.rot = HOME[i].r + Math.sin(Math.PI * u) * 8;
+          place(c, ease(u) * p.spin);
+        } else {                            // 回弹落定
+          const v = (u - 1) / 0.18;
+          const h = Math.sin(Math.PI * v) * 10 * (1 - v);
+          c.y = HOME[i].y - h;
+          place(c, p.spin);
+        }
+      });
+
+      // 阶段提示 + 落定冲击
+      if (t < PHASE_AIR) lb.textContent = '01 · 聚气起势';
+      else if (t < minLand) lb.textContent = '02 · 腾空翻飞';
+      else if (t < maxLand + 150) lb.textContent = '03 · 凝空悬停';
+      else {
+        if (lb.textContent !== '04 · 落定成卦') {
+          lb.textContent = '04 · 落定成卦';
+          // 冲击光环 + 光尘
+          const r1 = ringFx(111, CY - 58, 180, 60);
+          const r2 = ringFx(81, CY - 72, 240, 84);
+          r1.animate([{opacity:.9, transform:'scale(.5)'},{opacity:0, transform:'scale(1.25)'}], {duration:520, easing:'ease-out', fill:'forwards'});
+          r2.animate([{opacity:.4, transform:'scale(.5)'},{opacity:0, transform:'scale(1.3)'}], {duration:640, easing:'ease-out', fill:'forwards'});
+          for (let k = 0; k < 10; k++) {
+            const s = spark(120 + Math.random()*170, CY - 30 + Math.random()*30, 1.5 + Math.random()*2, .8);
+            s.animate([{transform:'translateY(0)', opacity:.8},{transform:'translateY(-26px)', opacity:0}], {duration:480 + Math.random()*260, easing:'ease-out', fill:'forwards'});
+          }
+          ground.style.opacity = 1.6;
+        }
+      }
+
+      // 组合名浮现
+      if (t > maxLand + 450 && combo.style.opacity != 1) {
+        const zheng = faces.filter(f => f).length;
+        const name = zheng === 3 ? '三正无背 · 方向已明'
+                   : zheng === 2 ? '两正一背 · 大势已显'
+                   : zheng === 1 ? '两背一正 · 先稳后行'
+                   : '三背无正 · 时机未到';
+        combo.textContent = name;
+        combo.style.opacity = 1;
+      }
+
+      if (t < maxLand + 1700) requestAnimationFrame(frame);
+      else setTimeout(toss, 700);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  coins = [makeCoin(0), makeCoin(1), makeCoin(2)];
+  coins.forEach(c => place(c, 0));
+  setTimeout(toss, 600);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<view class="app-bg"></view>
+<view class="stars">
+  <view class="star star-1"></view><view class="star star-2"></view><view class="star star-3"></view>
+  <view class="star star-4"></view><view class="star star-5"></view>
+</view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd">
+      <text class="pt">我的</text>
+      <text class="ps">谕心 · 存档</text>
+    </view>
+
+    <view class="pcard me-card">
+      <view class="me-row">
+        <view class="me-ava"></view>
+        <view class="me-mid">
+          <view class="me-name-row">
+            <text class="me-name">INTJ · 天蝎</text>
+            <text class="vip-tag-sm">会员</text>
+          </view>
+          <view class="me-sub">听风人 · Lv1 · 喜欢直白一点的签文</view>
+        </view>
+        <view class="me-edit" bindtap="onEdit">编辑</view>
+      </view>
+    </view>
+
+    <view class="luck-row">
+      <text>好运值 128 <text class="vip-tag-sm vip-tag-inline">会员 +10/日</text></text>
+      <text class="luck-next">距执灯人还差 100</text>
+    </view>
+    <view class="luck-bar"><view class="luck-in"></view></view>
+
+    <view class="pcard">
+      <view class="list-row" bindtap="onList" data-k="records"><text>树洞记录（仅你可见）</text><text class="lr-v">{{treeCount}} 条</text></view>
+      <view class="list-row" bindtap="onList" data-k="mt"><text>互测历史</text><text class="lr-v">{{matchCount}} 次</text></view>
+      <view class="list-row" bindtap="onList" data-k="ritual"><text>焚香 / 星图记录</text><text class="lr-v">{{ritualCount}} 次</text></view>
+      <view class="list-row" bindtap="onList" data-k="fav"><text>签文收藏</text><text class="lr-v">{{favCount}} 支</text></view>
+    </view>
+
+    <view class="vip-card">
+      <view class="vip-t">谕心会员</view>
+      <view class="vip-d">仪式全解锁（含焚香 / 观星）· 无限问事 · 去水印 · 每日 +10</view>
+      <button class="pbtn gold vip-btn" bindtap="onVip">开通会员 ¥12.9/月</button>
+    </view>
+
+    <view class="foot">谕心仅供娱乐 · 不构成任何建议</view>
+  </view>
+  <view class="tab-space"></view>
+</view>

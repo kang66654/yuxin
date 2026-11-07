@@ -1,0 +1,46 @@
+<view class="app-bg"></view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd"><text class="pt">仪式记录</text><text class="ps">焚香 · 观星 · 共 {{list.length}} 条</text></view>
+
+    <view wx:if="{{loading}}" style="text-align:center;color:rgba(232,228,216,.4);padding:60rpx 0">加载中…</view>
+    <view wx:elif="{{list.length===0}}" style="text-align:center;color:rgba(232,228,216,.4);padding:80rpx 0;font-size:26rpx;line-height:1.8">
+      还没有仪式记录<br/>去仪式库体验一次焚香或观星吧
+    </view>
+
+    <view class="ritrec-card" wx:for="{{list}}" wx:key="_id">
+      <view class="rc-head">
+        <text class="rt-type {{item.type}}">{{item.type==='stargaze' ? '观星' : '焚香'}}</text>
+        <text class="rt-date">{{item._date}}</text>
+      </view>
+
+      <!-- 焚香：sign 为主签文，sub 为副标题 -->
+      <block wx:if="{{item.type==='incense'}}">
+        <view class="rc-line">{{item.result.sign}}</view>
+        <view class="rc-sub" wx:if="{{item.result.sub}}">{{item.result.sub}}</view>
+      </block>
+      <!-- 观星：line 为主签文，sky 为星象副标题 -->
+      <block wx:else>
+        <view class="rc-line">{{item.result.line}}</view>
+        <view class="rc-sub" wx:if="{{item.result.sky}}">{{item.result.sky}}</view>
+      </block>
+
+      <view class="rc-read" wx:if="{{item.result.read}}">{{item.result.read}}</view>
+
+      <view class="rc-yj">
+        <view class="yj-item yj-good" wx:if="{{item.result.yi}}">
+          <text class="yj-tag">宜</text>
+          <text class="yj-val">{{item.result.yi}}</text>
+        </view>
+        <view class="yj-item yj-bad" wx:if="{{item.result.ji}}">
+          <text class="yj-tag">忌</text>
+          <text class="yj-val">{{item.result.ji}}</text>
+        </view>
+      </view>
+    </view>
+
+    <button class="pbtn ghost pin-bottom" bindtap="goBack">返回我的</button>
+  </view>
+  <view class="tab-space"></view>
+</view>

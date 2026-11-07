@@ -1,0 +1,46 @@
+<view class="app-bg"></view>
+<view class="stars">
+  <view class="star star-1"></view><view class="star star-2"></view><view class="star star-3"></view>
+  <view class="star star-4"></view><view class="star star-5"></view>
+</view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd">
+      <text class="pt">情绪树洞</text>
+      <text class="ps">说给夜色听 · 匿名</text>
+    </view>
+
+    <view class="chip-grid">
+      <view wx:for="{{moods}}" wx:key="*this"
+            class="pchip {{mood===item?'on':''}}" data-m="{{item}}" bindtap="chipPick">{{item}}</view>
+    </view>
+
+    <view class="custom-row">
+      <input class="custom-input" placeholder="自定义心情..." value="{{customText}}" bindinput="onCustomInput" confirm-type="done" bindconfirm="addCustom" />
+      <button class="pbtn gold custom-ok" bindtap="addCustom">确定</button>
+    </view>
+
+    <view class="pcard mood-card">
+      <view class="mood-hint">一句话说说此刻的心情</view>
+      <textarea class="mood-textarea" placeholder="此刻的心情是……" value="{{moodText}}" bindinput="onMoodInput" auto-height maxlength="-1" />
+    </view>
+
+    <button class="pbtn gold tree-send" bindtap="sendEcho">匿名送出</button>
+    <view class="tree-note">不保存身份 · 仅你可见 · 可随时删除</view>
+
+    <view class="hotline">严重情绪困扰请寻求专业帮助 · 心理援助热线 12356</view>
+  </view>
+  <view class="tab-space"></view>
+</view>
+
+<!-- 夜色回响弹窗 -->
+<view class="echo-mask" wx:if="{{echo}}" bindtap="closeEcho">
+  <view class="echo-modal" catchtap="">
+    <view class="e-t">{{isCrisis ? '夜色回响 · 请先照顾好自己' : '夜色回响 · 一条'}}</view>
+    <view class="e-b">{{echoText}}</view>
+    <view class="e-tip" wx:if="{{echoTip}}">{{echoTip}}</view>
+    <button class="pbtn gold" bindtap="closeEcho">我知道了</button>
+  </view>
+</view>

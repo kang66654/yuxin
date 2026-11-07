@@ -1,0 +1,36 @@
+/* app.wxss —— 只做挂载与重置；视觉真值全在 tokens / base / shell 三层 */
+@import "styles/tokens.wxss";
+@import "styles/base.wxss";
+@import "styles/shell.wxss";
+
+/* 页面容器：原型是把所有视图塞进 .screen（640px 固定高）里，
+   小程序里每一页自己就是屏幕，所以这里把 page 撑满并纵向 flex，
+   让 shell.wxss 的 .pbody{flex:1} 真正生效 */
+page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--sky-3);
+}
+
+button {
+  background: initial;
+}
+
+button::after {
+  border: none;
+}
+
+/* 原生 button 默认带 button[size="default"]{width:auto;margin:0 auto}，
+   特异性比 .pbtn 高，会把按钮挤成内容宽度的居中小药丸。用双类名压回去。 */
+.pbtn.pbtn {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* 原生 button 自带左右 14px 内边距，原型 .pbtn 是 padding:13px 0，一并压掉 */
+button.pbtn {
+  padding-left: 0;
+  padding-right: 0;
+}

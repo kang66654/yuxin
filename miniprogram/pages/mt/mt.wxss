@@ -1,0 +1,139 @@
+
+/* rec-row for mt/records */
+.rec-row { display:flex; align-items:center; justify-content:space-between; padding:24.5rpx 0; border-bottom:1rpx solid var(--card-line); }
+.rec-row:last-child { border-bottom:none; }
+.rec-t { font-size:31rpx; color:var(--ink); }
+.rec-s { font-size:27rpx; color:var(--ink-faint); margin-top:9.8rpx; line-height:1.5; }
+.rec-btn { width:auto !important; padding:9.8rpx 24.5rpx !important; font-size:27rpx; flex:0 0 auto; }
+
+/* fav-row */
+.fav-row { padding:24.5rpx 0; border-bottom:1rpx solid var(--card-line); }
+.fav-row:last-child { border-bottom:none; }
+.fav-q { font-family:"Songti SC",serif; font-size:34.3rpx; color:var(--ink); line-height:1.5; }
+.fav-s { font-size:27rpx; color:var(--ink-faint); margin-top:9.8rpx; }
+
+/* lv-card */
+.lv-card { background:var(--tint-bg); border:1rpx solid var(--tint-line); border-radius:24.5rpx; padding:24.5rpx; margin-bottom:14.7rpx; }
+.lv-card.cur { background:linear-gradient(135deg,var(--btn-a),var(--btn-b)); border:none; }
+.lv-n { font-size:31rpx; color:var(--ink); font-weight:700; }
+.lv-card.cur .lv-n { color:var(--btn-text); }
+.lv-d { font-size:27rpx; color:var(--gold-soft); margin-top:4.9rpx; }
+.lv-card.cur .lv-d { color:var(--btn-text); }
+.lv-note { font-size:25.5rpx; color:var(--nav-text); margin-top:22rpx; text-align:center; line-height:1.6; }
+
+/* vip */
+.vip-title { font-family:"Songti SC",serif; font-size:39rpx; font-weight:700; color:var(--ink); }
+.vip-sub { font-size:29.4rpx; color:var(--ink-faint); margin:7.4rpx 0 22rpx; }
+.vip-plans { display:flex; gap:14.7rpx; }
+.plan { flex:1; text-align:center; border:1rpx solid var(--tint-line); border-radius:24.5rpx; padding:22rpx 9.8rpx; background:var(--tint-bg); }
+.plan.cur { border-color:var(--gold); background:linear-gradient(135deg,var(--btn-a),var(--btn-b)); }
+.p-price { font-size:36.8rpx; font-weight:700; color:var(--gold-soft); }
+.plan.cur .p-price { color:var(--btn-text); }
+.p-desc { font-size:25.5rpx; color:var(--nav-text); margin-top:4.9rpx; }
+.plan.cur .p-desc { color:var(--btn-text); }
+.vip-row { display:flex; gap:14.7rpx; margin-top:15.7rpx; }
+.vip-fine { font-size:25.5rpx; color:var(--nav-text); margin-top:14.7rpx; text-align:center; }
+
+/* share */
+.sh-canvas-wrap { margin:24.5rpx 0; display:flex; justify-content:center; }
+.sh-canvas { width:540rpx; height:720rpx; background:linear-gradient(170deg,var(--card-a),var(--card-b)); border-radius:29.4rpx; }
+.sh-chips { display:flex; gap:14.7rpx; justify-content:center; margin-bottom:14.7rpx; }
+.sh-note { font-size:25.5rpx; color:var(--nav-text); text-align:center; margin-bottom:19.6rpx; }
+.sh-foot { font-size:25.5rpx; color:var(--nav-text); text-align:center; margin-top:27rpx; }
+
+/* intro */
+.ob-label { font-size:32rpx; color:var(--gold-soft); margin:34.3rpx 0 14.7rpx; }
+.ob-input { background:var(--tint-bg); border:1rpx solid var(--tint-line); border-radius:24.5rpx; padding:22rpx 29.4rpx; font-size:32rpx; color:var(--ink); }
+.ob-hint { font-size:25.5rpx; color:var(--ink-faint); margin-top:14.7rpx; line-height:1.6; }
+.ob-date { display:flex; gap:14.7rpx; align-items:center; }
+.ob-date .ob-input { flex:1; }
+.ob-u { font-size:27rpx; color:var(--nav-text); }
+.ob-mbti { margin-top:14.7rpx; }
+.ob-mrow { display:flex; align-items:center; gap:14.7rpx; margin-bottom:14.7rpx; }
+.ob-k { font-size:29.4rpx; color:var(--nav-text); width:98rpx; }
+.ob-foot { margin-top:auto; padding-top:39.2rpx; }
+.ob-dots { display:flex; gap:9.8rpx; justify-content:center; margin-bottom:22rpx; }
+.dot { width:14.7rpx; height:14.7rpx; border-radius:50%; background:var(--tint-line); }
+.dot.on { background:var(--gold); }
+.ob-btns { display:flex; gap:14.7rpx; justify-content:center; }
+.ob-skip { display:block; text-align:center; font-size:25.5rpx; color:var(--nav-text); margin-top:22rpx; }
+
+
+
+/* per-record card spacing */
+.rec-card { margin-bottom:14.7rpx; }
+.rec-card:last-of-type { margin-bottom:0; }
+.rec-card .rec-row { padding:0; border-bottom:none; }
+.rec-card .fav-row { padding:0; border-bottom:none; }
+
+/* pin button to bottom */
+.pin-bottom { margin-top:auto !important; }
+
+/* improved record card layout */
+.rec-card { margin-bottom:19.6rpx; padding:29.4rpx !important; }
+.rec-card:last-of-type { margin-bottom:0; }
+.rec-card .rec-row { display:flex; flex-direction:column; gap:14.7rpx; padding:0; border-bottom:none; align-items:stretch; }
+.rec-t { font-size:32rpx; color:var(--ink); line-height:1.6; font-weight:500; }
+.rec-s { font-size:26rpx; color:var(--ink-faint); line-height:1.5; }
+.rec-btn { width:auto !important; align-self:flex-end; padding:9.8rpx 29.4rpx !important; font-size:26rpx; flex:0 0 auto; margin-top:4.9rpx; }
+
+/* improved fav card */
+.rec-card .fav-row { padding:0; border-bottom:none; display:flex; flex-direction:column; gap:9.8rpx; }
+.fav-q { font-family:"Songti SC",serif; font-size:34rpx; color:var(--ink); line-height:1.6; }
+.fav-s { font-size:26rpx; color:var(--gold-soft); }
+
+/* mt 选项展示 */
+.rec-options { display:flex; gap:12rpx; flex-wrap:wrap; margin:14rpx 0 4rpx; }
+.rec-opt {
+  font-size:25rpx; color:var(--ink-soft); background:var(--tint-bg);
+  border:1rpx solid var(--tint-line); border-radius:12rpx; padding:8rpx 18rpx;
+}
+.rec-score-btn { width:auto !important; align-self:flex-start; padding:10rpx 30rpx !important; font-size:26rpx; margin-top:12rpx; }
+
+/* mt 弹窗 */
+.mt-mask {
+  position:fixed; inset:0; background:rgba(0,0,0,.62);
+  display:flex; align-items:center; justify-content:center; z-index:100; padding:40rpx;
+}
+.mt-modal {
+  width:100%; max-width:620rpx; background:linear-gradient(170deg,var(--card-a),var(--card-b));
+  border:1rpx solid var(--card-line); border-radius:28rpx; padding:40rpx 36rpx;
+}
+.mt-modal-title {
+  font-family:"Songti SC",serif; font-size:34rpx; font-weight:700;
+  color:var(--ink); text-align:center; margin-bottom:24rpx;
+}
+.mt-label { font-size:26rpx; color:var(--gold-deep); margin:18rpx 0 12rpx; }
+.mt-chips { display:flex; flex-wrap:wrap; gap:12rpx; }
+.mt-chip {
+  font-size:27rpx; color:var(--ink-soft); background:var(--tint-bg);
+  border:1rpx solid var(--tint-line); border-radius:16rpx; padding:12rpx 24rpx;
+}
+.mt-chip.on {
+  background:linear-gradient(135deg,var(--btn-a),var(--btn-b));
+  color:var(--btn-text); border-color:transparent; font-weight:600;
+}
+.mt-actions { display:flex; gap:16rpx; margin-top:32rpx; }
+.mt-btn { flex:1; border-radius:16rpx; padding:16rpx; font-size:29rpx; margin:0; }
+.mt-btn.ghost { background:transparent; border:1rpx solid var(--tint-line); color:var(--ink-soft); }
+.mt-btn.gold {
+  background:linear-gradient(135deg,var(--btn-a),var(--btn-b));
+  border:none; color:var(--btn-text); font-weight:700;
+}
+
+/* 评分结果 */
+.mt-score {
+  font-family:"Songti SC",serif; font-size:96rpx; font-weight:700;
+  color:var(--gold-deep); text-align:center; line-height:1.2; margin:10rpx 0 20rpx;
+}
+.mt-score-read { font-size:29rpx; color:var(--ink-soft); line-height:1.7; margin-bottom:16rpx; }
+.mt-score-tip {
+  font-size:25rpx; color:var(--gold-deep); background:rgba(201,169,106,.14);
+  border-radius:14rpx; padding:12rpx 18rpx; text-align:center; margin-bottom:28rpx;
+}
+
+/* 好友答题模式 */
+.frq-question { font-family:'Songti SC',serif; font-size:36rpx; font-weight:700; color:#F0E6D0; line-height:1.5; margin-bottom:30rpx; }
+.frq-options { display:flex; flex-direction:column; gap:16rpx; }
+.frq-opt { padding:24rpx 28rpx; border-radius:16rpx; background:rgba(255,255,255,.06); border:1rpx solid rgba(255,255,255,.12); font-size:28rpx; color:#E8E4D8; text-align:center; }
+.frq-opt.on { background:linear-gradient(135deg,#F2DFA8,#D9B96A); color:#3A2A10; font-weight:700; border-color:transparent; }

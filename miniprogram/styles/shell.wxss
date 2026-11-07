@@ -1,0 +1,122 @@
+/* shell.wxss —— 屏内非组件层：夜色底、星空、自定义导航、内容区。
+   对应原型 .screen 的 sky 渐变 + .stars + .status + .pbody。
+   自绘状态栏（21:41 / 头像）按清单 NT-03 不复制：真机由系统状态栏与胶囊承担。 */
+
+/* 全局 reset：WXSS 不支持通配选择器 `*`（会直接报 unexpected token），
+   因此用元素选择器逐个兜住。box-sizing 必须保 border-box，
+   否则 .sq-card 的 2.5rpx 边框会让宽度溢出 5rpx，1:1 立刻破。 */
+page,
+view,
+text,
+image,
+button,
+scroll-view,
+canvas,
+swiper,
+navigator {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* 夜色底：原型 .screen 的 background 渐变（640px 高被 flex 取代，渐变角度/色标不动） */
+.app-bg {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 0;
+  background: linear-gradient(175deg, var(--sky-1), var(--sky-2) 55%, var(--sky-3));
+}
+
+/* 星空：原型 .stars 5 个点，坐标取自 :nth-child(1..5) */
+.stars {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  width: 7.4rpx;
+  height: 7.4rpx;
+  border-radius: 50%;
+  background: var(--star);
+  opacity: .7;
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.star-1 { left: 14%; top: 12%; animation-delay: 0s; }
+.star-2 { left: 78%; top: 8%; width: 4.9rpx; height: 4.9rpx; animation-delay: .6s; }
+.star-3 { left: 34%; top: 24%; width: 4.9rpx; height: 4.9rpx; animation-delay: 1.2s; }
+.star-4 { left: 88%; top: 34%; animation-delay: 1.8s; }
+.star-5 { left: 8%; top: 44%; width: 4.9rpx; height: 4.9rpx; animation-delay: 2.4s; }
+
+/* 自定义导航：高度对齐原型 .status（padding 14/15/8 + 11.5px 字），
+   上不压胶囊、下留 .page-hd 的 2px 间距 */
+.nav {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 34.3rpx 36.8rpx 60rpx;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+}
+
+.nav-yu {
+  font-family: "YXSong", "Songti SC", "SimSun", serif;
+  font-size: 41.5rpx;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: .06em;
+}
+
+.nav-alias {
+  font-size: 28rpx;
+  color: var(--gold-soft);
+  margin-left: 14.7rpx;
+  letter-spacing: .06em;
+}
+
+.nav-right {
+  font-size: 28rpx;
+  color: var(--nav-text);
+  white-space: nowrap;
+}
+
+/* 内容区：原型 .pbody（flex:1 + 左右 15px）；overflow-y 让长内容可滚 */
+.pbody {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 36.8rpx;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* flex:1 0 auto = 撑满剩余高度，但不压缩内容：
+   短内容时撑满让 margin-top:auto 钉底；长内容时不收缩，pbody 正常滚动。 */
+.page-view {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  animation: pageIn .3s ease;
+}
+
+/* custom tabBar 占位：tab 高 ≈ 118rpx + bottom 18rpx + safe area，留足余量不被遮挡 */
+.tab-space {
+  height: calc(210rpx + env(safe-area-inset-bottom));
+  flex: 0 0 auto;
+}

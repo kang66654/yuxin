@@ -1,0 +1,92 @@
+@import "/styles/base.wxss";
+@import "/styles/shell.wxss";
+
+/* 记录卡：深色夜色质感 */
+.ritrec-card {
+  background: linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border: 1rpx solid rgba(232,201,138,.12);
+  border-radius: 24rpx;
+  padding: 32rpx 28rpx 28rpx;
+  margin-bottom: 24rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 顶部行：类型标签 + 时间 */
+.rc-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.rt-type {
+  font-family: "PingFang SC", sans-serif;
+  font-size: 22rpx;
+  font-weight: 700;
+  padding: 6rpx 18rpx;
+  border-radius: 20rpx;
+  letter-spacing: .12em;
+}
+.rt-type.incense {
+  background: rgba(168,69,46,.18);
+  color: #d98e6a;
+  border: 1rpx solid rgba(217,142,106,.25);
+}
+.rt-type.stargaze {
+  background: rgba(100,120,180,.18);
+  color: #9ab4e8;
+  border: 1rpx solid rgba(154,180,232,.25);
+}
+.rt-date {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 22rpx;
+  color: rgba(232,228,216,.35);
+  letter-spacing: .05em;
+}
+
+/* 主签文：宋体衬线，金色调 */
+.rc-line {
+  font-family: 'Songti SC', 'Source Han Serif SC', serif;
+  font-size: 36rpx;
+  font-weight: 700;
+  color: #F0E6D0;
+  line-height: 1.45;
+  letter-spacing: .04em;
+}
+.rc-sub {
+  font-family: 'Songti SC', serif;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #C9A96A;
+  margin-top: 10rpx;
+  letter-spacing: .1em;
+}
+
+/* 解读段 */
+.rc-read {
+  font-size: 26rpx;
+  color: rgba(232,228,216,.55);
+  margin: 18rpx 0 22rpx;
+  line-height: 1.75;
+}
+
+/* 宜忌胶囊 */
+.rc-yj {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx 24rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(232,201,138,.08);
+}
+.yj-item { display: flex; align-items: center; }
+.yj-tag {
+  width: 44rpx; height: 44rpx; border-radius: 12rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Songti SC', serif; font-size: 26rpx; font-weight: 700;
+  margin-right: 12rpx;
+}
+.yj-val { font-size: 26rpx; font-weight: 600; }
+.yj-good .yj-tag { background: rgba(94,122,92,.2); color: #7ab87a; }
+.yj-good .yj-val { color: #7ab87a; }
+.yj-bad .yj-tag { background: rgba(168,69,46,.18); color: #e88a6a; }
+.yj-bad .yj-val { color: #e88a6a; }

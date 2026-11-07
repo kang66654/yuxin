@@ -1,0 +1,15 @@
+<view class="app-bg"></view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd"><text class="pt">身份等级</text><text class="ps">好运值 128</text></view>
+    <view class="lv-card"><view class="lv-n">听风人</view><view class="lv-d">当前 · 0 – 99 · 解锁抽签</view></view>
+    <view class="lv-card cur"><view class="lv-n">执灯人</view><view class="lv-d">下一级 · 100 · 已达标 · 解锁翻牌</view></view>
+    <view class="lv-card"><view class="lv-n">观星人</view><view class="lv-d">300 · 解锁铜钱</view></view>
+    <view class="lv-card"><view class="lv-n">掌印人</view><view class="lv-d">600 · 解锁焚香</view></view>
+    <view class="lv-card"><view class="lv-n">谕者</view><view class="lv-d">1000 · 顶级 · 解锁观星</view></view>
+    <view class="lv-note">五个仪式对应五级身份 · 好运值只升不降 · 不可购买 · 会员即时全解锁</view>
+    <button class="pbtn dark" style="margin-top:19.6rpx" bindtap="goBack">返回我的</button>
+  </view>
+  <view class="tab-space"></view>
+</view>

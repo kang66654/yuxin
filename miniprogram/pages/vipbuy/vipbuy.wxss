@@ -1,0 +1,70 @@
+
+/* rec-row for mt/records */
+.rec-row { display:flex; align-items:center; justify-content:space-between; padding:24.5rpx 0; border-bottom:1rpx solid var(--card-line); }
+.rec-row:last-child { border-bottom:none; }
+.rec-t { font-size:31rpx; color:var(--ink); }
+.rec-s { font-size:27rpx; color:var(--ink-faint); margin-top:9.8rpx; line-height:1.5; }
+.rec-btn { width:auto !important; padding:9.8rpx 24.5rpx !important; font-size:27rpx; flex:0 0 auto; }
+
+/* fav-row */
+.fav-row { padding:24.5rpx 0; border-bottom:1rpx solid var(--card-line); }
+.fav-row:last-child { border-bottom:none; }
+.fav-q { font-family:"Songti SC",serif; font-size:34.3rpx; color:var(--ink); line-height:1.5; }
+.fav-s { font-size:27rpx; color:var(--ink-faint); margin-top:9.8rpx; }
+
+/* lv-card */
+.lv-card { background:var(--tint-bg); border:1rpx solid var(--tint-line); border-radius:24.5rpx; padding:24.5rpx; margin-bottom:14.7rpx; }
+.lv-card.cur { background:linear-gradient(135deg,var(--btn-a),var(--btn-b)); border:none; }
+.lv-n { font-size:31rpx; color:var(--ink); font-weight:700; }
+.lv-card.cur .lv-n { color:var(--btn-text); }
+.lv-d { font-size:27rpx; color:var(--gold-soft); margin-top:4.9rpx; }
+.lv-card.cur .lv-d { color:var(--btn-text); }
+.lv-note { font-size:25.5rpx; color:var(--nav-text); margin-top:22rpx; text-align:center; line-height:1.6; }
+
+/* vip */
+.vip-title { font-family:"Songti SC",serif; font-size:39rpx; font-weight:700; color:var(--ink); }
+.vip-sub { font-size:29.4rpx; color:var(--ink-faint); margin:7.4rpx 0 22rpx; }
+.vip-plans { display:flex; gap:14.7rpx; }
+.plan { flex:1; text-align:center; border:1rpx solid var(--tint-line); border-radius:24.5rpx; padding:22rpx 9.8rpx; background:var(--tint-bg); }
+.plan.cur { border-color:var(--gold); background:linear-gradient(135deg,var(--btn-a),var(--btn-b)); }
+.p-price { font-size:36.8rpx; font-weight:700; color:var(--gold-soft); }
+.plan.cur .p-price { color:var(--btn-text); }
+.p-desc { font-size:25.5rpx; color:var(--nav-text); margin-top:4.9rpx; }
+.plan.cur .p-desc { color:var(--btn-text); }
+.vip-row { display:flex; gap:14.7rpx; margin-top:15.7rpx; }
+.vip-fine { font-size:25.5rpx; color:var(--nav-text); margin-top:14.7rpx; text-align:center; }
+
+/* share */
+.sh-canvas-wrap { margin:24.5rpx 0; display:flex; justify-content:center; }
+.sh-canvas { width:540rpx; height:720rpx; background:linear-gradient(170deg,var(--card-a),var(--card-b)); border-radius:29.4rpx; }
+.sh-chips { display:flex; gap:14.7rpx; justify-content:center; margin-bottom:14.7rpx; }
+.sh-note { font-size:25.5rpx; color:var(--nav-text); text-align:center; margin-bottom:19.6rpx; }
+.sh-foot { font-size:25.5rpx; color:var(--nav-text); text-align:center; margin-top:27rpx; }
+
+/* intro */
+.ob-label { font-size:32rpx; color:var(--gold-soft); margin:34.3rpx 0 14.7rpx; }
+.ob-input { background:var(--tint-bg); border:1rpx solid var(--tint-line); border-radius:24.5rpx; padding:22rpx 29.4rpx; font-size:32rpx; color:var(--ink); }
+.ob-hint { font-size:25.5rpx; color:var(--ink-faint); margin-top:14.7rpx; line-height:1.6; }
+.ob-date { display:flex; gap:14.7rpx; align-items:center; }
+.ob-date .ob-input { flex:1; }
+.ob-u { font-size:27rpx; color:var(--nav-text); }
+.ob-mbti { margin-top:14.7rpx; }
+.ob-mrow { display:flex; align-items:center; gap:14.7rpx; margin-bottom:14.7rpx; }
+.ob-k { font-size:29.4rpx; color:var(--nav-text); width:98rpx; }
+.ob-foot { margin-top:auto; padding-top:39.2rpx; }
+.ob-dots { display:flex; gap:9.8rpx; justify-content:center; margin-bottom:22rpx; }
+.dot { width:14.7rpx; height:14.7rpx; border-radius:50%; background:var(--tint-line); }
+.dot.on { background:var(--gold); }
+.ob-btns { display:flex; gap:14.7rpx; justify-content:center; }
+.ob-skip { display:block; text-align:center; font-size:25.5rpx; color:var(--nav-text); margin-top:22rpx; }
+
+
+
+/* per-record card spacing */
+.rec-card { margin-bottom:14.7rpx; }
+.rec-card:last-of-type { margin-bottom:0; }
+.rec-card .rec-row { padding:0; border-bottom:none; }
+.rec-card .fav-row { padding:0; border-bottom:none; }
+
+/* pin button to bottom */
+.pin-bottom { margin-top:auto !important; }

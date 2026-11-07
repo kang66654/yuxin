@@ -1,0 +1,32 @@
+<view class="app-bg"></view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd"><text class="pt">签文收藏</text><text class="ps">共 {{list.length}} 支</text></view>
+    <view wx:if="{{loading}}" style="text-align:center;color:#8A8474;padding:60rpx 0">加载中…</view>
+    <view wx:elif="{{list.length===0}}" style="text-align:center;color:#8A8474;padding:60rpx 0">还没有收藏签文</view>
+    <view class="pcard rec-card" wx:for="{{list}}" wx:key="_id">
+      <view class="crh">
+        <text class="cl">{{item.data.title || '神谕签'}}</text>
+        <view class="crr"><text class="seal">{{item.data.seal || '谕'}}</text></view>
+      </view>
+      <view class="res-inner">
+        <view class="res-line">{{item.data.line}}</view>
+        <view class="res-read" wx:if="{{item.data.read}}">{{item.data.read}}</view>
+        <view class="res-yj">
+          <view class="yj-item yj-good" wx:if="{{item.data.good}}">
+            <text class="yj-tag">宜</text>
+            <text class="yj-val">{{item.data.good}}</text>
+          </view>
+          <view class="yj-item yj-bad" wx:if="{{item.data.bad}}">
+            <text class="yj-tag">忌</text>
+            <text class="yj-val">{{item.data.bad}}</text>
+          </view>
+        </view>
+      </view>
+      <button class="pbtn dark rec-btn" data-id="{{item._id}}" bindtap="delItem" style="margin-top:14.7rpx">删除</button>
+    </view>
+    <button class="pbtn ghost pin-bottom" bindtap="goBack">返回我的</button>
+  </view>
+  <view class="tab-space"></view>
+</view>

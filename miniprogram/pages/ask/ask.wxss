@@ -1,0 +1,648 @@
+/* ask 页 —— 按设计稿《谕心-问事签改版》重绘
+   视觉基准：402px 设计宽度 → 750rpx，1px ≈ 1.866rpx
+   夜色 #1D1E3C→#0A0B1A，金 #E8C98A / 亮金 #F2DFA8 */
+
+/* ---------- 顶部氛围 ---------- */
+.ask-aurora {
+  position: fixed;
+  left: 50%;
+  top: -220rpx;
+  transform: translateX(-50%);
+  width: 1120rpx;
+  height: 820rpx;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at 50% 50%, rgba(110, 100, 196, .16), rgba(110, 100, 196, 0) 68%);
+}
+
+/* ---------- 标题区 ---------- */
+.ask-hd {
+  margin: 0 0 24rpx;
+}
+.quota-pill {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 12rpx 22rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, .05);
+  border: 1rpx solid rgba(232, 201, 138, .18);
+}
+.qp-ico {
+  width: 18rpx;
+  height: 22rpx;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='12' viewBox='0 0 10 12' fill='none'%3E%3Cpath d='M1.5 1H8.5M1.5 11H8.5M2 1C2 3.4 4 4.2 4 6C4 7.8 2 8.6 2 11M8 1C8 3.4 6 4.2 6 6C6 7.8 8 8.6 8 11' stroke='%23E8C98A' stroke-width='1.1' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.qp-txt {
+  font-size: 22rpx;
+  color: #E8C98A;
+  letter-spacing: .02em;
+  line-height: 1;
+}
+
+/* ---------- 问题输入卡 ---------- */
+.ask-qcard {
+  position: relative;
+  height: 190rpx;
+  display: flex;
+  flex-direction: column;
+  padding: 26rpx 28rpx 40rpx;
+  border-radius: 26rpx;
+  background: rgba(255, 255, 255, .028);
+  border: 1rpx solid rgba(169, 176, 214, .12);
+}
+.ask-qinput {
+  width: 100%;
+  flex: 1;
+  font-size: 30rpx;
+  line-height: 1.5;
+  color: #E6E8F5;
+}
+.ask-qph {
+  position: absolute;
+  left: 28rpx;
+  right: 28rpx;
+  top: 28rpx;
+  pointer-events: none;
+}
+.ask-qph-1 {
+  font-size: 28rpx;
+  color: #7E86A8;
+  line-height: 1.5;
+}
+.ask-qph-2 {
+  margin-top: 10rpx;
+  font-size: 26rpx;
+  color: #5F6689;
+  line-height: 1.5;
+}
+.ask-qcount {
+  position: absolute;
+  right: 28rpx;
+  bottom: 16rpx;
+  font-size: 22rpx;
+  color: #C9A259;
+}
+
+/* ---------- 仪式分段控件 ---------- */
+.rit-pill {
+  display: flex;
+  margin: 22rpx 0 0;
+  padding: 8rpx;
+  border-radius: 48rpx;
+  background: rgba(13, 14, 34, .55);
+  border: 1rpx solid rgba(255, 255, 255, .07);
+}
+.rit-sel {
+  flex: 1;
+  text-align: center;
+  border-radius: 40rpx;
+  padding: 15rpx 0;
+  font-size: 28rpx;
+  letter-spacing: .14em;
+  color: #8B90AC;
+  transition: background .2s, color .2s, box-shadow .2s;
+}
+.rit-sel.on {
+  background: linear-gradient(135deg, #F2DFA8, #D9B96A);
+  color: #3A2A10;
+  font-weight: 700;
+  box-shadow: 0 10rpx 26rpx rgba(232, 201, 138, .26);
+}
+
+/* ---------- 签筒舞台 ---------- */
+.zone-body { flex: 1; display: flex; flex-direction: column; }
+.zone-body.is-result { flex: 0 0 auto; margin-top: 0; }
+.zone-body.is-result .cx-stage { transform: translateY(20rpx) scale(.86); }
+.zone-center { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+
+/* ==========================================================
+   铜钱 · 品字舞台（尺寸与 utils/coinfx.js 的 COIN 一一对应）
+   币径 142rpx；舞台高 254rpx；品字原点距舞台顶 145.7rpx
+   ========================================================== */
+.cx-stage {
+  position: relative;
+  width: 100%;
+  height: 254rpx;
+  margin: 0 auto;
+  transition: opacity .24s ease, transform .32s ease;
+}
+.cx-stage.is-fx { opacity: 0; }
+/* 背光呼吸 */
+.cx-aura {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 620rpx;
+  height: 620rpx;
+  margin: -310rpx 0 0 -310rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 201, 138, .16), rgba(232, 201, 138, .04) 52%, rgba(232, 201, 138, 0) 72%);
+  animation: cxBreath 3.6s ease-in-out infinite;
+}
+/* 虚线圈（页面版收敛到 440rpx，避免顶到分段控件；画布同尺寸） */
+.cx-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 440rpx;
+  height: 440rpx;
+  margin: -220rpx 0 0 -220rpx;
+  border-radius: 50%;
+  border: 1rpx dashed rgba(232, 201, 138, .14);
+}
+.cx-ring-in {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 360rpx;
+  height: 360rpx;
+  margin: -180rpx 0 0 -180rpx;
+  border-radius: 50%;
+  border: 1rpx dashed rgba(232, 201, 138, .09);
+}
+/* 地光 */
+.cx-floor {
+  position: absolute;
+  left: 50%;
+  top: 176rpx;
+  width: 520rpx;
+  height: 200rpx;
+  margin-left: -260rpx;
+  background: radial-gradient(ellipse, rgba(232, 201, 138, .16), rgba(232, 201, 138, 0) 70%);
+}
+@keyframes cxBreath {
+  0%, 100% { opacity: .7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+/* 单枚铜钱 */
+.cx-slot {
+  position: absolute;
+  width: 142rpx;
+  height: 142rpx;
+}
+.cx-coin {
+  position: relative;
+  width: 142rpx;
+  height: 142rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle at 32% 26%, #F9ECBF 0%, #E8CD8B 26%, #C9A259 56%, #8A6530 82%, #6B4C22 100%);
+  box-shadow:
+    inset 0 0 0 5rpx rgba(255, 246, 220, .30),
+    inset 0 0 0 8rpx rgba(92, 64, 24, .45),
+    inset 0 -12rpx 20rpx rgba(40, 24, 4, .40),
+    0 20rpx 44rpx rgba(0, 0, 0, .45);
+}
+.cx-coin::before {
+  content: '';
+  position: absolute;
+  top: 15rpx;
+  right: 15rpx;
+  bottom: 15rpx;
+  left: 15rpx;
+  border-radius: 50%;
+  border: 1rpx dashed rgba(90, 62, 20, .5);
+}
+/* 谕（背面） */
+.cx-yu {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Songti SC', 'Source Han Serif SC', 'SimSun', serif;
+  font-size: 56rpx;
+  font-weight: 700;
+  line-height: 1;
+  color: #5C3D14;
+}
+/* 谕心通宝（正面） */
+.cx-ch {
+  position: absolute;
+  font-family: 'Songti SC', 'Source Han Serif SC', 'SimSun', serif;
+  font-size: 24rpx;
+  font-weight: 700;
+  line-height: 1;
+  color: #5C3D14;
+}
+.cx-ch.cx-t { left: 50%; top: 20rpx; transform: translateX(-50%); }
+.cx-ch.cx-b { left: 50%; bottom: 20rpx; transform: translateX(-50%); }
+.cx-ch.cx-l { left: 20rpx; top: 50%; transform: translateY(-50%); }
+.cx-ch.cx-r { right: 20rpx; top: 50%; transform: translateY(-50%); }
+.cx-hole {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 37rpx;
+  height: 37rpx;
+  margin: -18.5rpx 0 0 -18.5rpx;
+  border-radius: 4rpx;
+  background: linear-gradient(135deg, #7A5A28, #4E3616);
+  box-shadow: inset 0 2rpx 4rpx rgba(0, 0, 0, .6), 0 0 0 3rpx rgba(255, 246, 220, .25);
+}
+/* 固定高度交接区：提示语 ↔ 组合名互换不推动舞台 */
+.cx-foot {
+  height: 96rpx;
+  margin-top: 14rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cx-hint { margin: 0; }
+/* 落定组合名 */
+.cx-combo {
+  position: relative;
+  height: 60rpx;
+  padding: 0 34rpx;
+  border-radius: 30rpx;
+  display: flex;
+  align-items: center;
+  background: rgba(13, 14, 34, .82);
+  border: 1rpx solid rgba(232, 201, 138, .42);
+  font-family: 'Songti SC', 'Source Han Serif SC', 'SimSun', serif;
+  font-size: 32rpx;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-indent: .14em;
+  color: #F2DFA8;
+  animation: cxComboIn .5s ease both;
+}
+@keyframes cxComboIn {
+  0% { opacity: 0; transform: translateY(12rpx) scale(.94); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* 掷钱过场 HUD（文字层，字体与全站一致） */
+.cfx-hud {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+}
+.cfx-pill {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  height: 64rpx;
+  padding: 0 34rpx;
+  margin-top: 52rpx;
+  border-radius: 32rpx;
+  background: rgba(13, 14, 34, .82);
+  border: 1rpx solid rgba(232, 201, 138, .22);
+}
+.cfx-num {
+  font-family: 'SF Mono', Consolas, monospace;
+  font-size: 24rpx;
+  letter-spacing: .04em;
+  color: #E8C98A;
+}
+.cfx-sep {
+  font-size: 24rpx;
+  color: rgba(232, 201, 138, .55);
+}
+.cfx-name {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 26rpx;
+  font-weight: 600;
+  letter-spacing: .12em;
+  color: #E8C98A;
+}
+.cfx-skip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 96rpx;
+  text-align: center;
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 24rpx;
+  letter-spacing: .12em;
+  color: #5F6689;
+}
+
+.qian-zone {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.qian-stage {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+.zone-hint {
+  font-family: 'Songti SC', 'Source Han Serif SC', serif;
+  font-size: 24rpx;
+  color: #C9A259;
+  letter-spacing: .16em;
+  text-align: center;
+  margin: 18rpx 0 0;
+  white-space: nowrap;
+}
+
+/* 求一签按钮压到底部 */
+.ask-zone-wrap { flex: 1; display: flex; flex-direction: column; }
+.ask-go {
+  margin-top: 28rpx;
+  height: 106rpx;
+  line-height: 106rpx;
+  padding: 0;
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 34rpx;
+  font-weight: 700;
+  letter-spacing: .08em;
+  border-radius: 53rpx;
+  background: linear-gradient(135deg, #F2DFA8, #D9B96A);
+  color: #3A2A10;
+  box-shadow: 0 16rpx 44rpx rgba(232, 201, 138, .34);
+}
+
+/* ---------- 写实竹签筒（程序化绘制，无图片素材） ---------- */
+.new-tube {
+  position: relative;
+  width: 486rpx;
+  height: 642rpx;
+  transition: opacity .32s ease;
+}
+.new-tube.tube-out {
+  opacity: 0;
+  pointer-events: none;
+}
+/* 背光呼吸 */
+.new-tube .nt-aura {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  width: 560rpx;
+  height: 560rpx;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232, 201, 138, .20), rgba(232, 201, 138, .05) 52%, rgba(232, 201, 138, 0) 72%);
+  animation: tubeBreath 3.4s ease-in-out infinite;
+  z-index: 0;
+}
+/* 筒身：横向渐变模拟圆柱面 + 竹片拼缝 */
+.new-tube .nt-body {
+  position: absolute;
+  left: 50%;
+  bottom: 41rpx;
+  transform: translateX(-50%);
+  width: 224rpx;
+  height: 321rpx;
+  border-radius: 10rpx 10rpx 30rpx 30rpx;
+  background:
+    repeating-linear-gradient(90deg,
+      rgba(28, 18, 6, .55) 0 1.6rpx,
+      rgba(238, 214, 154, .16) 1.6rpx 3rpx,
+      rgba(28, 18, 6, 0) 3rpx 45rpx),
+    linear-gradient(90deg,
+      #2B1D08 0%, #6B4B1B 14%, #B78C45 34%, #E3C07D 50%,
+      #C9A259 66%, #7D5B25 84%, #261A07 100%);
+  box-shadow:
+    inset 0 -44rpx 58rpx rgba(0, 0, 0, .45),
+    inset 8rpx 0 16rpx rgba(255, 246, 220, .10),
+    0 26rpx 52rpx rgba(0, 0, 0, .55);
+  z-index: 3;
+  overflow: hidden;
+}
+/* 底部渐暗 */
+.new-tube .nt-body::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 96rpx;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, .32));
+}
+/* 红漆箍带 + 金线包边 */
+.new-tube .nt-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 48rpx;
+  height: 56rpx;
+  background: linear-gradient(90deg, #43120A, #8D2414 25%, #C0392B 50%, #A52A1B 75%, #6D1A0E);
+  border-top: 2rpx solid #E8C98A;
+  border-bottom: 2rpx solid #E8C98A;
+  z-index: 1;
+}
+/* 筒口内腔（深色椭圆，加深透视让签根藏进内腔） */
+.new-tube .nt-mouth {
+  position: absolute;
+  left: 50%;
+  top: 280rpx;
+  transform: translate(-50%, -50%);
+  width: 236rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 50% 42%, #3D2A10, #1B1105 62%, #06040A 100%);
+  z-index: 3; /* 与签支同层但 DOM 靠后 → 内腔压住签根，签支像从筒里长出来 */
+}
+/* 口沿金圈 */
+.new-tube .nt-rim {
+  position: absolute;
+  left: 50%;
+  top: 280rpx;
+  transform: translate(-50%, -50%);
+  width: 236rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  border: 3rpx solid rgba(201, 162, 89, .9);
+  border-bottom-color: #EED69A;
+  border-bottom-width: 5rpx;
+  z-index: 4;
+}
+/* 签支：九支扇形，签根藏在筒口 */
+.new-tube .nt-sticks {
+  position: absolute;
+  left: 50%;
+  bottom: 350rpx;
+  width: 0;
+  height: 0;
+  z-index: 3;
+}
+.new-tube .nt-stick {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 16rpx;
+  background: linear-gradient(90deg, #8B6428, #D3A961 35%, #EED69A 55%, #BD9350 80%, #7D5822);
+  border-radius: 8rpx 8rpx 0 0;
+  transform-origin: bottom center;
+  display: flex;
+  justify-content: center;
+  padding-top: 4rpx;
+}
+.new-tube .nt-stick text {
+  font-family: 'Songti SC', 'SimSun', serif;
+  font-size: 18rpx;
+  line-height: 1;
+  color: #4A3212;
+  font-weight: 700;
+}
+.new-tube .n1 { height: 205rpx; transform: translateX(-56rpx) rotate(-15deg); }
+.new-tube .n2 { height: 235rpx; transform: translateX(-42rpx) rotate(-11deg); }
+.new-tube .n3 { height: 195rpx; transform: translateX(-28rpx) rotate(-7.5deg); }
+.new-tube .n4 { height: 250rpx; transform: translateX(-14rpx) rotate(-3.5deg); }
+.new-tube .n5 { height: 220rpx; transform: translateX(0) rotate(0deg); }
+.new-tube .n6 { height: 255rpx; transform: translateX(14rpx) rotate(3.5deg); }
+.new-tube .n7 { height: 200rpx; transform: translateX(28rpx) rotate(7.5deg); }
+.new-tube .n8 { height: 240rpx; transform: translateX(42rpx) rotate(11deg); }
+.new-tube .n9 { height: 210rpx; transform: translateX(56rpx) rotate(15deg); }
+
+/* 红绳 + 谕字签牌（挂在筒身右上，牌面压住筒身边缘） */
+.new-tube .nt-string {
+  position: absolute;
+  right: 136rpx;
+  top: 290rpx;
+  width: 2rpx;
+  height: 96rpx;
+  background: linear-gradient(180deg, #B03A2E, #8E2B20);
+  transform: rotate(-5deg);
+  transform-origin: top center;
+  z-index: 5;
+}
+.new-tube .nt-tag {
+  position: absolute;
+  right: 116rpx;
+  top: 384rpx;
+  width: 56rpx;
+  height: 78rpx;
+  border-radius: 8rpx;
+  background: linear-gradient(180deg, #FBF6E8, #DED0A6);
+  border: 1rpx solid rgba(180, 155, 98, .9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, .38);
+  z-index: 5;
+}
+.new-tube .nt-tag text {
+  font-family: 'Kaiti SC', 'KaiTi', 'STKaiti', serif;
+  font-size: 40rpx;
+  line-height: 1;
+  color: #7A2A1A;
+}
+@keyframes tubeBreath {
+  0%, 100% { opacity: .65; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.07); }
+}
+
+/* ---------- 光聚凝签 canvas 覆盖层 ---------- */
+.condense-canvas {
+  position: fixed;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 100;
+}
+.condense-canvas.fx-fade {
+  opacity: 0;
+  transition: opacity .26s ease;
+}
+
+/* ---------- 结果 ---------- */
+.result-stick { animation: stickMeld .55s ease forwards; }
+@keyframes stickMeld {
+  0% { opacity: 0; transform: scale(.82); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.ask-rescard { margin-top: 0; }
+.result-card-wrap { flex: 0 0 auto; display: flex; flex-direction: column; }
+.result-wrap {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+.result-main {
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+}
+
+.ask-rescard .crh { align-items: center; padding: 22rpx 28rpx 6rpx; }
+.ask-rescard .cl {
+  font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-size: 28rpx; font-weight: 600; letter-spacing: .08em;
+  color: var(--gold-deep);
+}
+.res-inner { padding: 8rpx 28rpx 24rpx; }
+.res-line {
+  font-family: 'Songti SC', 'Source Han Serif SC', serif;
+  font-size: 36rpx; font-weight: 700; color: var(--ink);
+  line-height: 1.45; letter-spacing: .02em;
+}
+.res-read {
+  font-size: 26rpx; color: var(--ink-faint);
+  margin: 12rpx 0 16rpx; line-height: 1.6;
+}
+.res-yj { display: flex; flex-wrap: wrap; gap: 16rpx 28rpx; }
+.yj-item { display: flex; align-items: center; }
+.yj-tag {
+  width: 44rpx; height: 44rpx; border-radius: 12rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Songti SC', serif; font-size: 26rpx; font-weight: 700;
+  margin-right: 12rpx;
+}
+.yj-val { font-size: 27rpx; font-weight: 600; }
+.yj-good .yj-tag { background: rgba(94, 122, 92, .16); color: var(--green); }
+.yj-good .yj-val { color: var(--green); }
+.yj-bad .yj-tag { background: rgba(168, 69, 46, .14); color: var(--red); }
+.yj-bad .yj-val { color: var(--red); }
+
+/* 三按钮 */
+.ask-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22rpx 0;
+  font-size: 30rpx;
+}
+.ask-btn.dark {
+  background: rgba(255, 255, 255, .08);
+  border: 1rpx solid rgba(255, 255, 255, .14);
+  color: var(--textlight);
+}
+.ask-btn.gold { flex: 1.18; }
+.bi {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 8rpx;
+  font-size: 30rpx;
+}
+.bi-star { line-height: 1; }
+.bi-card {
+  width: 32rpx;
+  height: 32rpx;
+  background-image: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%232B2620" stroke-width="2"%3E%3Crect x="3" y="5" width="18" height="14" rx="2"/%3E%3Cline x1="7" y1="10" x2="17" y2="10"/%3E%3Cline x1="7" y1="14" x2="13" y2="14"/%3E%3C/svg%3E');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+.ask-foot {
+  margin: 18rpx 0 0;
+  text-align: center;
+  font-size: 22rpx;
+  color: #6A7194;
+  letter-spacing: .04em;
+}

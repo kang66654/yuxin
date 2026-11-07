@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>谕心 · 铜钱界面重设计 + 掷钱动画关键帧</title>
+<style>
+  /* ===================================================================
+     字体规范（402px 手机基准 = 750rpx，1rpx ≈ 0.536px）
+     H1 41.5rpx→22px/700/.06em   H2 40→21.5px/700/1.5/.14em
+     H3 33rpx→18px/700/.06em     Body 27-28→14.5-15px/400-600/1.65
+     Caption 24-25.5→13px/400/1.6/.12em   小标签 21-22→11.5px/700
+     按钮 34-37→18.5px/700/.08em（禁用 .34em 超宽字距）
+     字族：无衬线 PingFang / 宋体 Songti-SourceHan / 楷体 KaiTi / 等宽 SF Mono
+     =================================================================== */
+  html,body{margin:0;padding:0;background:#05060f;
+    font-family:'PingFang SC','Microsoft YaHei',sans-serif;-webkit-font-smoothing:antialiased;}
+  .board{display:flex;gap:24px;padding:24px;}
+  .phone{
+    position:relative;width:402px;height:874px;overflow:hidden;flex:0 0 auto;
+    background:linear-gradient(175deg,#1D1E3C 0%,#12132B 45%,#0A0B1A 100%);
+    border-radius:6px;
+  }
+  /* 顶部紫晕 */
+  .halo{position:absolute;left:50%;top:-300px;width:1120px;height:820px;margin-left:-560px;
+    background:radial-gradient(ellipse at 50% 50%,rgba(110,100,196,.16),rgba(110,100,196,0) 68%);pointer-events:none;}
+  .stars{position:absolute;left:0;top:0;width:402px;height:340px;pointer-events:none;}
+  /* 状态栏 */
+  .sb{position:absolute;left:0;top:0;width:100%;height:44px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;box-sizing:border-box;z-index:9;}
+  .sb .t{font:600 15px 'SF Pro Display','PingFang SC',sans-serif;color:#EDEFF8;}
+  .sb .ic{display:flex;gap:6px;align-items:center;}
+  .sb .dot{width:16px;height:10px;border-radius:2px;background:#EDEFF8;opacity:.9;}
+  /* 页头 */
+  .hd{position:relative;display:flex;align-items:center;justify-content:space-between;margin:56px 24px 0;z-index:2;}
+  .hd .tt{font:700 22px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#F2EFE6;letter-spacing:.06em;}
+  .hd .qt{display:flex;align-items:center;gap:4px;height:28px;padding:0 14px;border-radius:14px;
+    background:rgba(255,255,255,.05);border:1px solid rgba(232,201,138,.28);
+    font:600 13px 'PingFang SC',sans-serif;color:#E8C98A;letter-spacing:.04em;}
+  .hd .qt i{font:500 13px 'SF Mono',Consolas,monospace;font-style:normal;letter-spacing:.02em;}
+  /* 输入卡 */
+  .qcard{position:relative;margin:14px 20px 0;height:92px;border-radius:14px;background:rgba(255,255,255,.04);
+    border:1px solid rgba(169,176,214,.12);box-sizing:border-box;z-index:2;}
+  .qcard .p1{position:absolute;left:16px;top:12px;font:400 14.5px 'PingFang SC',sans-serif;color:#7E86A8;letter-spacing:.01em;}
+  .qcard .p2{position:absolute;left:16px;top:37px;font:400 13px 'PingFang SC',sans-serif;color:#5F6689;letter-spacing:.02em;}
+  .qcard .ct{position:absolute;right:12px;bottom:8px;font:400 13px 'SF Mono',Consolas,monospace;color:#C9A259;letter-spacing:.02em;}
+  /* 分段 */
+  .seg{position:relative;margin:14px 20px 0;height:48px;border-radius:24px;background:rgba(13,14,34,.55);
+    border:1px solid rgba(255,255,255,.07);display:flex;padding:4px;box-sizing:border-box;z-index:2;}
+  .seg .s{flex:1;display:flex;align-items:center;justify-content:center;border-radius:20px;
+    font:600 15px 'PingFang SC',sans-serif;color:#8B90AC;letter-spacing:.08em;}
+  .seg .s.on{background:linear-gradient(135deg,#F2DFA8,#D9B96A);color:#3A2A10;font-weight:700;
+    box-shadow:0 4px 13px rgba(232,201,138,.26);}
+  /* 舞台通用 */
+  .stage{position:relative;flex:1;z-index:2;}
+  .phone .col{position:relative;height:100%;display:flex;flex-direction:column;z-index:2;}
+  /* 提示语 */
+  .hint{margin:0 20px;text-align:center;
+    font:500 13px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#C9A259;letter-spacing:.14em;text-indent:.14em;}
+  /* 按钮 */
+  .go{margin:16px 24px 0;height:56px;border-radius:28px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#F2DFA8,#D9B96A);box-shadow:0 6px 22px rgba(232,201,138,.34);
+    font:700 18.5px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#3A2A10;letter-spacing:.08em;text-indent:.08em;}
+  .disc{margin:12px 20px 0;text-align:center;font:400 13px 'PingFang SC',sans-serif;color:#6A7194;letter-spacing:.12em;text-indent:.12em;}
+  /* 底部 Tab */
+  .tabbar{position:absolute;left:12px;right:12px;bottom:16px;height:62px;border-radius:36px;z-index:9;
+    background:rgba(18,19,43,.9);border:1px solid rgba(255,255,255,.09);display:flex;align-items:center;padding:0 10px;box-sizing:border-box;}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font:600 11.5px 'PingFang SC',sans-serif;color:#8B90AC;letter-spacing:.02em;}
+  .tab.on{height:54px;justify-content:center;border-radius:27px;background:linear-gradient(135deg,#F2DFA8,#D9B96A);
+    color:#3A2A10;font-weight:700;box-shadow:0 3px 12px rgba(232,201,138,.3);}
+  .tab svg{display:block;}
+  /* ---------- 铜钱组件（402 基准） ---------- */
+  .coin{position:absolute;width:76px;height:76px;border-radius:50%;
+    background:radial-gradient(circle at 32% 26%,#F9ECBF 0%,#E8CD8B 26%,#C9A259 56%,#8A6530 82%,#6B4C22 100%);
+    box-shadow:inset 0 0 0 2.5px rgba(255,246,220,.3),inset 0 0 0 4px rgba(92,64,24,.45),
+               inset 0 -6px 10px rgba(40,24,4,.4),0 10px 22px rgba(0,0,0,.45);}
+  /* 侧缘态：隐去币身，只留薄椭圆侧缘，像立起来的硬币 */
+  .coin.edge-on{background:transparent;box-shadow:none;}
+  .coin.edge-on::before{display:none;}
+  .coin::before{content:"";position:absolute;inset:8px;border-radius:50%;border:1px dashed rgba(90,62,20,.5);}
+  .coin .hole{position:absolute;left:50%;top:50%;width:20px;height:20px;transform:translate(-50%,-50%);
+    background:linear-gradient(135deg,#7A5A28,#4E3616);border-radius:2px;
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.6),0 0 0 1.5px rgba(255,246,220,.25);}
+  .coin .ch{position:absolute;font:700 13px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#5C3D14;}
+  .coin .ch.t{left:50%;top:11px;transform:translateX(-50%);}
+  .coin .ch.b{left:50%;bottom:11px;transform:translateX(-50%);}
+  .coin .ch.l{left:11px;top:50%;transform:translateY(-50%);}
+  .coin .ch.r{right:11px;top:50%;transform:translateY(-50%);}
+  .coin .yu{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    font:700 30px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#5C3D14;}
+  .coin .sq{position:absolute;left:50%;top:50%;width:6px;height:6px;transform:translate(-50%,-50%) rotate(45deg);
+    background:rgba(92,61,20,.4);border-radius:1px;}
+  .coin .edge{position:absolute;left:50%;top:50%;width:76px;height:22px;transform:translate(-50%,-50%);
+    border-radius:50%;display:none;}
+  .coin.edge-on .edge{display:block;background:linear-gradient(180deg,#E8CD8B,#8A6530);
+    box-shadow:inset 0 1px 1px rgba(255,246,220,.5),inset 0 -2px 3px rgba(40,24,4,.5);}
+  .cshadow{position:absolute;height:10px;border-radius:50%;background:radial-gradient(ellipse,rgba(0,0,0,.5),rgba(0,0,0,0) 70%);}
+  /* 待掷舞台 */
+  .ring0{position:absolute;left:50%;top:46%;width:300px;height:300px;transform:translate(-50%,-50%);
+    border-radius:50%;border:1px dashed rgba(232,201,138,.14);}
+  .ring0::before{content:"";position:absolute;inset:26px;border-radius:50%;border:1px dashed rgba(232,201,138,.09);}
+  .glow0{position:absolute;left:50%;top:66%;width:260px;height:110px;transform:translate(-50%,-50%);
+    background:radial-gradient(ellipse,rgba(232,201,138,.18),rgba(232,201,138,0) 70%);}
+  .pill-lb{position:absolute;left:50%;transform:translateX(-50%);height:32px;padding:0 18px;border-radius:16px;
+    display:flex;align-items:center;gap:6px;background:rgba(13,14,34,.8);border:1px solid rgba(232,201,138,.2);
+    font:600 13px 'PingFang SC',sans-serif;color:#E8C98A;letter-spacing:.12em;white-space:nowrap;z-index:5;}
+  .pill-lb em{font:500 13px 'SF Mono',Consolas,monospace;font-style:normal;letter-spacing:.02em;opacity:.85;}
+  .skip{position:absolute;left:20px;top:772px;width:362px;text-align:center;
+    font:400 13px 'PingFang SC',sans-serif;color:#5F6689;letter-spacing:.12em;z-index:5;}
+  .arcs{position:absolute;pointer-events:none;}
+  .spark{position:absolute;border-radius:50%;background:#FFE9BC;}
+  .impact{position:absolute;border-radius:50%;border:2px solid rgba(255,217,138,.85);}
+  /* ---------- 动效帧屏 · 标注体系 ---------- */
+  .ph-t{position:absolute;left:0;right:0;top:132px;text-align:center;z-index:5;
+    font:700 22px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#F2EFE6;letter-spacing:.08em;text-indent:.08em;}
+  .ph-d{position:absolute;left:30px;right:30px;top:172px;text-align:center;z-index:5;
+    font:400 13px 'PingFang SC',sans-serif;color:#8B90AC;letter-spacing:.12em;}
+  .anno{position:absolute;display:flex;align-items:center;gap:7px;z-index:6;white-space:nowrap;
+    font:600 11.5px 'PingFang SC',sans-serif;color:#C9A259;letter-spacing:.04em;}
+  .anno .ln{width:34px;height:1px;background:linear-gradient(90deg,rgba(232,201,138,.65),rgba(232,201,138,.08));}
+  .anno .ln.rev{background:linear-gradient(270deg,rgba(232,201,138,.65),rgba(232,201,138,.08));}
+  .anno .vt{width:1px;height:26px;background:linear-gradient(180deg,rgba(232,201,138,.65),rgba(232,201,138,.08));}
+  .chips{position:absolute;left:0;right:0;top:634px;display:flex;justify-content:center;gap:8px;z-index:5;}
+  .chip{height:24px;padding:0 12px;border-radius:12px;display:flex;align-items:center;
+    background:rgba(255,255,255,.05);border:1px solid rgba(169,176,214,.18);
+    font:600 11.5px 'PingFang SC',sans-serif;color:#A9B0D6;letter-spacing:.03em;}
+  .chip b{font:600 11.5px 'SF Mono',Consolas,monospace;color:#E8C98A;margin-left:3px;letter-spacing:.02em;}
+  /* 阶段时间轴 */
+  .tl{position:absolute;left:30px;right:30px;top:688px;z-index:5;}
+  .tl-track{height:3px;border-radius:2px;background:rgba(255,255,255,.09);overflow:hidden;}
+  .tl-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#F2DFA8,#D9B96A);
+    box-shadow:0 0 8px rgba(232,201,138,.55);}
+  .tl-marks{display:flex;justify-content:space-between;margin-top:8px;
+    font:600 11.5px 'PingFang SC',sans-serif;color:#5F6689;letter-spacing:.03em;}
+  .tl-marks .on{color:#E8C98A;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="board">
+
+  <!-- ================ 屏1 · 主界面（待掷） ================ -->
+  <div class="phone">
+    <div class="halo"></div>
+    <svg class="stars" width="402" height="340" viewBox="0 0 402 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="52" cy="64" r="1" fill="#9AA3D4" opacity=".55"/><circle cx="236" cy="70" r="1.2" fill="#C9CFF0" opacity=".6"/>
+      <circle cx="330" cy="44" r=".8" fill="#8E97C9" opacity=".45"/><circle cx="92" cy="150" r=".8" fill="#8E97C9" opacity=".35"/>
+      <circle cx="300" cy="180" r="1" fill="#9AA3D4" opacity=".3"/><circle cx="30" cy="250" r="1" fill="#9AA3D4" opacity=".25"/>
+    </svg>
+    <div class="sb"><span class="t">15:46</span><span class="ic"><span class="dot"></span><span class="dot"></span></span></div>
+    <div class="col">
+      <div class="hd"><span class="tt">问事签</span><span class="qt">⧗ 今日剩余 <i>0/3</i></span></div>
+      <div class="qcard"><span class="p1">你纠结的是……（≤100字）</span><span class="p2">写下你想问的事，例如：要不要联系他？</span><span class="ct">0/100</span></div>
+      <div class="seg"><span class="s">抽 签</span><span class="s">翻 牌</span><span class="s on">铜 钱</span></div>
+
+      <div class="stage">
+        <div class="ring0"></div>
+        <div class="glow0"></div>
+        <!-- 品字三钱：背（谕）朝上 -->
+        <div class="cshadow" style="left:139px;top:236px;width:124px;"></div>
+        <div class="cshadow" style="left:76px;top:296px;width:124px;"></div>
+        <div class="cshadow" style="left:202px;top:296px;width:124px;"></div>
+        <div class="coin" style="left:163px;top:172px;transform:rotate(-5deg);">
+          <span class="yu">谕</span><span class="sq" style="left:24%;top:22%;"></span><span class="sq" style="left:70%;top:24%;"></span>
+        </div>
+        <div class="coin" style="left:100px;top:232px;transform:rotate(7deg);">
+          <span class="yu">谕</span><span class="sq" style="left:26%;top:70%;"></span>
+        </div>
+        <div class="coin" style="left:226px;top:232px;transform:rotate(-9deg);">
+          <span class="yu">谕</span><span class="sq" style="left:68%;top:68%;"></span>
+        </div>
+      </div>
+
+      <div class="hint">三钱问路 · 落定知天意</div>
+      <div class="go">掷 钱 问 路</div>
+      <div class="disc">谕心仅供娱乐 · 不构成任何建议</div>
+      <div style="height:96px;"></div>
+    </div>
+    <div class="tabbar">
+      <div class="tab"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.5 9L10 3.5L16.5 9M5 8V16.5H8.5V12H11.5V16.5H15V8" stroke="#7E86A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>首页</div>
+      <div class="tab on"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3C14.4 3 17.5 5.9 17.5 9.5C17.5 13.1 14.4 16 10 16C8.8 16 7.7 15.8 6.7 15.4L3.5 16.5L4.4 13.6C3.5 12.5 3 11.1 3 9.5C3 5.9 5.6 3 10 3Z" fill="#3A2A10"/><circle cx="7" cy="9.5" r="1" fill="#E8C98A"/><circle cx="10" cy="9.5" r="1" fill="#E8C98A"/><circle cx="13" cy="9.5" r="1" fill="#E8C98A"/></svg>问事</div>
+      <div class="tab"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2.5C13.6 2.5 16.5 5.2 16.5 8.5C16.5 11 15 13.1 12.8 14.1V17H7.2V14.1C5 13.1 3.5 11 3.5 8.5C3.5 5.2 6.4 2.5 10 2.5Z" stroke="#7E86A8" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="10" cy="9" rx="2.2" ry="3" stroke="#7E86A8" stroke-width="1.3"/></svg>树洞</div>
+      <div class="tab"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.5" stroke="#7E86A8" stroke-width="1.5"/><circle cx="10" cy="10" r="2" fill="#7E86A8"/></svg>仪式</div>
+      <div class="tab"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="6.5" r="3.2" stroke="#7E86A8" stroke-width="1.5"/><path d="M3.8 16.5C4.6 13.9 7 12.4 10 12.4C13 12.4 15.4 13.9 16.2 16.5" stroke="#7E86A8" stroke-width="1.5" stroke-linecap="round"/></svg>我的</div>
+    </div>
+  </div>
+
+  <!-- ================ 屏2 · 动效帧1 聚气起势 0.0-0.4s ================ -->
+  <div class="phone">
+    <div class="halo"></div>
+    <svg class="stars" width="402" height="874" viewBox="0 0 402 874" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="52" cy="64" r="1" fill="#9AA3D4" opacity=".55"/><circle cx="236" cy="70" r="1.2" fill="#C9CFF0" opacity=".6"/>
+      <circle cx="330" cy="44" r=".8" fill="#8E97C9" opacity=".45"/><circle cx="92" cy="150" r=".8" fill="#8E97C9" opacity=".35"/>
+      <circle cx="352" cy="236" r="1" fill="#9AA3D4" opacity=".3"/><circle cx="40" cy="330" r="1" fill="#9AA3D4" opacity=".25"/>
+      <circle cx="366" cy="470" r=".9" fill="#8E97C9" opacity=".3"/><circle cx="30" cy="580" r="1" fill="#9AA3D4" opacity=".22"/>
+    </svg>
+    <div class="sb"><span class="t">15:46</span><span class="ic"><span class="dot"></span><span class="dot"></span></span></div>
+    <div class="pill-lb" style="top:84px;">01 · 聚气起势　0.0–0.4s</div>
+    <div class="ph-t">聚气起势</div>
+    <div class="ph-d">三钱下沉蓄力 · 币缘金光渐亮</div>
+
+    <div class="stage" style="height:100%;">
+      <div class="glow0" style="top:60%;width:320px;height:150px;background:radial-gradient(ellipse,rgba(232,201,138,.32),rgba(232,201,138,0) 70%);"></div>
+      <div class="cshadow" style="left:139px;top:436px;width:124px;opacity:.6;"></div>
+      <div class="cshadow" style="left:76px;top:496px;width:124px;opacity:.6;"></div>
+      <div class="cshadow" style="left:202px;top:496px;width:124px;opacity:.6;"></div>
+      <!-- 三钱微微下沉蓄力，币缘亮起 -->
+      <div class="coin" style="left:163px;top:382px;transform:scale(1.15) rotate(-5deg);box-shadow:inset 0 0 0 2.5px rgba(255,246,220,.55),inset 0 0 14px rgba(255,233,188,.5),0 10px 22px rgba(0,0,0,.45);">
+        <span class="yu">谕</span>
+      </div>
+      <div class="coin" style="left:100px;top:442px;transform:scale(1.15) rotate(7deg);box-shadow:inset 0 0 0 2.5px rgba(255,246,220,.55),inset 0 0 14px rgba(255,233,188,.5),0 10px 22px rgba(0,0,0,.45);">
+        <span class="yu">谕</span>
+      </div>
+      <div class="coin" style="left:226px;top:442px;transform:scale(1.15) rotate(-9deg);box-shadow:inset 0 0 0 2.5px rgba(255,246,220,.55),inset 0 0 14px rgba(255,233,188,.5),0 10px 22px rgba(0,0,0,.45);">
+        <span class="yu">谕</span>
+      </div>
+      <!-- 上升光尘 -->
+      <span class="spark" style="left:150px;top:420px;width:3px;height:3px;opacity:.9;"></span>
+      <span class="spark" style="left:210px;top:400px;width:2px;height:2px;opacity:.7;"></span>
+      <span class="spark" style="left:120px;top:470px;width:2.5px;height:2.5px;opacity:.8;"></span>
+      <span class="spark" style="left:262px;top:460px;width:2px;height:2px;opacity:.7;"></span>
+      <span class="spark" style="left:180px;top:372px;width:2px;height:2px;opacity:.6;"></span>
+      <span class="spark" style="left:240px;top:390px;width:1.6px;height:1.6px;opacity:.5;"></span>
+      <span class="spark" style="left:136px;top:348px;width:1.6px;height:1.6px;opacity:.45;"></span>
+      <span class="spark" style="left:250px;top:342px;width:1.6px;height:1.6px;opacity:.4;"></span>
+      <!-- 参数标注 -->
+      <div class="anno" style="left:26px;top:396px;flex-direction:column;align-items:flex-start;">
+        <span>下沉蓄力 −12px</span><i class="vt"></i>
+      </div>
+      <div class="anno" style="right:24px;top:548px;"><i class="ln rev"></i><span>币缘高光 inset +55%</span></div>
+    </div>
+
+    <div class="chips"><span class="chip">时长 <b>0.4s</b></span><span class="chip">曲线 <b>easeOut</b></span><span class="chip">光尘 <b>×8</b></span></div>
+    <div class="tl">
+      <div class="tl-track"><div class="tl-fill" style="width:12.5%;"></div></div>
+      <div class="tl-marks"><span class="on">01 聚气</span><span>02 腾空</span><span>03 凝空</span><span>04 落定</span></div>
+    </div>
+    <div class="skip">动画播放中 · 轻触屏幕任意处可跳过</div>
+  </div>
+
+  <!-- ================ 屏3 · 动效帧2 腾空翻飞 0.4-1.2s ================ -->
+  <div class="phone">
+    <div class="halo"></div>
+    <svg class="stars" width="402" height="874" viewBox="0 0 402 874" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="52" cy="64" r="1" fill="#9AA3D4" opacity=".55"/><circle cx="236" cy="70" r="1.2" fill="#C9CFF0" opacity=".6"/>
+      <circle cx="330" cy="44" r=".8" fill="#8E97C9" opacity=".45"/><circle cx="92" cy="150" r=".8" fill="#8E97C9" opacity=".35"/>
+      <circle cx="352" cy="236" r="1" fill="#9AA3D4" opacity=".3"/><circle cx="40" cy="330" r="1" fill="#9AA3D4" opacity=".25"/>
+      <circle cx="366" cy="470" r=".9" fill="#8E97C9" opacity=".3"/><circle cx="30" cy="580" r="1" fill="#9AA3D4" opacity=".22"/>
+    </svg>
+    <div class="sb"><span class="t">15:46</span><span class="ic"><span class="dot"></span><span class="dot"></span></span></div>
+    <div class="pill-lb" style="top:84px;">02 · 腾空翻飞　0.4–1.2s</div>
+    <div class="ph-t">腾空翻飞</div>
+    <div class="ph-d">三币沿弧线腾空 · 错峰出手 · 翻面闪现</div>
+
+    <div class="stage" style="height:100%;">
+      <!-- 轨迹虚线弧 -->
+      <svg class="arcs" style="left:36px;top:210px;" width="330" height="360" viewBox="0 0 330 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M70 300 C60 220 84 150 118 112" stroke="#E8C98A" stroke-opacity=".35" stroke-width="1.6" stroke-dasharray="5 8" stroke-linecap="round"/>
+        <path d="M165 310 C165 220 165 150 165 92" stroke="#E8C98A" stroke-opacity=".35" stroke-width="1.6" stroke-dasharray="5 8" stroke-linecap="round"/>
+        <path d="M262 300 C272 224 246 158 214 122" stroke="#E8C98A" stroke-opacity=".35" stroke-width="1.6" stroke-dasharray="5 8" stroke-linecap="round"/>
+        <path d="M78 306 C70 238 90 176 118 140" stroke="#FFD98A" stroke-opacity=".16" stroke-width="1.1" stroke-dasharray="3 7" stroke-linecap="round"/>
+        <path d="M254 306 C262 240 244 180 216 146" stroke="#FFD98A" stroke-opacity=".16" stroke-width="1.1" stroke-dasharray="3 7" stroke-linecap="round"/>
+      </svg>
+      <!-- 三币空中，不同高度，侧缘/斜角状态 -->
+      <div class="coin edge-on" style="left:52px;top:256px;transform:scale(1.15) rotate(-12deg);">
+        <span class="edge"></span>
+      </div>
+      <div class="coin" style="left:150px;top:192px;transform:scale(1.15) rotate(24deg) scaleX(.62);">
+      </div>
+      <div class="coin edge-on" style="left:246px;top:270px;transform:scale(1.15) rotate(14deg);">
+        <span class="edge"></span>
+      </div>
+      <!-- 拖尾光尘 -->
+      <span class="spark" style="left:84px;top:350px;width:3px;height:3px;opacity:.8;"></span>
+      <span class="spark" style="left:76px;top:376px;width:2px;height:2px;opacity:.55;"></span>
+      <span class="spark" style="left:168px;top:276px;width:3px;height:3px;opacity:.85;"></span>
+      <span class="spark" style="left:162px;top:308px;width:2.4px;height:2.4px;opacity:.6;"></span>
+      <span class="spark" style="left:158px;top:340px;width:1.8px;height:1.8px;opacity:.4;"></span>
+      <span class="spark" style="left:276px;top:360px;width:2.6px;height:2.6px;opacity:.75;"></span>
+      <span class="spark" style="left:268px;top:390px;width:1.8px;height:1.8px;opacity:.45;"></span>
+      <span class="spark" style="left:120px;top:240px;width:1.6px;height:1.6px;opacity:.5;"></span>
+      <span class="spark" style="left:288px;top:246px;width:1.6px;height:1.6px;opacity:.5;"></span>
+      <!-- 地面余光 -->
+      <div class="glow0" style="top:78%;width:240px;height:80px;background:radial-gradient(ellipse,rgba(232,201,138,.12),rgba(232,201,138,0) 70%);"></div>
+      <!-- 参数标注 -->
+      <div class="anno" style="left:26px;top:318px;flex-direction:column;align-items:flex-start;">
+        <span>错峰出手 · 间隔 80ms</span><i class="vt"></i>
+      </div>
+      <div class="anno" style="right:26px;top:206px;"><i class="ln rev"></i><span>翻面中 scaleX .62</span></div>
+      <div class="anno" style="right:24px;top:378px;"><i class="ln rev"></i><span>侧缘态 · 厚 22px</span></div>
+    </div>
+
+    <div class="chips"><span class="chip">抛物线 <b>×3</b></span><span class="chip">转速 <b>540°/s</b></span><span class="chip">拖尾光尘 <b>×9</b></span></div>
+    <div class="tl">
+      <div class="tl-track"><div class="tl-fill" style="width:37.5%;"></div></div>
+      <div class="tl-marks"><span>01 聚气</span><span class="on">02 腾空</span><span>03 凝空</span><span>04 落定</span></div>
+    </div>
+    <div class="skip">动画播放中 · 轻触屏幕任意处可跳过</div>
+  </div>
+
+  <!-- ================ 屏4 · 动效帧3 凝空悬停 1.2-1.7s ================ -->
+  <div class="phone">
+    <div class="halo"></div>
+    <svg class="stars" width="402" height="874" viewBox="0 0 402 874" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="52" cy="64" r="1" fill="#9AA3D4" opacity=".55"/><circle cx="236" cy="70" r="1.2" fill="#C9CFF0" opacity=".6"/>
+      <circle cx="330" cy="44" r=".8" fill="#8E97C9" opacity=".45"/><circle cx="92" cy="150" r=".8" fill="#8E97C9" opacity=".35"/>
+      <circle cx="352" cy="236" r="1" fill="#9AA3D4" opacity=".3"/><circle cx="40" cy="330" r="1" fill="#9AA3D4" opacity=".25"/>
+      <circle cx="366" cy="470" r=".9" fill="#8E97C9" opacity=".3"/><circle cx="30" cy="580" r="1" fill="#9AA3D4" opacity=".22"/>
+    </svg>
+    <div class="sb"><span class="t">15:46</span><span class="ic"><span class="dot"></span><span class="dot"></span></span></div>
+    <div class="pill-lb" style="top:84px;">03 · 凝空悬停　1.2–1.7s</div>
+    <div class="ph-t">凝空悬停</div>
+    <div class="ph-d">时间凝滞 0.5s · 三币同高定格</div>
+
+    <div class="stage" style="height:100%;">
+      <!-- 时间凝滞：横向光丝 -->
+      <svg style="position:absolute;left:0;top:0;" width="402" height="874" viewBox="0 0 402 874" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="392" x2="150" y2="392" stroke="#FFD98A" stroke-opacity=".18" stroke-width="1"/>
+        <line x1="260" y1="408" x2="376" y2="408" stroke="#FFD98A" stroke-opacity=".15" stroke-width="1"/>
+        <line x1="60" y1="452" x2="130" y2="452" stroke="#E8C98A" stroke-opacity=".12" stroke-width="1"/>
+        <line x1="286" y1="464" x2="352" y2="464" stroke="#E8C98A" stroke-opacity=".1" stroke-width="1"/>
+      </svg>
+      <!-- 三币悬停同一高度，各带时停光环 -->
+      <div class="impact" style="left:34px;top:318px;width:116px;height:116px;border-color:rgba(255,217,138,.5);border-style:dashed;"></div>
+      <div class="impact" style="left:143px;top:318px;width:116px;height:116px;border-color:rgba(255,217,138,.5);border-style:dashed;"></div>
+      <div class="impact" style="left:252px;top:318px;width:116px;height:116px;border-color:rgba(255,217,138,.5);border-style:dashed;"></div>
+      <div class="coin edge-on" style="left:54px;top:340px;transform:scale(1.15) rotate(-4deg);">
+        <span class="edge"></span>
+      </div>
+      <div class="coin" style="left:163px;top:340px;transform:scale(1.15) scaleX(.45);">
+        <span class="edge" style="width:76px;"></span>
+      </div>
+      <div class="coin edge-on" style="left:272px;top:340px;transform:scale(1.15) rotate(6deg);">
+        <span class="edge"></span>
+      </div>
+      <span class="spark" style="left:88px;top:316px;width:2.4px;height:2.4px;opacity:.9;"></span>
+      <span class="spark" style="left:196px;top:306px;width:2px;height:2px;opacity:.8;"></span>
+      <span class="spark" style="left:304px;top:320px;width:2.4px;height:2.4px;opacity:.9;"></span>
+      <span class="spark" style="left:130px;top:458px;width:1.6px;height:1.6px;opacity:.5;"></span>
+      <span class="spark" style="left:270px;top:468px;width:1.6px;height:1.6px;opacity:.5;"></span>
+      <!-- 参数标注 -->
+      <div class="anno" style="left:26px;top:480px;flex-direction:column;align-items:flex-start;">
+        <span>时间流速 0.1×</span><i class="vt"></i>
+      </div>
+      <div class="anno" style="right:26px;top:480px;"><i class="ln rev"></i><span>光环呼吸 1.6s</span></div>
+      <div class="anno" style="left:26px;top:296px;"><span>侧缘 · 正面 · 侧缘</span><i class="ln"></i></div>
+    </div>
+
+    <div class="chips"><span class="chip">悬停 <b>0.5s</b></span><span class="chip">时停光环 <b>×3</b></span><span class="chip">光丝 <b>×4</b></span></div>
+    <div class="tl">
+      <div class="tl-track"><div class="tl-fill" style="width:62.5%;"></div></div>
+      <div class="tl-marks"><span>01 聚气</span><span>02 腾空</span><span class="on">03 凝空</span><span>04 落定</span></div>
+    </div>
+    <div class="skip">动画播放中 · 轻触屏幕任意处可跳过</div>
+  </div>
+
+  <!-- ================ 屏5 · 动效帧4 落定成卦 1.7-2.4s ================ -->
+  <div class="phone">
+    <div class="halo"></div>
+    <svg class="stars" width="402" height="874" viewBox="0 0 402 874" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="52" cy="64" r="1" fill="#9AA3D4" opacity=".55"/><circle cx="236" cy="70" r="1.2" fill="#C9CFF0" opacity=".6"/>
+      <circle cx="330" cy="44" r=".8" fill="#8E97C9" opacity=".45"/><circle cx="92" cy="150" r=".8" fill="#8E97C9" opacity=".35"/>
+      <circle cx="352" cy="236" r="1" fill="#9AA3D4" opacity=".3"/><circle cx="40" cy="330" r="1" fill="#9AA3D4" opacity=".25"/>
+      <circle cx="366" cy="470" r=".9" fill="#8E97C9" opacity=".3"/><circle cx="30" cy="580" r="1" fill="#9AA3D4" opacity=".22"/>
+    </svg>
+    <div class="sb"><span class="t">15:46</span><span class="ic"><span class="dot"></span><span class="dot"></span></span></div>
+    <div class="pill-lb" style="top:84px;">04 · 落定成卦　1.7–2.4s</div>
+    <div class="ph-t">落定成卦</div>
+    <div class="ph-d">双环冲击波扩散 · 三钱归位 · 即时揭晓</div>
+
+    <div class="stage" style="height:100%;">
+      <!-- 落地冲击光环 -->
+      <div class="impact" style="left:111px;top:412px;width:180px;height:60px;opacity:.9;"></div>
+      <div class="impact" style="left:81px;top:398px;width:240px;height:84px;opacity:.4;"></div>
+      <div class="glow0" style="top:52%;width:300px;height:130px;background:radial-gradient(ellipse,rgba(232,201,138,.26),rgba(232,201,138,0) 70%);"></div>
+      <div class="cshadow" style="left:139px;top:436px;width:124px;"></div>
+      <div class="cshadow" style="left:76px;top:496px;width:124px;"></div>
+      <div class="cshadow" style="left:202px;top:496px;width:124px;"></div>
+      <!-- 落定：两正（方孔）一背（谕·中） -->
+      <div class="coin" style="left:100px;top:382px;transform:scale(1.15) rotate(6deg);">
+        <span class="ch t">谕</span><span class="ch r">心</span><span class="ch b">通</span><span class="ch l">宝</span><span class="hole"></span>
+      </div>
+      <div class="coin" style="left:163px;top:442px;transform:scale(1.15) rotate(-3deg);">
+        <span class="yu">谕</span><span class="sq" style="left:70%;top:24%;"></span>
+      </div>
+      <div class="coin" style="left:226px;top:382px;transform:scale(1.15) rotate(-8deg);">
+        <span class="ch t">谕</span><span class="ch r">心</span><span class="ch b">通</span><span class="ch l">宝</span><span class="hole"></span>
+      </div>
+      <span class="spark" style="left:96px;top:368px;width:2.4px;height:2.4px;opacity:.8;"></span>
+      <span class="spark" style="left:310px;top:372px;width:2px;height:2px;opacity:.7;"></span>
+      <span class="spark" style="left:120px;top:510px;width:1.8px;height:1.8px;opacity:.5;"></span>
+      <span class="spark" style="left:286px;top:506px;width:1.8px;height:1.8px;opacity:.5;"></span>
+      <!-- 参数标注 -->
+      <div class="anno" style="left:26px;top:346px;flex-direction:column;align-items:flex-start;">
+        <span>两正（方孔）一背（谕）</span><i class="vt"></i>
+      </div>
+      <div class="anno" style="right:24px;top:522px;"><i class="ln rev"></i><span>冲击波双环扩散</span></div>
+      <!-- 组合名浮现 -->
+      <div class="pill-lb" style="top:560px;border-color:rgba(232,201,138,.45);color:#F2DFA8;">两正一背 · 大势已显</div>
+      <div class="ph-d" style="top:604px;color:#C9A259;">落定 0.6s 后自动进入解签页</div>
+    </div>
+
+    <div class="chips"><span class="chip">曲线 <b>easeOutBack</b></span><span class="chip">落点 <b>品字阵</b></span><span class="chip">卦象 <b>即时判定</b></span></div>
+    <div class="tl">
+      <div class="tl-track"><div class="tl-fill" style="width:87.5%;"></div></div>
+      <div class="tl-marks"><span>01 聚气</span><span>02 腾空</span><span>03 凝空</span><span class="on">04 落定</span></div>
+    </div>
+    <div class="skip">动画播放中 · 轻触屏幕任意处可跳过</div>
+  </div>
+
+</div>
+</body>
+</html>

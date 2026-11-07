@@ -1,0 +1,57 @@
+/* 自定义 tabBar 是独立层：page 上的 CSS 变量进不来，
+   必须把 tokens 再引入一次，并在根节点加 .yx-varscope 才能取到色。 */
+@import "../styles/tokens.wxss";
+@import "../styles/tabbar-icons.wxss";
+
+/* 浮动圆角深色胶囊容器 */
+.pnav {
+  position: fixed;
+  left: 24rpx;
+  right: 24rpx;
+  bottom: calc(18rpx + env(safe-area-inset-bottom));
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 14rpx;
+  border-radius: 999rpx;
+  background: rgba(23, 22, 35, .92);
+  border: 1rpx solid rgba(255, 255, 255, .08);
+  box-shadow: 0 16rpx 40rpx rgba(0, 0, 0, .45);
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10rpx 0;
+  border-radius: 999rpx;
+  font-size: 22rpx;
+  color: var(--nav-text);
+  transition: background .2s, color .2s;
+}
+
+.tab::before {
+  content: "";
+  width: 40rpx;
+  height: 40rpx;
+  margin-bottom: 4rpx;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* 选中项：金色胶囊 + 深色图标文字 */
+.tab.on {
+  background: linear-gradient(135deg, var(--btn-a), var(--btn-b));
+  color: var(--btn-text);
+  font-weight: 700;
+  box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, .3);
+}
+
+/* 灰色 SVG 图标压成深色，配合金色底 */
+.tab.on::before {
+  filter: brightness(0);
+}

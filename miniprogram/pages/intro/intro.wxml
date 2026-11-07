@@ -1,0 +1,41 @@
+<view class="app-bg"></view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd"><text class="pt">完善资料</text><text class="ps">{{step}} / 3 · 都可跳过</text></view>
+    <block wx:if="{{step===1}}">
+      <view class="ob-label">怎么称呼你</view>
+      <input class="ob-input" placeholder="听风人" maxlength="12" value="{{name}}" bindinput="onName" />
+      <view class="ob-hint">签文里会用这个名字称呼你。只存本机，随时可改。</view>
+    </block>
+    <block wx:if="{{step===2}}">
+      <view class="ob-label">生日 · 只记月日</view>
+      <view class="ob-date">
+        <input class="ob-input ob-m" type="number" placeholder="月" value="{{m}}" bindinput="onM" />
+        <text class="ob-u">月</text>
+        <input class="ob-input ob-m" type="number" placeholder="日" value="{{d}}" bindinput="onD" />
+        <text class="ob-u">日</text>
+      </view>
+      <view class="ob-hint">不记年份，只用来算星座。当前：{{zod}}</view>
+    </block>
+    <block wx:if="{{step===3}}">
+      <view class="ob-label">MBTI · 自己选</view>
+      <view class="ob-mbti">
+        <view class="ob-mrow"><text class="ob-k">E / I</text><view class="pchip" wx:for="{{['E','I']}}" wx:key="*this" data-k="{{item}}" bindtap="pickMbti">{{item}}</view></view>
+        <view class="ob-mrow"><text class="ob-k">S / N</text><view class="pchip" wx:for="{{['S','N']}}" wx:key="*this" data-k="{{item}}" bindtap="pickMbti">{{item}}</view></view>
+        <view class="ob-mrow"><text class="ob-k">T / F</text><view class="pchip" wx:for="{{['T','F']}}" wx:key="*this" data-k="{{item}}" bindtap="pickMbti">{{item}}</view></view>
+        <view class="ob-mrow"><text class="ob-k">J / P</text><view class="pchip" wx:for="{{['J','P']}}" wx:key="*this" data-k="{{item}}" bindtap="pickMbti">{{item}}</view></view>
+      </view>
+      <view class="ob-hint">四组各选一个；只影响签文口吻，不填也能用。</view>
+    </block>
+    <view class="ob-foot">
+      <view class="ob-dots"><view class="dot {{step===1?'on':''}}"></view><view class="dot {{step===2?'on':''}}"></view><view class="dot {{step===3?'on':''}}"></view></view>
+      <view class="ob-btns">
+        <button class="pbtn ghost" wx:if="{{step>1}}" bindtap="prev">上一步</button>
+        <button class="pbtn gold" bindtap="next">{{step===3?'完成':'下一步'}}</button>
+      </view>
+      <button class="ob-skip" bindtap="goBack">跳过，之后在「我的」里补</button>
+    </view>
+  </view>
+  <view class="tab-space"></view>
+</view>

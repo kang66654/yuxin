@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>谕心小程序 1:1 复刻 · 工具调研与提示词定稿</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23070A12'/%3E%3Cpath d='M16 7c-4 0-6 2.6-6 5.4 0 2 1.3 3.4 3 4.2v1.4h6v-1.4c1.7-.8 3-2.2 3-4.2 0-2.8-2-5.4-6-5.4z' fill='%23C9A24F'/%3E%3Crect x='11' y='19' width='10' height='6' rx='2' fill='%23E8CF97'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#070A12; --bg2:#0B1120; --panel:#0E1526; --line:rgba(201,162,79,.20);
+    --gold:#C9A24F; --gold2:#E8CF97; --paper:#F2E8D5; --ink:#211808;
+    --text:#D8D2C3; --dim:#8B8477; --warn:#8C5A4A;
+    --mono:"SF Mono",Consolas,"Cascadia Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text)}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    font-size:15px;line-height:1.75;
+    background:
+      radial-gradient(900px 520px at 82% -6%, rgba(201,162,79,.10), transparent 62%),
+      radial-gradient(700px 420px at 6% 8%, rgba(96,120,200,.08), transparent 60%),
+      var(--bg);
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:44px 24px 90px}
+  header.hero{border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:34px}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase}
+  h1{
+    font-family:"Songti SC","SimSun",serif;font-size:clamp(28px,4.2vw,44px);
+    line-height:1.25;color:var(--paper);margin:14px 0 10px;letter-spacing:.02em;font-weight:700;
+  }
+  .lede{color:var(--dim);max-width:74ch;font-size:15px}
+  .lede b{color:var(--gold2);font-weight:600}
+
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:28px 0 0}
+  .stat{background:linear-gradient(160deg,#0F1729,#0A0F1C);border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px}
+  .stat .n{font-family:"Songti SC",serif;font-size:26px;color:var(--gold2);line-height:1.1;font-variant-numeric:tabular-nums}
+  .stat .t{font-size:12px;color:var(--dim);margin-top:6px;letter-spacing:.04em}
+
+  main{display:grid;grid-template-columns:212px minmax(0,1fr);gap:40px;align-items:start}
+  nav.toc{position:sticky;top:28px;font-size:13px;border-left:1px solid var(--line);padding-left:16px}
+  nav.toc a{display:block;color:var(--dim);text-decoration:none;padding:5px 0;letter-spacing:.02em}
+  nav.toc a:hover{color:var(--gold2)}
+  nav.toc .t{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.18em;margin-bottom:10px}
+
+  section{margin:0 0 46px}
+  .snum{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.2em}
+  h2{font-family:"Songti SC",serif;font-size:24px;color:var(--paper);margin:8px 0 14px;font-weight:700;letter-spacing:.02em}
+  h3{font-size:15px;color:var(--gold2);margin:26px 0 10px;font-weight:600;letter-spacing:.04em}
+  p{margin:0 0 12px}
+  .hint{color:var(--dim);font-size:13px}
+
+  .tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13.5px;min-width:720px}
+  th,td{padding:11px 14px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(201,162,79,.10)}
+  th{color:var(--gold2);font-weight:600;font-size:12.5px;letter-spacing:.05em;background:rgba(201,162,79,.06)}
+  td:first-child{color:var(--paper)}
+  tr:last-child td{border-bottom:0}
+  .mono{font-family:var(--mono);font-size:12.5px;color:var(--gold2)}
+  .ok{color:#8FA97A}
+  .no{color:#B4736A}
+  .mid{color:#C9A24F}
+
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:14px}
+  .card{background:linear-gradient(165deg,#0F1729,#0A0F1C);border:1px solid var(--line);border-radius:14px;padding:18px}
+  .card .from{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.14em}
+  .card .nm{font-family:"Songti SC",serif;font-size:17px;color:var(--paper);margin:7px 0 8px}
+  .card p{font-size:13.5px;color:var(--dim);margin:0}
+  .card p b{color:var(--gold2);font-weight:600}
+
+  .warnbox{border:1px solid rgba(180,115,106,.35);background:rgba(140,90,74,.08);border-radius:12px;padding:16px 18px}
+  .warnbox .h{color:#CBA79E;font-size:13px;letter-spacing:.1em;font-family:var(--mono);margin-bottom:8px}
+  ol.steps{margin:0;padding-left:20px}
+  ol.steps li{margin:0 0 10px}
+  ol.steps li b{color:var(--gold2);font-weight:600}
+  ol.steps li .out{display:block;color:var(--dim);font-size:12.5px}
+
+  .prompt{position:relative;border:1px solid rgba(201,162,79,.32);border-radius:14px;background:#080D18;margin:18px 0 8px}
+  .phead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid rgba(201,162,79,.18);background:rgba(201,162,79,.05)}
+  .phead .pt{font-family:var(--mono);font-size:12px;letter-spacing:.16em;color:var(--gold)}
+  button.cp{
+    font:inherit;font-size:12.5px;padding:6px 14px;border-radius:999px;cursor:pointer;
+    color:#1B1408;background:linear-gradient(135deg,#E8CF97,#C19A46);border:0;white-space:nowrap;
+  }
+  button.cp:active{transform:translateY(1px)}
+  pre{margin:0;padding:18px 18px 22px;overflow-x:auto;font-family:var(--mono);font-size:12.6px;line-height:1.85;color:#CFC8B7;white-space:pre-wrap;word-break:break-word}
+  pre .h{color:var(--gold2)}
+
+  .checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:10px}
+  .chk{display:flex;gap:10px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;font-size:13.5px}
+  .chk svg{flex:0 0 auto;margin-top:3px}
+
+  .ask{display:grid;gap:10px}
+  .q{display:flex;gap:12px;background:var(--panel);border-left:2px solid var(--gold);border-radius:0 10px 10px 0;padding:13px 16px;font-size:13.8px}
+  .q .i{font-family:var(--mono);color:var(--gold);font-size:12px;flex:0 0 22px}
+
+  footer{border-top:1px solid var(--line);margin-top:20px;padding-top:18px;color:var(--dim);font-size:12.5px}
+  .toast{position:fixed;left:50%;transform:translateX(-50%) translateY(12px);bottom:30px;background:#F2E8D5;color:#211808;font-size:13px;padding:9px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s}
+  .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:900px){
+    main{grid-template-columns:1fr;gap:26px}
+    nav.toc{position:static;border-left:0;border-top:1px solid var(--line);padding:14px 0 0;display:flex;flex-wrap:wrap;gap:14px}
+    nav.toc .t{width:100%;margin:0}
+    .stats{grid-template-columns:repeat(2,1fr)}
+  }
+  @media (max-width:520px){
+    .wrap{padding:30px 16px 70px}
+    .stats{grid-template-columns:1fr 1fr;gap:10px}
+    .stat .n{font-size:22px}
+    pre{font-size:12px;padding:14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">YUXIN · MINIPROGRAM PARITY</div>
+    <h1>把 HTML 原型 1:1 变成小程序：「谕心」的工具链、硬约束与提示词定稿</h1>
+    <p class="lede">原型有 14 个视图、23 个关键态、多段时序动画和一张 1080×1440 的 canvas 卡面。小程序端并不是"照抄 CSS"就能一致——<b>渲染引擎、单位体系、原生组件层级、字体可用性</b>四件事会系统性地把"看起来一样"变成"差一点"。本文给出可借鉴的工具、必须承认的物理差异，以及按深度/高度/广度改写的提示词。</p>
+
+    <div class="stats">
+      <div class="stat"><div class="n">14</div><div class="t">原型视图数</div></div>
+      <div class="stat"><div class="n">23</div><div class="t">像素比对基准图</div></div>
+      <div class="stat"><div class="n">2.451</div><div class="t">px → rpx 换算系数</div></div>
+      <div class="stat"><div class="n">&lt;2%</div><div class="t">单页差异像素阈值</div></div>
+    </div>
+  </header>
+
+  <main>
+    <nav class="toc">
+      <div class="t">目录</div>
+      <a href="#s1">01 现状与缺口</a>
+      <a href="#s2">02 工具与插件矩阵</a>
+      <a href="#s3">03 跨领域借鉴</a>
+      <a href="#s4">04 1:1 的物理约束</a>
+      <a href="#s5">05 提示词定稿</a>
+      <a href="#s6">06 验收清单</a>
+      <a href="#s7">07 先定三件事</a>
+    </nav>
+
+    <div>
+
+      <section id="s1">
+        <div class="snum">01 / BASELINE</div>
+        <h2>现状与缺口：工程已经有了，缺的是"可比对"</h2>
+        <p>你已经具备复刻所需的全部<b style="color:var(--gold2)">真源</b>：原型 HTML、23 张基准截图、22 个 action 的云函数契约、8 个集合、已写好的分享卡 canvas 绘制。所以这个任务不是"从零开发"，而是<b style="color:var(--gold2)">建立一套"写一页—截一图—比一次"的闭环</b>，把差异变成可量化数字。</p>
+
+        <div class="tblwrap">
+          <table>
+            <colgroup><col style="width:24%"><col style="width:38%"><col style="width:38%"></colgroup>
+            <tr><th>维度</th><th>已有</th><th>缺口（决定能否 1:1）</th></tr>
+            <tr><td>视觉真源</td><td>原型 150,928B、14 视图、无外链；23 张 984×1986 基准图</td><td>无 tokens 抽取表；尺寸仍按 px 手写</td></tr>
+            <tr><td>页面骨架</td><td>15 页 app.json、custom 导航、custom tabBar、lazyCodeLoading</td><td>未做"状态栏/胶囊/安全区"避让；内容区仍按固定高度思维</td></tr>
+            <tr><td>动效</td><td>原型已固化：燃香 2400ms、翻牌 700ms×3+2200ms、铜钱 400ms×3+520ms、签筒八拍</td><td>星轨用 SVG 描线，小程序无 SVG 元素；textarea 原生层级冲突未验证</td></tr>
+            <tr><td>云侧</td><td>22 action 三方对齐、8 集合、shareCode（getUnlimited→uploadFile）</td><td>云函数未上传部署；集合未在控制台建立；索引未配</td></tr>
+            <tr><td>验收</td><td>有 Chrome headless 截图流程</td><td>无小程序端自动化截图与像素 diff；无真机三机型对照</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section id="s2">
+        <div class="snum">02 / TOOLING</div>
+        <h2>工具与插件矩阵：六个环节，各挑一件</h2>
+        <p class="hint">判断标准：能不能把"像不像"从主观印象变成可复现的数字。能，则纳入；只提供"更快写代码"但改变视觉的，一律排除。</p>
+
+        <div class="tblwrap" style="margin-top:12px">
+          <table>
+            <colgroup><col style="width:16%"><col style="width:27%"><col style="width:12%"><col style="width:45%"></colgroup>
+            <tr><th>环节</th><th>工具 / 插件</th><th>取舍</th><th>在本项目怎么用</th></tr>
+            <tr>
+              <td>样式单一来源</td>
+              <td class="mono">tokens.json + WXSS 变量</td>
+              <td class="ok">采用</td>
+              <td>把原型 <span class="mono">&lt;style&gt;</span> 里的色值/字号/圆角/阴影/渐变/keyframes 全量导出为一张表，WXSS 只引用变量，杜绝"再目测一遍颜色"。这是设计令牌（Design Token）思路的直接移植。</td>
+            </tr>
+            <tr>
+              <td>单位换算</td>
+              <td class="mono">px→rpx 脚本（k=2.451）</td>
+              <td class="ok">采用</td>
+              <td>750rpx = 屏宽，原型屏宽 306px，故 1px = 2.4509rpx。批量替换而不是手抄，字号取整到 0.5rpx 以内。</td>
+            </tr>
+            <tr>
+              <td>端上截图</td>
+              <td class="mono">miniprogram-automator</td>
+              <td class="ok">采用</td>
+              <td>官方自动化 SDK，可驱动开发者工具模拟器做页面跳转、点击、输入、<span class="mono">miniProgram.screenshot()</span> 截图。只对模拟器负责，真机仍需人工抽查。</td>
+            </tr>
+            <tr>
+              <td>像素比对</td>
+              <td class="mono">pixelmatch / @devecorsoft/miniprogram-visual-test</td>
+              <td class="ok">采用</td>
+              <td>前者轻量、可配阈值；后者是现成的"小程序组件截图 + 像素级 diff"方案，直接接 Vitest/Jest。二选一即可，别两套并存。</td>
+            </tr>
+            <tr>
+              <td>预览与上传</td>
+              <td class="mono">miniprogram-ci</td>
+              <td class="ok">采用</td>
+              <td>命令行出预览码/上传版本，避免每次手动点开发者工具；配合 automator 可做"改完即刻回归"。</td>
+            </tr>
+            <tr>
+              <td>云函数部署</td>
+              <td class="mono">@cloudbase/cli（tcb fn deploy）</td>
+              <td class="ok">采用</td>
+              <td>当前最大阻塞：<span class="mono">shareCode</span> 与 <span class="mono">getUnlimited</span> 权限只在代码里，云函数没重传就等于没有。CLI 部署可脚本化、可回滚。</td>
+            </tr>
+            <tr>
+              <td>复杂动效</td>
+              <td class="mono">lottie-miniprogram</td>
+              <td class="mid">按需</td>
+              <td>只在"原型的 CSS 动画无法平移"时启用（例如需要沿路径变形）。代价是引入 JSON 资产与额外渲染层，能写 keyframes 就不要用它。</td>
+            </tr>
+            <tr>
+              <td>渲染引擎</td>
+              <td class="mono">WebView（默认） / Skyline</td>
+              <td class="mid">默认 WebView</td>
+              <td>原型重度依赖渐变、阴影、绝对定位与滤镜式质感，WebView 的支持面最接近浏览器；Skyline 更流畅但样式默认值与 Web 不同，需逐条显式声明。<b>1:1 优先，性能二期再谈</b>。</td>
+            </tr>
+            <tr>
+              <td>设计稿转码</td>
+              <td class="mono">Figma MCP / CodeBuddy / We0 类工具</td>
+              <td class="no">本轮回避</td>
+              <td>这类工具适合"有 Figma 稿"的团队。你的源是已定稿 HTML，转码工具会重排图层、改写结构，反而破坏 1:1。</td>
+            </tr>
+            <tr>
+              <td>UI 组件库</td>
+              <td class="mono">Vant Weapp / TDesign</td>
+              <td class="no">排除</td>
+              <td>任何组件库都自带圆角、阴影、间距语汇，一旦混用，页面就不再是原型那一套视觉。图标继续用内联 SVG。</td>
+            </tr>
+            <tr>
+              <td>工程化改造</td>
+              <td class="mono">weapp-tailwindcss / Taro / uni-app</td>
+              <td class="no">排除</td>
+              <td>会改变类名、单位与构建产物，让"和原型逐行对照"失效。原生 WXML/WXSS 才是最短路径。</td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+      <section id="s3">
+        <div class="snum">03 / CROSS-DOMAIN</div>
+        <h2>跨领域借鉴：别只学同行，学"用数字管视觉"的行业</h2>
+        <div class="cards">
+          <div class="card">
+            <div class="from">FLUTTER · 测试体系</div>
+            <div class="nm">Golden Test</div>
+            <p>把渲染结果存成基准图，每次改动跑一次像素比对，超阈值即失败。<b>可搬的只有一句</b>：不接受"我觉得差不多"，只接受 diff 数字。</p>
+          </div>
+          <div class="card">
+            <div class="from">WEB · 组件文档</div>
+            <div class="nm">Storybook + Chromatic</div>
+            <p>按"组件 × 状态"矩阵逐格截图存档，任何状态变化都能回溯。<b>迁移</b>：给每页建一张状态矩阵（会员/非会员、空/满、加载/结果），而不是只截一张默认态。</p>
+          </div>
+          <div class="card">
+            <div class="from">设计工程</div>
+            <div class="nm">Design Token</div>
+            <p>颜色、字号、间距只在一处定义，多端由脚本生成。<b>迁移</b>：tokens.json 作为唯一色值来源，WXSS 变量引用它，禁止在页面里写裸色值。</p>
+          </div>
+          <div class="card">
+            <div class="from">移动端原生</div>
+            <div class="nm">Snapshot Testing</div>
+            <p>基准图入版本库，随代码一起评审。<b>迁移</b>：把 23 张基准图与 diff 结果一起提交，让"视觉变化"出现在 diff 里，而不是靠人回忆。</p>
+          </div>
+          <div class="card">
+            <div class="from">影视 · 动画</div>
+            <div class="nm">Animatic（关键帧表）</div>
+            <p>先定关键帧节奏，再补插值，而不是"先做动效再调感觉"。<b>迁移</b>：签筒八拍、翻牌、燃香各自列出"第几帧、谁在动、动多久"，逐帧截图对。</p>
+          </div>
+          <div class="card">
+            <div class="from">制造业</div>
+            <div class="nm">首件检验 FAI</div>
+            <p>第一件做全尺寸检查，通过后才允许批量。<b>迁移</b>：先用首页把"字号/间距/圆角/阴影/状态栏"全部校到零差异，其余 13 页复用同一套规则批量推进。</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="s4">
+        <div class="snum">04 / CONSTRAINTS</div>
+        <h2>1:1 的物理约束：这六件事必须先承认</h2>
+        <p>这些不是"可以努力一下"的问题，是不解决就一定露馅的地方。把它们写进提示词，才不会在中期返工。</p>
+
+        <h3>4.1 单位与高度</h3>
+        <div class="tblwrap">
+          <table>
+            <colgroup><col style="width:34%"><col style="width:22%"><col style="width:22%"><col style="width:22%"></colgroup>
+            <tr><th>原型（px）</th><th>小程序（rpx）</th><th>原型（px）</th><th>小程序（rpx）</th></tr>
+            <tr><td>屏宽 306</td><td class="mono">750</td><td>字号 11.5</td><td class="mono">28</td></tr>
+            <tr><td>机身 padding 10</td><td class="mono">24.5</td><td>字号 13</td><td class="mono">32</td></tr>
+            <tr><td>机身圆角 38</td><td class="mono">93</td><td>字号 18（标题）</td><td class="mono">44</td></tr>
+            <tr><td>屏圆角 30</td><td class="mono">73.5</td><td>屏高 640</td><td class="mono">不写死</td></tr>
+          </table>
+        </div>
+        <p class="hint" style="margin-top:10px">关键判断：原型 640px 高只为"手机壳演示"服务；真机 844 逻辑高减去状态栏与 tabBar 后，可用区与 640px 的比例不同。因此内容区必须 <span class="mono">flex:1 + min-height</span>，而不是复制 640。</p>
+
+        <h3>4.2 字体：最容易被忽略的一处失真</h3>
+        <p>原型标题用 <span class="mono">'Songti SC'</span>（宋体），iOS 有、多数 Android 没有，会静默回退成黑体——整页气质当场变味。必须 <span class="mono">wx.loadFontFace</span> 加载思源宋体（云存储或 CDN，注意体积与首次加载延迟），并保留 <span class="mono">serif</span> 兜底；首屏字体未就绪时用 <span class="mono">font-display</span> 等价策略避免跳字。</p>
+
+        <h3>4.3 组件层级：textarea 会盖住一切</h3>
+        <p>问事页与树洞页都用大文本框。小程序 <span class="mono">textarea</span> 是原生组件，层级高于普通 view，弹层、toast、确认框会被它穿透覆盖。这是"功能一样但体验不一样"的典型：要么改用 <span class="mono">input</span> 分多行拼，要么在弹层出现时临时隐藏 textarea。</p>
+
+        <h3>4.4 动画载体换了</h3>
+        <p>原型星轨靠 SVG <span class="mono">stroke-dashoffset</span> 描线，小程序没有 SVG 元素。这个效果必须换载体：canvas 2D 画点与线（按原时序逐段推进），或预渲染成序列图。<b>不能"删掉不做"</b>，那是原型最抓眼的一处动效。</p>
+
+        <h3>4.5 系统件避让</h3>
+        <p>原型自绘「21:41 / 谕 / 晚安」状态栏，真机上会有真实状态栏与右上胶囊。必须取 <span class="mono">statusBarHeight</span> 与 <span class="mono">menuButton</span> 位置，把自绘状态栏放在其下方，并保证右下不压胶囊。</p>
+
+        <h3>4.6 云侧真的通了吗</h3>
+        <p>22 个 action 齐备只是"代码写了"。要让"功能一模一样"，还需：8 个集合真实建立并配索引、云函数重传（含 <span class="mono">wxacode.getUnlimited</span> 权限）、<span class="mono">shareCode</span> 返回的真码能贴进卡面。否则分享卡永远停在占位框。</p>
+      </section>
+
+      <section id="s5">
+        <div class="snum">05 / PROMPT</div>
+        <h2>提示词定稿（深度 / 高度 / 广度）</h2>
+        <p>下面这段可以直接复制给你的 AI 开发伙伴或外包，它把"要 1:1"翻译成可执行的原始数据、可验收的结果和按序的动作。左上角按钮可一键复制。</p>
+
+        <div class="prompt">
+          <div class="phead"><span class="pt">PROMPT · V1 定稿</span><button class="cp" onclick="cp('p1', this)">复制全文</button></div>
+<pre id="p1"><span class="h">【角色】</span>
+你是「谕心」小程序的复刻工程师。任务：把一份已定稿的单文件 HTML 原型（14 个视图，含 canvas 分享卡与多段时序动画）1:1 还原为原生微信小程序（微信云开发，环境 id YOUR_CLOUD_ENV_ID，工程 E:\miniprogram\yuxin）。
+唯一判据：同一套操作路径下，小程序与浏览器原型逐页比对，无可察觉差异。
+
+<span class="h">【深度 · 原始数据与工具（先拿到，不许猜）】</span>
+1. 视觉真源唯一：谕心夜色神谕签筒完整可演示Demo.html。任何冲突以它为准；v0.15 文档与截图只作对照，不作改动依据。
+2. 基准图：demo-screenshots 下 23 张 984×1986（328×662 CSS ×3 倍），作为像素比对基准。
+3. 样式抽取：把原型 style 全量导出为 tokens.json（颜色变量、字号、行高、圆角、阴影、渐变、keyframes 与时长），逐条落到 WXSS；禁止目测近似，禁止页面里出现裸色值。
+4. 单位：原型屏宽 306px 对应 750rpx，系数 k=2.4509；所有 px 乘 k 转 rpx（字号取整到 0.5rpx）。高度不复制 640px，改 flex:1 + min-height。
+5. 动效原始参数（从源码读出，不得重编）：燃香 2400ms；翻牌 700ms×3 后 2200ms 出结果；铜钱 400ms×3 后 520ms 结算；签筒「摇筒—顶高回落—跃出越口沿—落定顿住」四段八拍；星轨按点序逐段连线。
+6. 数据契约：22 个 action（cloud / store / api 三方一致）、8 个 yx_ 集合的字段与索引、错误码与空态文案；以 cloudfunctions/yuxin/index.js 与 utils/api.js 为唯一真源。
+7. 工具链：微信开发者工具模拟器、miniprogram-automator（跳转/点击/输入/截图）、pixelmatch（像素差）、miniprogram-ci（预览与上传）、@cloudbase/cli（tcb fn deploy）。不引入任何 UI 组件库或构建框架。
+
+<span class="h">【高度 · 结果（什么样才算完成）】</span>
+1. 逐页像素差报告：14 视图 × 关键态（会员/非会员、空/结果、引导 1-3），单页差异像素 &lt; 2%，且每条差异都写明原因与处置。
+2. 动效对齐表：每个动效的时长、缓动、触发点与原型一致；每个动效至少 3 帧截图对照。
+3. 功能闭环：22 个 action 真实读写云库；分享码能生成并贴在卡面右下；无占位、无假数据、无僵尸按钮。
+4. 真机三机型：iOS 大屏、Android 中屏、窄屏（逻辑宽 320），排版不破裂、字体不回退成黑体。
+5. 交付物：可编译工程 + 视觉回归脚本 + 差异报告 + README（含云函数部署与集合建立步骤）。
+
+<span class="h">【广度 · 动作（按序，每步有产出与卡点）】</span>
+A1 冻结基线：确认原型校验和与 23 张基准图版本，记录在 README。
+A2 抽 tokens：生成 tokens.json 与 px→rpx 对照表，输出《视觉规格表》。
+A3 骨架校准：自定义导航 + 状态栏/胶囊避让 + 安全区 + custom tabBar，先让首页整页零差异。
+A4 逐页复刻：按 01→23 顺序，「写 → 截图 → pixelmatch → 修」，该页不达标不进下一页。
+A5 动效层：能平移的 CSS keyframes 直接搬；canvas 类（签筒摇签、星轨、分享卡）按原参数在 canvas 2D 重画；textarea 原生层级问题单独处理。
+A6 云侧接线：8 集合建表配索引 → 22 action 联通 → tcb fn deploy 重传云函数（含 shareCode / getUnlimited）。
+A7 回归收口：全量像素回归 + 三机型真机对照，出差异报告并修到阈值内。
+
+<span class="h">【约束（违反即返工）】</span>
+- 不接受"看起来差不多"，只接受 diff 数据。
+- 不用第三方组件/图标库替换视觉；图标沿用内联 SVG 或雪花 PNG。
+- 不改文案、颜色、间距来迁就实现；只允许改实现方式。
+- 字体必须解决：Songti SC 仅 iOS，Android 用 wx.loadFontFace 载思源宋体 + serif 回退。
+- 合规文案必须保留：页脚「谕心仅供娱乐 · 不构成任何建议」；树洞加「严重情绪困扰请寻求专业帮助 · 心理援助热线 12356」。
+
+<span class="h">【开工前先交一份清单】</span>
+列出「不可直译清单 + 替代方案」（如 SVG 描线、textarea 层级、backdrop 类质感），等我确认再动手；不得静默降级，也不得为省事删动效。
+</pre>
+        </div>
+
+        <h3>如果你只想要一段"更短的版本"</h3>
+        <div class="prompt">
+          <div class="phead"><span class="pt">PROMPT · 精简版</span><button class="cp" onclick="cp('p2', this)">复制全文</button></div>
+<pre id="p2">把 E:\miniprogram\yuxin 的微信小程序做到与原型 HTML 逐页 1:1：以「谕心夜色神谕签筒完整可演示Demo.html」为唯一视觉真源，以 demo-screenshots 的 23 张 984×1986 图作像素基准，屏宽 306px 对应 750rpx（k=2.4509）。先用 tokens.json 抽全样式，再按「写一页—automator 截图—pixelmatch 比对—修」逐页推进，单页差异像素须 &lt;2%；动效按源码原参数重画（燃香 2400ms、翻牌 700×3+2200、铜钱 400×3+520、签筒八拍、星轨逐段连线，SVG 描线改 canvas 2D）；字体用 wx.loadFontFace 解决 Android 无 Songti SC；状态栏与胶囊做真实避让；最后用 tcb fn deploy 重传云函数（含 shareCode / getUnlimited）并建立 8 个 yx_ 集合并配索引。禁止组件库、禁止改文案颜色迁就实现、禁止"看起来差不多"。开工前先交「不可直译清单 + 替代方案」等我确认。</pre>
+        </div>
+      </section>
+
+      <section id="s6">
+        <div class="snum">06 / ACCEPTANCE</div>
+        <h2>验收清单：逐条打勾才算复刻完成</h2>
+        <div class="checks">
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>14 视图 × 关键态截图齐全，命名与 01–23 基准一一对应</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>单页 pixelmatch 差异 &lt; 2%，超阈值项均有书面解释</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>所有 px 已换成 rpx，页面内无裸色值与裸字号</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>Android 上标题仍是衬线体（未回退黑体）</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>签筒摇签、星轨、翻牌、铜钱、燃香四段动效时长与原型一致</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>弹层出现时 textarea 不穿透遮罩</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>22 个 action 全部在云库留下可查记录</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>8 个集合已建、索引已配、权限仅创建者可读写</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>分享卡右下是真小程序码，不是占位框</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>状态栏、胶囊、tabBar 三处不重叠、不越界</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>三机型真机截图与原型并排无明显差异</span></div>
+          <div class="chk"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8FA97A" stroke-width="2"><path d="M4 12l5 5 11-11"/></svg><span>合规文案在每页底部原样出现</span></div>
+        </div>
+      </section>
+
+      <section id="s7">
+        <div class="snum">07 / DECISIONS</div>
+        <h2>开工前需要你定的三件事</h2>
+        <p>这三项会实质改变实现路径，先定再动，比中途改省事。</p>
+        <div class="ask">
+          <div class="q"><span class="i">Q1</span><span><b style="color:var(--gold2)">字体方案</b>：Android 要 1:1 就必须加载思源宋体（体积 2–4MB，可放云存储）。接受首次加载等待，还是接受 Android 上标题回退黑体？</span></div>
+          <div class="q"><span class="i">Q2</span><span><b style="color:var(--gold2)">渲染引擎</b>：默认 WebView（最接近浏览器、1:1 代价最小），还是尝试 Skyline（动画更顺，但要逐条重写样式默认值）？建议先 WebView 做到像素一致，再单页试点 Skyline。</span></div>
+          <div class="q"><span class="i">Q3</span><span><b style="color:var(--gold2)">分享卡数据</b>：目前卡面是固定演示文案（日期 2026.11.05、NO.0417、持签第 47 次）。要不要这轮就接真实记录（最近一次签文 + 真实编号 + 月相/星位计算）？</span></div>
+        </div>
+      </section>
+
+      <footer>
+        真源：谕心夜色神谕签筒完整可演示Demo.html（150,928B，14 视图）· 基准：demo-screenshots（23 张 984×1986）· 云环境 YOUR_CLOUD_ENV_ID。<br>
+        参考：微信官方「小程序自动化」文档、Skyline 迁移兼容说明、CloudBase CLI 指南、Taro/uni-app 的 rpx 定义，以及 miniprogram-visual-test 的像素比对实践。
+      </footer>
+
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast">已复制</div>
+<script>
+function showToast(t){
+  var el = document.getElementById('toast');
+  el.textContent = t; el.classList.add('on');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function(){ el.classList.remove('on'); }, 1600);
+}
+function cp(id, btn){
+  var txt = document.getElementById(id).innerText;
+  var ok = false;
+  if (navigator.clipboard && navigator.clipboard.writeText){
+    try { navigator.clipboard.writeText(txt); ok = true; } catch(e){ ok = false; }
+  }
+  if (!ok){
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { ok = document.execCommand('copy'); } catch(e){ ok = false; }
+    document.body.removeChild(ta);
+  }
+  btn.textContent = ok ? '已复制' : '已选中，请按 Ctrl+C';
+  showToast(ok ? '提示词已复制到剪贴板' : '自动复制受限，已全选文本');
+  setTimeout(function(){ btn.textContent = '复制全文'; }, 1800);
+}
+</script>
+</body>
+</html>

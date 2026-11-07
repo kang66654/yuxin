@@ -1,0 +1,56 @@
+/* 树洞：原型 L513–547 行内样式换算 */
+
+.chip-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 14.7rpx; margin-bottom: 19.6rpx;
+}
+.chip-grid .pchip { text-align: center; }
+
+.custom-row { display: flex; gap: 14.7rpx; margin-bottom: 19.6rpx; align-items: center; }
+.custom-input {
+  flex: 1; min-width: 0; background: var(--tint-bg);
+  border: 1rpx solid var(--tint-line); color: var(--gold-soft);
+  border-radius: 24.5rpx; padding: 17.1rpx 24.5rpx; font-size: 29.4rpx;
+}
+.custom-ok { width: auto !important; padding: 0 24.5rpx !important; font-size: 29.4rpx; }
+
+.mood-card { padding: 29.4rpx 34.3rpx; }
+.mood-hint { font-size: 29.4rpx; color: var(--ink-faint); margin-bottom: 14.7rpx; }
+.mood-textarea {
+  width: 100%; font-size: 34.3rpx; color: var(--ink-soft);
+  line-height: 1.6; min-height: 100rpx;
+}
+
+.tree-note { font-size: 27rpx; color: var(--nav-text); margin-top: 22.1rpx; text-align: center; }
+
+/* 匿名送出按钮推到内容区底部 */
+.tree-send { margin-top: auto; }
+
+.hotline {
+  text-align: center; font-size: 25.5rpx;
+  color: var(--nav-text); margin-top: 22.1rpx;
+  line-height: 1.6;
+}
+
+/* 夜色回响弹窗 */
+.echo-mask {
+  position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  display: flex; align-items: center; justify-content: center; z-index: 100;
+}
+.echo-modal {
+  width: 80%; background: linear-gradient(170deg, var(--card-a), var(--card-b));
+  border: 2.5rpx solid var(--card-line); border-radius: 29.4rpx;
+  padding: 49rpx 39.2rpx; text-align: center;
+  animation: modalIn .3s ease;
+}
+.echo-modal .e-t {
+  font-family: 'Songti SC', serif; font-size: 32rpx;
+  color: var(--gold-deep); letter-spacing: .14em; margin-bottom: 19.6rpx;
+}
+.echo-modal .e-b {
+  font-size: 32rpx; color: var(--ink-soft); line-height: 1.7; margin-bottom: 24rpx;
+}
+.echo-modal .e-tip {
+  font-size: 26rpx; color: var(--gold-deep); background: rgba(201,169,106,.14);
+  border-radius: 14rpx; padding: 12rpx 18rpx; margin-bottom: 32rpx;
+}

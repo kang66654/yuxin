@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>光聚凝签 · 抽签动画 Demo</title>
+<style>
+  html, body { margin: 0; height: 100%; background: #070b16; overflow: hidden;
+    font-family: "Noto Serif SC", "STKaiti", "KaiTi", serif; }
+  #cv { position: fixed; inset: 0; display: block; }
+  #tip { position: fixed; top: 22px; left: 0; right: 0; text-align: center;
+    color: #d9bc85; opacity: .65; font-size: 13px; letter-spacing: 8px;
+    pointer-events: none; transition: opacity 1s; }
+  #ui { position: fixed; left: 0; right: 0; bottom: 30px; display: flex;
+    justify-content: center; gap: 14px; z-index: 9; }
+  .btn { padding: 10px 30px; border-radius: 99px; cursor: pointer;
+    color: #2b2312; border: none; font-size: 15px; letter-spacing: 4px;
+    font-family: inherit; font-weight: 700;
+    background: linear-gradient(180deg, #f5e0a8, #caa14f);
+    box-shadow: 0 6px 22px rgba(232, 201, 138, .45); }
+  .btn.ghost { background: rgba(255,255,255,.06); color: #f0e6d2;
+    border: 1px solid rgba(255,255,255,.16); box-shadow: none; }
+</style>
+</head>
+<body>
+<canvas id="cv"></canvas>
+<div id="tip">轻 点 签 筒 · 光 聚 凝 签</div>
+<div id="ui">
+  <button class="btn" id="replay">重 播</button>
+  <button class="btn ghost" id="slowmo">慢 速</button>
+</div>
+
+<script>
+/* ================= 可配置参数 ================= */
+const CFG = {
+  STICK_TEXT   : ['山','重','水','复','自','有','新','路'],  // 竖排签文
+  GOLD         : '#e8c98a',
+  GOLD_BRIGHT  : '#ffd98a',
+  STICK_LEN    : 0.34,   // 签长占屏高比例
+  STICK_W      : 0.155,  // 签宽占签长比例
+  MAX_PARTICLE : 340,    // 粒子上限（性能）
+  LOOP_HOLD    : 2.4,    // 定格停留秒数
+};
+/* 时间轴（秒） */
+const T = {
+  IDLE: 1.0,    // 静止蓄势
+  BURST: 1.0,   // 光粒喷发开始
+  CRYSTAL: 2.4, // 水晶签凝聚
+  WOOD: 3.4,    // 实体化
+  TEXT: 3.95,   // 文字逐字浮现
+  RINGS: 4.75,  // 金环下滑
+  FADE: 5.5,    // 光丝消散
+};
+
+/* ===== 签筒：造型参数 + 运动时刻表（可直接迁到小程序） ===== */
+const TUBE = {
+  baseY    : 0.70,  // 筒口中心纵向位置（占屏高比）
+  wMax     : 152,   // 筒身最大宽度 px
+  aspect   : 1.433, // 筒身高/宽（与小程序页面/动画统一：321/224）
+  enterDur : 0.55,  // 入场升起时长 s
+  shakeFrom: 0.42,  // 开始摇签 s
+  burst    : 1.02,  // 摇签定格 → 爆光 s（与 T.BURST 对齐）
+  exitFrom : 1.25,  // 开始下沉离场 s
+  exitDur  : 2.60,  // 下沉时长 s
+};
+
+/* ================= 基础 ================= */
+const cv = document.getElementById('cv');
+const ctx = cv.getContext('2d');
+let W, H, DPR, stars = [], parts = [], sparkles = [], dust = [];
+let t0 = performance.now() / 1000, speed = 1, running = true;
+const rand = (a, b) => a + Math.random() * (b - a);
+const clamp01 = v => Math.max(0, Math.min(1, v));
+const smooth = v => { v = clamp01(v); return v * v * (3 - 2 * v); };
+const lerp = (a, b, k) => a + (b - a) * k;
+
+function resize() {
+  DPR = Math.min(devicePixelRatio || 1, 2);
+  W = innerWidth; H = innerHeight;
+  cv.width = W * DPR; cv.height = H * DPR;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  initStars(); initAmbient();
+}
+addEventListener('resize', resize);
+
+function initStars() {
+  stars = [];
+  for (let i = 0; i < 110; i++)
+    stars.push({ x: Math.random() * W, y: Math.random() * H * 0.9,
+      r: rand(0.4, 1.4), ph: Math.random() * 7, sp: rand(0.5, 2) });
+}
+function initAmbient() {
+  dust = [];
+  for (let i = 0; i < 26; i++)
+    dust.push({ x: Math.random() * W, y: Math.random() * H,
+      r: rand(0.5, 1.3), vy: rand(-8, -2), ph: Math.random() * 7 });
+  sparkles = [];
+  for (let i = 0; i < 22; i++)
+    sparkles.push({ a: Math.random() * 7, rr: rand(0.15, 0.95), ph: Math.random() * 7 });
+  initTubeSticks();
+}
+
+/* ================= 时间轴工具 ================= */
+let tNow = 0;
+
+/* 签筒运动：入场升起 → 静候呼吸 → 摇签 → 爆光回弹 → 下沉离场
+   返回筒口中心的 x/y、整体旋转、缩放、透明度 */
+function tubePos() {
+  const enterK = smooth(tNow / TUBE.enterDur);
+  let dy = lerp(76, 0, enterK);                       // 入场：自下方升起
+
+  // 静候呼吸（爆光后停止）
+  const idleK = smooth((tNow - 0.28) / 0.42) * (1 - smooth((tNow - TUBE.burst) / 0.35));
+  dy += Math.sin(tNow * 1.7) * 2.4 * idleK;
+
+  // 摇签：左右摆动，爆光瞬间骤停（“啪”地定格）
+  const shakeK = smooth((tNow - TUBE.shakeFrom) / 0.30) * (1 - smooth((tNow - TUBE.burst + 0.015) / 0.13));
+  const rot = Math.sin(tNow * 15.5) * 0.052 * shakeK;
+
+  // 爆光瞬间向上回弹一次
+  const kick = tNow > TUBE.burst ? Math.exp(-(tNow - TUBE.burst) * 15) * 10 : 0;
+  dy -= kick;
+
+  // 下沉离场（同时微缩 + 淡出）
+  const exitK = smooth((tNow - TUBE.exitFrom) / TUBE.exitDur);
+  dy += Math.pow(exitK, 1.3) * H * 1.28;
+  const scale = lerp(1, 0.82, exitK);
+  const alpha = 1 - smooth((exitK - 0.40) / 0.56);
+
+  return { x: W / 2, y: H * TUBE.baseY + dy, rot, scale,
+           alpha: clamp01(alpha) * enterK };
+}
+function tubeY() { return tubePos().y; }
+
+function stickTopY()    { return H * 0.46 - H * CFG.STICK_LEN / 2; }
+function stickBottomY() { return H * 0.46 + H * CFG.STICK_LEN / 2; }
+function stickLen()     { return H * CFG.STICK_LEN; }
+function stickW()       { return stickLen() * CFG.STICK_W; }
+function vortexY() {                    // 涡流中心：从筒口升至画面中心
+  const k = smooth((tNow - T.IDLE) / 1.8);
+  return lerp(H * TUBE.baseY, H * 0.46, k);
+}
+
+/* ================= 粒子系统 ================= */
+let emitAcc = 0;
+function emitParticles(dt) {
+  if (tNow < T.BURST || tNow > T.FADE + 0.8) return;
+  const rate = tNow < T.CRYSTAL ? 130 : lerp(110, 0, smooth((tNow - T.CRYSTAL) / (T.FADE - T.CRYSTAL)));
+  emitAcc += rate * dt;
+  // 发射源：筒口中心；签筒完全离场后改由涡流底部续光
+  const ty = tubeY() + 4;
+  const y0 = ty > H * 0.9 ? vortexY() + stickLen() * 0.42 : ty;
+  while (emitAcc >= 1 && parts.length < CFG.MAX_PARTICLE) {
+    emitAcc--;
+    const dir = Math.random() < 0.9 ? 1 : -1;   // 90% 同向 → 螺旋更连贯
+    parts.push({
+      born: tNow, life: rand(1.6, 2.8),
+      th0: Math.random() * Math.PI * 2, w: rand(2.2, 4.6) * dir,
+      r0: rand(10, 46), climb: rand(90, 240), y0,
+      targetY: lerp(stickTopY() + stickLen() * 0.1, stickBottomY(), Math.random()),
+      size: rand(0.7, 2.0), white: Math.random() < 0.18,
+      trail: [], px: null, py: null,
+    });
+  }
+}
+function stepParticles(dt) {
+  const vy = vortexY(), cx = W / 2;
+  for (let i = parts.length - 1; i >= 0; i--) {
+    const p = parts[i], age = tNow - p.born;
+    if (age > p.life) { parts.splice(i, 1); continue; }
+    const prog = clamp01(age / p.life);
+    const r = p.r0 * Math.pow(1 - 0.88 * smooth(prog), 1.1) + 3;
+    const th = p.th0 + p.w * age * (0.9 + 9 / (r + 26));
+    const startY = p.y0;
+    const y = lerp(Math.min(startY, vy + 40), p.targetY, smooth(prog));
+    const x = cx + Math.cos(th) * r;
+    const yy = vy + (y - vy) * clamp01(prog * 1.4);
+    if (p.px !== null) {
+      p.trail.push([p.px, p.py]);
+      if (p.trail.length > 7) p.trail.shift();
+    }
+    p.px = x; p.py = yy;
+  }
+}
+
+/* ================= 绘制 ================= */
+function drawBackground() {
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#0b1226'); g.addColorStop(0.55, '#12203d');
+  g.addColorStop(0.85, '#0d1730'); g.addColorStop(1, '#070d1c');
+  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+  // 星
+  ctx.save();
+  for (const s of stars) {
+    const tw = 0.35 + 0.65 * Math.abs(Math.sin(tNow * s.sp + s.ph));
+    ctx.globalAlpha = tw * 0.8;
+    ctx.fillStyle = '#cfe0ff';
+    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 7); ctx.fill();
+  }
+  ctx.restore();
+  // 地平线雾光
+  const hg = ctx.createLinearGradient(0, H * 0.8, 0, H);
+  hg.addColorStop(0, 'rgba(20,34,64,0)'); hg.addColorStop(1, 'rgba(9,16,34,0.9)');
+  ctx.fillStyle = hg; ctx.fillRect(0, H * 0.8, W, H * 0.2);
+}
+
+/* ================= 签筒：程序化写实竹筒 ================= */
+let tubeSticks = [];
+const STICK_GLYPHS = ['天','地','玄','黄','宇','宙','洪','荒','日','月','盈','昃','辰'];
+
+function initTubeSticks() {
+  tubeSticks = [];
+  const N = 13;
+  for (let i = 0; i < N; i++) {
+    const k = i / (N - 1);
+    const back = i % 2 === 1;                       // 奇数为后排（暗、矮、细）
+    tubeSticks.push({
+      back,
+      u: 0.05 + 0.90 * k,                            // 口内横向归一位置
+      len: (back ? 0.22 : 0.28) + ((i * 7) % 5) * 0.045,  // 签高（相对筒身高）
+      w: back ? 0.066 : 0.088,                       // 签宽（相对筒身宽）
+      tilt: (k - 0.5) * (back ? 0.13 : 0.24),        // 静态扇形张开角
+      ph: i * 1.73,
+      glyph: STICK_GLYPHS[i],
+    });
+  }
+  tubeSticks.sort((a, b) => (a.back ? 0 : 1) - (b.back ? 0 : 1));  // 后排先画
+}
+
+function drawTube() {
+  const P = tubePos();
+  if (P.alpha <= 0.003) return;
+  const w = Math.min(W * 0.2987, TUBE.wMax), h = w * TUBE.aspect, hw = w / 2; // 宽 0.2987W = 224/750rpx，与小程序统一
+  const pulse  = 0.5 + 0.5 * Math.sin(tNow * 2.3);
+  const burstK = tNow > TUBE.burst ? Math.exp(-(tNow - TUBE.burst) * 2.6) : 0;
+
+  /* ① 落地投影 */
+  ctx.save();
+  ctx.globalAlpha = P.alpha * 0.55;
+  const shg = ctx.createRadialGradient(P.x, P.y + h * 0.99, 0, P.x, P.y + h * 0.99, w * 0.62);
+  shg.addColorStop(0, 'rgba(0,0,0,0.6)'); shg.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = shg;
+  ctx.beginPath(); ctx.ellipse(P.x, P.y + h * 0.99, w * 0.62, w * 0.15, 0, 0, 7); ctx.fill();
+  ctx.restore();
+
+  /* ② 筒口外溢的金色辉光（爆光时暴涨） */
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.globalAlpha = P.alpha;
+  const gR = w * (1.4 + 0.7 * burstK);
+  const gg = ctx.createRadialGradient(P.x, P.y - 4, 0, P.x, P.y - 4, gR);
+  gg.addColorStop(0,   `rgba(255,214,140,${(0.18 + 0.13 * pulse + 0.55 * burstK).toFixed(3)})`);
+  gg.addColorStop(0.45,`rgba(255,190,100,${(0.07 + 0.22 * burstK).toFixed(3)})`);
+  gg.addColorStop(1,   'rgba(255,190,100,0)');
+  ctx.fillStyle = gg;
+  ctx.beginPath(); ctx.arc(P.x, P.y - 4, gR, 0, 7); ctx.fill();
+  ctx.restore();
+
+  /* ③ 筒体（局部坐标：原点 = 筒口中心，筒身向下） */
+  ctx.save();
+  ctx.globalAlpha = P.alpha;
+  ctx.translate(P.x, P.y); ctx.rotate(P.rot); ctx.scale(P.scale, P.scale);
+
+  const bodyTop = 3, bodyBot = h;
+  const bodyPath = () => roundRect(-hw, bodyTop, w, bodyBot - bodyTop,
+                                   [0, 0, hw * 0.16, hw * 0.16]);
+
+  // —— 筒身：横向明暗渐变模拟圆柱
+  ctx.save();
+  ctx.shadowColor = 'rgba(255,180,80,0.32)'; ctx.shadowBlur = 30; ctx.shadowOffsetY = 12;
+  const bg = ctx.createLinearGradient(-hw, 0, hw, 0);
+  bg.addColorStop(0.00, '#2b1d08'); bg.addColorStop(0.09, '#6b4b1b');
+  bg.addColorStop(0.24, '#b78c45'); bg.addColorStop(0.40, '#e3c07d');
+  bg.addColorStop(0.56, '#c9a259'); bg.addColorStop(0.76, '#7d5b25');
+  bg.addColorStop(0.91, '#483212'); bg.addColorStop(1.00, '#261a07');
+  ctx.fillStyle = bg; bodyPath(); ctx.fill();
+  ctx.restore();
+
+  // —— 表面纹理（裁切在筒身内）
+  ctx.save();
+  bodyPath(); ctx.clip();
+
+  // 竹片拼缝
+  for (let i = 1; i <= 6; i++) {
+    const x = -hw + w * (i / 7);
+    ctx.strokeStyle = 'rgba(52,34,10,0.22)'; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(x, bodyTop); ctx.lineTo(x, bodyBot); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,240,200,0.10)'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(x + 1.4, bodyTop); ctx.lineTo(x + 1.4, bodyBot); ctx.stroke();
+  }
+  // 竹节（两道横箍线）
+  [0.42, 0.76].forEach(k => {
+    const y = bodyTop + (bodyBot - bodyTop) * k;
+    ctx.fillStyle = 'rgba(46,30,8,0.28)'; ctx.fillRect(-hw, y, w, 2.2);
+    ctx.fillStyle = 'rgba(255,238,196,0.13)'; ctx.fillRect(-hw, y + 2.2, w, 1.2);
+  });
+  // 红漆箍带
+  const rbY = bodyTop + (bodyBot - bodyTop) * 0.075;
+  const rbH = (bodyBot - bodyTop) * 0.115;
+  const rg = ctx.createLinearGradient(-hw, 0, hw, 0);
+  rg.addColorStop(0, '#43120a'); rg.addColorStop(0.14, '#8d2414');
+  rg.addColorStop(0.38, '#c0392b'); rg.addColorStop(0.56, '#a52a1b');
+  rg.addColorStop(0.80, '#6d1a0e'); rg.addColorStop(1, '#3a0f07');
+  ctx.fillStyle = rg; ctx.fillRect(-hw, rbY, w, rbH);
+  ctx.fillStyle = 'rgba(240,206,140,0.55)';
+  ctx.fillRect(-hw, rbY, w, 1.2);
+  ctx.fillRect(-hw, rbY + rbH - 1.2, w, 1.2);
+  // 竖排暗刻「灵签」
+  ctx.save();
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `600 ${Math.round(w * 0.19)}px "Noto Serif SC","STKaiti",serif`;
+  const gx = 0, gy = bodyTop + (bodyBot - bodyTop) * 0.585;
+  ctx.fillStyle = 'rgba(255,236,190,0.20)';
+  ctx.fillText('灵', gx + 1, gy + 1); ctx.fillText('签', gx + 1, gy + w * 0.29 + 1);
+  ctx.fillStyle = 'rgba(52,34,8,0.42)';
+  ctx.fillText('灵', gx, gy); ctx.fillText('签', gx, gy + w * 0.29);
+  ctx.restore();
+  // 左侧高光条
+  const hl = ctx.createLinearGradient(0, bodyTop, 0, bodyBot);
+  hl.addColorStop(0, 'rgba(255,255,255,0.16)');
+  hl.addColorStop(0.5, 'rgba(255,255,255,0.08)');
+  hl.addColorStop(1, 'rgba(255,255,255,0.02)');
+  ctx.fillStyle = hl;
+  roundRect(-hw * 0.60, bodyTop + 12, w * 0.085, bodyBot - 46, [8,8,8,8]); ctx.fill();
+  // 入场扫光（材质反光一闪）
+  const sw = (tNow - 0.18) / 0.9;
+  if (sw > 0 && sw < 1) {
+    const sx = lerp(-hw * 1.35, hw * 1.35, smooth(sw)), bandW = w * 0.32;
+    const sg = ctx.createLinearGradient(sx - bandW, 0, sx + bandW, 0);
+    sg.addColorStop(0, 'rgba(255,245,215,0)');
+    sg.addColorStop(0.5, `rgba(255,245,215,${(0.26 * Math.sin(Math.PI * sw)).toFixed(3)})`);
+    sg.addColorStop(1, 'rgba(255,245,215,0)');
+    ctx.save(); ctx.transform(1, 0, -0.22, 1, 0, 0);
+    ctx.fillStyle = sg; ctx.fillRect(sx - bandW, bodyTop, bandW * 2, bodyBot);
+    ctx.restore();
+  }
+  // 底部暗部
+  const bb = ctx.createLinearGradient(0, bodyBot - h * 0.16, 0, bodyBot);
+  bb.addColorStop(0, 'rgba(18,10,2,0)'); bb.addColorStop(1, 'rgba(18,10,2,0.55)');
+  ctx.fillStyle = bb; ctx.fillRect(-hw, bodyBot - h * 0.16, w, h * 0.16);
+  ctx.restore();   // end clip
+
+  // —— 筒口内腔
+  const rx = hw * 1.004, ry = w * 0.135;
+  const cav = ctx.createRadialGradient(0, 0, 0, 0, 0, rx);
+  cav.addColorStop(0, '#06040a'); cav.addColorStop(0.55, '#1b1105'); cav.addColorStop(1, '#3d2a10');
+  ctx.fillStyle = cav;
+  ctx.beginPath(); ctx.ellipse(0, 0, rx, ry, 0, 0, 7); ctx.fill();
+
+  // —— 签支（后排先画，带摇签摆动）
+  const shakeK = smooth((tNow - TUBE.shakeFrom) / 0.30) * (1 - smooth((tNow - TUBE.burst) / 0.14));
+  const quake  = tNow > TUBE.burst ? Math.exp(-(tNow - TUBE.burst) * 5.5) : 0;
+  for (const st of tubeSticks) {
+    const rootX = (st.u - 0.5) * w * 0.90;
+    const rootY = 2 + Math.cos((st.u - 0.5) * Math.PI) * ry * 0.45;
+    const wob = Math.sin(tNow * (5.5 + (st.ph % 2)) + st.ph);
+    const swing = st.tilt + P.rot * 1.35
+                + wob * (0.013 + 0.058 * shakeK)
+                + Math.sin(tNow * 34 + st.ph) * 0.03 * quake;
+    const swid = w * st.w, slen = h * st.len;
+
+    ctx.save();
+    ctx.translate(rootX, rootY); ctx.rotate(swing);
+    const g2 = ctx.createLinearGradient(-swid / 2, 0, swid / 2, 0);
+    if (st.back) {
+      g2.addColorStop(0, '#4e3512'); g2.addColorStop(0.42, '#8d6a2e');
+      g2.addColorStop(0.72, '#a67f3a'); g2.addColorStop(1, '#4a3210');
+    } else {
+      g2.addColorStop(0, '#8b6428'); g2.addColorStop(0.32, '#d3a961');
+      g2.addColorStop(0.55, '#eed69a'); g2.addColorStop(0.82, '#bd9350');
+      g2.addColorStop(1, '#7d5822');
+    }
+    ctx.fillStyle = g2;
+    roundRect(-swid / 2, -slen, swid, slen + 6, [swid * 0.45, swid * 0.45, 1, 1]);
+    ctx.fill();
+    ctx.strokeStyle = st.back ? 'rgba(40,26,6,0.50)' : 'rgba(70,48,16,0.55)';
+    ctx.lineWidth = 0.8; ctx.stroke();
+    // 签头圆润高光
+    ctx.fillStyle = `rgba(255,246,214,${st.back ? 0.10 : 0.22})`;
+    ctx.beginPath(); ctx.ellipse(0, -slen + swid * 0.42, swid * 0.28, swid * 0.24, 0, 0, 7); ctx.fill();
+    // 签头字（千字文序号）
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = `700 ${Math.round(swid * 0.80)}px "Noto Serif SC","STKaiti",serif`;
+    ctx.fillStyle = st.back ? 'rgba(58,40,12,0.50)' : 'rgba(58,40,12,0.88)';
+    ctx.fillText(st.glyph, 0, -slen + swid * 1.2);
+    ctx.restore();
+  }
+
+  // —— 口沿（整圈）
+  const rim = ctx.createLinearGradient(-hw, 0, hw, 0);
+  rim.addColorStop(0, '#3a2810'); rim.addColorStop(0.30, '#a9803c');
+  rim.addColorStop(0.50, '#e8c176'); rim.addColorStop(0.75, '#96702f');
+  rim.addColorStop(1, '#33220c');
+  ctx.strokeStyle = rim; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.ellipse(0, 0, rx, ry, 0, 0, 7); ctx.stroke();
+
+  // —— 口沿前缘（加厚 + 压住签根，签才像从筒里长出来）
+  ctx.strokeStyle = rim; ctx.lineWidth = 6.5;
+  ctx.beginPath(); ctx.ellipse(0, 0.5, rx, ry, 0, 0, Math.PI); ctx.stroke();
+  ctx.strokeStyle = 'rgba(255,240,200,0.42)'; ctx.lineWidth = 1.3;
+  ctx.beginPath(); ctx.ellipse(0, 1.6, rx * 0.985, ry * 0.985, 0, 0.12 * Math.PI, 0.88 * Math.PI); ctx.stroke();
+
+  // —— 筒口内溢光（盖在签根上，光是从筒里透出来的）
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const lk = 0.25 + 0.2 * pulse + 0.8 * burstK;
+  const lg = ctx.createRadialGradient(0, 0, 0, 0, 0, rx * 0.95);
+  lg.addColorStop(0, `rgba(255,224,160,${(0.40 * lk).toFixed(3)})`);
+  lg.addColorStop(0.5, `rgba(255,196,110,${(0.16 * lk).toFixed(3)})`);
+  lg.addColorStop(1, 'rgba(255,196,110,0)');
+  ctx.fillStyle = lg;
+  ctx.beginPath(); ctx.ellipse(0, 0, rx * 0.95, ry * 1.2, 0, 0, 7); ctx.fill();
+  ctx.restore();
+
+  // —— 红绳 + 「谕」字签牌（挂在筒身右侧）
+  const tagW = w * 0.25, tagH = w * 0.33;
+  const tagX = hw * 0.64, tagY = h * 0.115;
+  ctx.strokeStyle = '#8f2a1b'; ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.moveTo(hw * 0.50, ry * 0.5);
+  ctx.quadraticCurveTo(hw * 0.96, ry + 8, tagX, tagY);
+  ctx.stroke();
+  ctx.save();
+  ctx.shadowColor = 'rgba(0,0,0,0.45)'; ctx.shadowBlur = 10; ctx.shadowOffsetY = 4;
+  const tg = ctx.createLinearGradient(0, tagY, 0, tagY + tagH);
+  tg.addColorStop(0, '#fbf6e8'); tg.addColorStop(1, '#ded0a6');
+  ctx.fillStyle = tg;
+  roundRect(tagX - tagW / 2, tagY, tagW, tagH, [3, 3, 3, 3]); ctx.fill();
+  ctx.restore();
+  ctx.strokeStyle = 'rgba(120,92,40,0.72)'; ctx.lineWidth = 1;
+  roundRect(tagX - tagW / 2, tagY, tagW, tagH, [3, 3, 3, 3]); ctx.stroke();
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `${Math.round(tagW * 0.64)}px "Ma Shan Zheng","STKaiti","KaiTi",serif`;
+  ctx.fillStyle = '#6a4a18';
+  ctx.fillText('谕', tagX, tagY + tagH * 0.53);
+  ctx.fillStyle = '#8f2a1b';
+  ctx.beginPath(); ctx.arc(tagX, tagY + 3.5, 2, 0, 7); ctx.fill();
+
+  ctx.restore();  // end 筒体 transform
+
+  /* ④ 爆光瞬间：筒口冲出一圈椭圆光环 */
+  if (tNow > TUBE.burst && tNow < TUBE.burst + 0.55) {
+    const k = (tNow - TUBE.burst) / 0.55;
+    ctx.save();
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.globalAlpha = (1 - k) * P.alpha;
+    ctx.strokeStyle = 'rgba(255,226,160,0.85)';
+    ctx.lineWidth = 3 * (1 - k) + 0.6;
+    ctx.beginPath();
+    ctx.ellipse(P.x, P.y, w * (0.5 + 1.6 * k), w * (0.13 + 0.44 * k), 0, 0, 7);
+    ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function roundRect(x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r[0], y);
+  ctx.arcTo(x + w, y, x + w, y + h, Math.max(r[1], 1));
+  ctx.arcTo(x + w, y + h, x, y + h, r[2]);
+  ctx.arcTo(x, y + h, x, y, Math.max(r[3], 1));
+  ctx.arcTo(x, y, x + w, y, Math.max(r[0], 1));
+  ctx.closePath();
+}
+
+function drawParticles() {
+  if (!parts.length) return;
+  let gAlpha = 1;
+  if (tNow > T.FADE) gAlpha = clamp01(1 - (tNow - T.FADE) / 1.1);
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.lineCap = 'round';
+  for (const p of parts) {
+    if (p.px === null || !p.trail.length) continue;
+    const age = tNow - p.born;
+    const a = smooth(age / 0.25) * (1 - smooth((age - p.life * 0.7) / (p.life * 0.3)));
+    const col = p.white ? '255,244,220' : '255,200,110';
+    for (let i = 0; i < p.trail.length - 1; i++) {
+      const k = (i + 1) / p.trail.length;
+      ctx.strokeStyle = `rgba(${col},${(a * gAlpha * k * 0.75).toFixed(3)})`;
+      ctx.lineWidth = p.size * k;
+      ctx.beginPath();
+      ctx.moveTo(p.trail[i][0], p.trail[i][1]);
+      ctx.lineTo(p.trail[i + 1][0], p.trail[i + 1][1]);
+      ctx.stroke();
+    }
+    ctx.fillStyle = `rgba(${col},${(a * gAlpha).toFixed(3)})`;
+    ctx.beginPath(); ctx.arc(p.px, p.py, p.size * 0.9, 0, 7); ctx.fill();
+  }
+  ctx.restore();
+}
+
+function drawVortexGlow() {
+  if (tNow < T.IDLE) return;
+  const a = clamp01((tNow - T.IDLE) / 0.8) * (tNow > T.FADE ? clamp01(1 - (tNow - T.FADE) / 1.2) : 1);
+  const cx = W / 2, cy = vortexY();
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, stickLen() * 0.85);
+  g.addColorStop(0, `rgba(255,210,130,${0.28 * a})`);
+  g.addColorStop(0.5, `rgba(232,160,70,${0.1 * a})`);
+  g.addColorStop(1, 'rgba(232,160,70,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(cx, cy, stickLen() * 0.85, 0, 7); ctx.fill();
+  ctx.restore();
+}
+
+/* ---- 签体路径：上端圆头、下端尖脚 ---- */
+function stickPath(cx, top, bot, w) {
+  const bw = w / 2, capY = top + w * 0.5, tipY = bot;
+  ctx.beginPath();
+  ctx.moveTo(cx - bw, capY);
+  ctx.quadraticCurveTo(cx - bw, top, cx, top);
+  ctx.quadraticCurveTo(cx + bw, top, cx + bw, capY);
+  ctx.lineTo(cx + bw * 0.72, tipY - w * 0.9);
+  ctx.quadraticCurveTo(cx + bw * 0.5, tipY - w * 0.25, cx, tipY);
+  ctx.quadraticCurveTo(cx - bw * 0.5, tipY - w * 0.25, cx - bw * 0.72, tipY - w * 0.9);
+  ctx.closePath();
+}
+
+function drawStick() {
+  const grow = smooth((tNow - T.CRYSTAL) / 0.8);
+  if (grow <= 0) return;
+  const cx = W / 2, len = stickLen() * grow, w = stickW();
+  const top = H * 0.46 - len / 2, bot = H * 0.46 + len / 2;
+  const woodK = smooth((tNow - T.WOOD) / 0.9);
+  const glowCol = woodK < 0.5 ? '190,215,255' : '255,205,120';
+
+  ctx.save();
+  ctx.shadowColor = `rgba(${glowCol},0.8)`; ctx.shadowBlur = 34;
+  // ① 水晶层（半透明玻璃感）
+  if (woodK < 1) {
+    ctx.globalAlpha = 1 - woodK;
+    const cg = ctx.createLinearGradient(cx, top, cx, bot);
+    cg.addColorStop(0, 'rgba(225,238,255,0.30)');
+    cg.addColorStop(0.5, 'rgba(200,222,255,0.14)');
+    cg.addColorStop(1, 'rgba(235,245,255,0.30)');
+    stickPath(cx, top, bot, w); ctx.fillStyle = cg; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1.6; ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = 1;
+    stickPath(cx - w * 0.18, top + w * 0.3, bot - w * 0.4, w * 0.55); ctx.stroke();
+  }
+  // ② 竹木层（实体化）
+  if (woodK > 0) {
+    ctx.globalAlpha = woodK;
+    const wg = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
+    wg.addColorStop(0, '#6d4a22'); wg.addColorStop(0.3, '#c69c5e');
+    wg.addColorStop(0.5, '#e0b878'); wg.addColorStop(0.72, '#b48848');
+    wg.addColorStop(1, '#5c3d1a');
+    stickPath(cx, top, bot, w); ctx.fillStyle = wg; ctx.fill();
+    ctx.strokeStyle = 'rgba(255,235,190,0.5)'; ctx.lineWidth = 1.2; ctx.stroke();
+    // 木纹
+    ctx.save(); stickPath(cx, top, bot, w); ctx.clip();
+    ctx.strokeStyle = 'rgba(80,52,20,0.4)'; ctx.lineWidth = 1;
+    for (let i = -1; i <= 1; i++) {
+      ctx.beginPath();
+      ctx.moveTo(cx + i * w * 0.22, top + 4);
+      ctx.bezierCurveTo(cx + i * w * 0.22 + 3, top + len * 0.4,
+        cx + i * w * 0.22 - 3, bot - len * 0.4, cx + i * w * 0.22, bot - 6);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+  ctx.restore();
+
+  // ③ 周身星屑
+  if (tNow < T.FADE + 1 && grow > 0.5) {
+    const sa = clamp01(1 - (tNow - T.FADE) / 1.2) * 0.9;
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    for (const s of sparkles) {
+      const tw = Math.abs(Math.sin(tNow * 2.4 + s.ph));
+      const x = cx + Math.cos(s.a + tNow * 0.4) * w * (0.8 + s.rr * 1.4);
+      const y = lerp(top, bot, s.rr);
+      ctx.fillStyle = `rgba(255,220,150,${(tw * sa * 0.8).toFixed(3)})`;
+      ctx.beginPath(); ctx.arc(x, y, 1.1, 0, 7); ctx.fill();
+    }
+    ctx.restore();
+  }
+  drawStickText(cx, top, bot, len, w);
+  drawRings(cx, top, bot, w);
+}
+
+function drawStickText(cx, top, bot, len, w) {
+  const chars = CFG.STICK_TEXT, n = chars.length;
+  const charH = len / (n + 1.6);
+  ctx.save();
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = `600 ${Math.round(charH * 0.82)}px "Noto Serif SC","STKaiti","KaiTi",serif`;
+  for (let i = 0; i < n; i++) {
+    const born = T.TEXT + i * 0.14;
+    const a = smooth((tNow - born) / 0.45);
+    if (a <= 0) continue;
+    const y = top + charH * 0.9 + i * charH;
+    ctx.save();
+    ctx.globalAlpha = a;
+    ctx.shadowColor = 'rgba(255,200,110,0.9)'; ctx.shadowBlur = 14;
+    ctx.fillStyle = CFG.GOLD_BRIGHT;
+    ctx.translate(cx, y);
+    const pop = 0.7 + 0.3 * smooth((tNow - born) / 0.3);
+    ctx.scale(pop, pop);
+    ctx.fillText(chars[i], 0, 0);
+    ctx.restore();
+  }
+  ctx.restore();
+}
+
+function drawRings(cx, top, bot, w) {
+  for (let i = 0; i < 2; i++) {
+    const prog = (tNow - T.RINGS - i * 0.34) / 1.2;
+    if (prog <= 0 || prog >= 1) continue;
+    const y = lerp(top - 6, bot + 6, smooth(prog));
+    const a = Math.sin(Math.PI * prog);
+    ctx.save(); ctx.globalCompositeOperation = 'lighter';
+    ctx.strokeStyle = `rgba(255,214,140,${(a * 0.9).toFixed(3)})`;
+    ctx.lineWidth = 2.4;
+    ctx.shadowColor = 'rgba(255,200,110,0.9)'; ctx.shadowBlur = 14;
+    ctx.beginPath(); ctx.ellipse(cx, y, w * 0.95, w * 0.26, 0, 0, 7); ctx.stroke();
+    ctx.strokeStyle = `rgba(255,240,200,${(a * 0.5).toFixed(3)})`;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.ellipse(cx, y, w * 1.15, w * 0.32, 0, 0, 7); ctx.stroke();
+    ctx.restore();
+  }
+}
+
+function drawFinalPulse() {
+  const settle = tNow - (T.RINGS + 1.4);
+  if (settle < 0) return;
+  const pulse = 0.5 + 0.5 * Math.sin(settle * 2.4);
+  const cx = W / 2, cy = H * 0.46;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, stickLen() * 0.7);
+  g.addColorStop(0, `rgba(255,214,140,${0.1 + 0.06 * pulse})`);
+  g.addColorStop(1, 'rgba(255,214,140,0)');
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(cx, cy, stickLen() * 0.7, 0, 7); ctx.fill();
+  ctx.restore();
+}
+
+function drawDust() {
+  ctx.save(); ctx.globalAlpha = 0.35;
+  ctx.fillStyle = '#cfe0ff';
+  for (const d of dust) {
+    d.y += d.vy * 0.016; if (d.y < -4) d.y = H + 4;
+    ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, 7); ctx.fill();
+  }
+  ctx.restore();
+}
+
+/* ================= 主循环 ================= */
+let last = performance.now() / 1000;
+function frame() {
+  requestAnimationFrame(frame);
+  const now = performance.now() / 1000;
+  let dt = Math.min(now - last, 0.05); last = now;
+  if (!running) return;
+  dt *= speed;
+  tNow += dt;
+  if (tNow > T.RINGS + 1.4 + CFG.LOOP_HOLD) restart(false);   // 自动循环
+
+  emitParticles(dt);
+  stepParticles(dt);
+  drawBackground();
+  drawDust();
+  drawVortexGlow();
+  drawTube();
+  drawParticles();
+  drawStick();
+  drawFinalPulse();
+}
+
+function restart(user) {
+  tNow = 0; parts = []; emitAcc = 0;
+  if (user) document.getElementById('tip').style.opacity = 0;
+}
+cv.addEventListener('pointerdown', () => restart(true));
+document.getElementById('replay').addEventListener('click', () => restart(true));
+document.getElementById('slowmo').addEventListener('click', e => {
+  speed = speed === 1 ? 0.4 : 1;
+  e.target.textContent = speed === 1 ? '慢 速' : '恢 复';
+});
+
+resize();
+requestAnimationFrame(frame);
+</script>
+</body>
+</html>

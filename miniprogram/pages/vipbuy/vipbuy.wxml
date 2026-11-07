@@ -1,0 +1,25 @@
+<view class="app-bg"></view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd"><text class="pt">谕心会员</text><text class="ps">可随时取消</text></view>
+    <view class="pcard" style="padding:31.9rpx">
+      <view class="vip-title">仪式全解锁（含焚香 / 观星）</view>
+      <view class="vip-sub">不限问事 · 去水印 · 主题卡面 · 每日 +10</view>
+      <view class="vip-plans">
+        <view class="plan cur"><view class="p-price">¥6.9</view><view class="p-desc">首月 · 新用户</view></view>
+        <view class="plan"><view class="p-price">¥12.9</view><view class="p-desc">月付</view></view>
+        <view class="plan"><view class="p-price">¥118</view><view class="p-desc">年付 · 8.2 折</view></view>
+      </view>
+    </view>
+    <button class="pbtn gold" style="margin-top:27rpx" data-t="演示中 · 接入微信支付" bindtap="toast">立即开通</button>
+    <view class="vip-row">
+      <button class="pbtn dark" style="flex:1;font-size:30.6rpx" data-t="演示中 · 预览焚香" bindtap="toast">预览焚香仪式</button>
+      <button class="pbtn dark" style="flex:1;font-size:30.6rpx" data-t="演示中 · 预览观星" bindtap="toast">预览观星仪式</button>
+    </view>
+    <button class="pbtn ghost" style="margin-top:15.7rpx" bindtap="goBack">暂不开通</button>
+    <view class="vip-fine">会员仅解锁形式与体验 · 不解锁任何签文结果</view>
+    <view class="vip-fine">支持随时取消 · 未成年人不设付费引导</view>
+  </view>
+  <view class="tab-space"></view>
+</view>

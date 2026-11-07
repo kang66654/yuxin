@@ -1,0 +1,9 @@
+<view class="pnav nav5 yx-varscope">
+  <view
+    wx:for="{{list}}"
+    wx:key="pagePath"
+    class="tab ic-{{item.icon}} {{selected === index ? 'on' : ''}}"
+    data-index="{{index}}"
+    bindtap="switchTab"
+  >{{item.text}}</view>
+</view>

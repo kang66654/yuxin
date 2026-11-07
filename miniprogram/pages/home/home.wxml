@@ -1,0 +1,65 @@
+<!-- 首页：对应原型 L390–410，结构与文案逐字照抄，尺寸见 home.wxss -->
+<view class="app-bg"></view>
+<view class="stars">
+  <view class="star star-1"></view>
+  <view class="star star-2"></view>
+  <view class="star star-3"></view>
+  <view class="star star-4"></view>
+  <view class="star star-5"></view>
+</view>
+
+<!-- 顶部只留系统状态栏高度的透明占位：自绘的 谕/页别名/会员 字样按要求删除（NT-03） -->
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd">
+      <text class="pt">夜安</text>
+      <text class="ps">{{dateText}}</text>
+    </view>
+
+    <view class="sq-card">
+      <view class="sq-top">
+        <text>今日签 · 夜签</text>
+        <text>21:00 收签</text>
+      </view>
+      <view class="sq-mid">
+        <view class="q-line">{{dailySign || '夜色正在为你写今日签…'}}</view>
+      </view>
+      <view class="sq-bottom">
+        <view class="yi-badge">{{dailyYi || '落笔就好'}}</view>
+        <view class="ji-badge">{{dailyJi || '反复咀嚼'}}</view>
+      </view>
+    </view>
+
+    <view class="quick-row">
+      <view class="quick-tile" bindtap="goAsk">
+        <view class="tile-t">问事</view>
+        <view class="tile-s">纠结时来一签</view>
+      </view>
+      <view class="quick-tile" bindtap="goTree">
+        <view class="tile-t">树洞</view>
+        <view class="tile-s">说给夜色听</view>
+      </view>
+      <view class="quick-tile" bindtap="goMt">
+        <view class="tile-t">互测</view>
+        <view class="tile-s">拉上 TA 一起</view>
+      </view>
+    </view>
+
+    <view class="meta-row">
+      <text class="meta-l">好运值 {{luck}}<text class="vip-tag-sm">会员 +10/日</text></text>
+      <text class="meta-r">{{levelText}}</text>
+    </view>
+
+    <view class="bar">
+      <view class="bar-in"></view>
+    </view>
+
+    <button class="pbtn gold" bindtap="goAsk">求一签 · 问一件心事</button>
+    <button class="pbtn ghost btn-gap" bindtap="openShare">生成分享卡片</button>
+
+    <view class="foot">谕心仅供娱乐 · 不构成任何建议</view>
+  </view>
+  <view class="tab-space"></view>
+</view>

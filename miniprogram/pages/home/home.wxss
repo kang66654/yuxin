@@ -1,0 +1,79 @@
+/* home.wxss —— 原型首页里那些内联 style 的等价类，数值逐条由 306→750 换算。 */
+
+/* 三个快捷入口：原型 margin:12px 0 3px; gap:8px（用 margin-left 模拟，避开老 X5 的 gap 塌陷 NT-31） */
+.quick-row {
+  display: flex;
+  margin: 29.4rpx 0 7.4rpx;
+}
+
+.quick-tile {
+  flex: 1;
+  text-align: center;
+  background: var(--tint-bg);
+  border: 2.5rpx solid var(--tint-line);
+  border-radius: 29.4rpx;
+  padding: 24.5rpx 9.8rpx;
+}
+
+.quick-tile + .quick-tile {
+  margin-left: 19.6rpx;
+}
+
+.tile-t {
+  font-size: 39rpx;
+  color: var(--gold);
+}
+
+.tile-s {
+  font-size: 27rpx;
+  color: var(--ink-faint);
+  margin-top: 4.9rpx;
+}
+
+/* 好运值行：margin:10px 0 3px; font-size:12px; color:--ink-faint */
+.meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24.5rpx 0 7.4rpx;
+  font-size: 29.4rpx;
+  color: var(--ink-faint);
+}
+
+.meta-r {
+  color: var(--gold-soft);
+}
+
+/* 进度条：height 6px / radius 3px / 内条 64% / 90deg 金渐变 / margin-bottom 10px */
+.bar {
+  height: 14.7rpx;
+  border-radius: 7.4rpx;
+  background: var(--tint-line);
+  overflow: hidden;
+  margin-bottom: 24.5rpx;
+}
+
+.bar-in {
+  width: 64%;
+  height: 100%;
+  border-radius: 7.4rpx;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-soft));
+}
+
+/* 原型第二个按钮 margin-top:8px */
+.btn-gap {
+  margin-top: 19.6rpx;
+}
+
+/* 第一个按钮推到内容区底部，两个按钮+页脚贴底 */
+.pbtn.gold {
+  margin-top: auto;
+}
+
+/* 页脚：font-size:10.5px; color:--nav-text; margin:11px 0 1px（合规文案必须保留） */
+.foot {
+  text-align: center;
+  font-size: 25.5rpx;
+  color: var(--nav-text);
+  margin: 27rpx 0 2.5rpx;
+}

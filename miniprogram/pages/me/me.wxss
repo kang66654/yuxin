@@ -1,0 +1,46 @@
+/* 我的：原型 L738–765 行内样式换算 */
+
+.me-card { padding: 31.9rpx; }
+.me-row { display: flex; align-items: center; gap: 24.5rpx; }
+.me-ava {
+  width: 107.8rpx; height: 107.8rpx; flex: none; border-radius: 29.4rpx;
+  background: linear-gradient(135deg, var(--gold-soft-a25), var(--tint-bg));
+  border: 1rpx solid var(--tint-line);
+}
+.me-mid { min-width: 0; flex: 1; }
+.me-name-row { display: flex; align-items: center; gap: 14.7rpx; }
+.me-name {
+  font-family: 'Songti SC', 'Source Han Serif SC', serif;
+  font-size: 38rpx; font-weight: 700; color: var(--ink);
+}
+.me-sub { font-size: 29.4rpx; color: var(--ink-faint); margin-top: 6rpx; }
+.me-edit {
+  flex: none; font-size: 27rpx; color: var(--gold-soft);
+  border: 1rpx solid var(--tint-line); border-radius: 999rpx; padding: 9.8rpx 22.1rpx;
+}
+
+.luck-row {
+  margin: 26.9rpx 0 7.4rpx; display: flex; align-items: center; justify-content: space-between;
+  font-size: 29.4rpx; color: var(--ink-faint);
+}
+.vip-tag-inline { margin-left: 14.7rpx; }
+.luck-next { color: var(--gold-soft); }
+.luck-bar {
+  height: 14.7rpx; border-radius: 7.4rpx; background: var(--tint-line);
+  overflow: hidden; margin-bottom: 26.9rpx;
+}
+.luck-in {
+  width: 64%; height: 100%; border-radius: 7.4rpx;
+  background: linear-gradient(90deg, var(--gold-deep), var(--gold-soft));
+}
+
+.vip-card {
+  background: linear-gradient(135deg, var(--tint-bg), rgba(176,141,74,.08));
+  border: 1rpx solid var(--tint-line); border-radius: 34.3rpx;
+  padding: 31.9rpx; margin-top: 26.9rpx;
+}
+.vip-t {
+  font-family: 'Songti SC', serif; font-size: 39rpx; font-weight: 700; color: var(--gold-soft);
+}
+.vip-d { font-size: 29.4rpx; color: var(--nav-text); margin: 9.8rpx 0 22.1rpx; line-height: 1.6; }
+.vip-btn { padding: 24.5rpx 0 !important; font-size: 34.3rpx !important; }

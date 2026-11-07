@@ -1,0 +1,495 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>谕心 · A2 视觉规格表</title><style>
+:root{--bg:#0E0D14;--bg2:#141320;--line:rgba(216,180,106,.18);--gold:#D8B46A;--gold2:#E8CF97;
+--ink:#EDE8DC;--ink2:#A99F8E;--ink3:#6A6255;--card:#191826;--green:#7FA57C;--red:#D98A76}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:
+ radial-gradient(120% 80% at 12% -10%,#241f36 0%,transparent 55%),
+ linear-gradient(180deg,#0E0D14,#0B0A11 60%,#0E0D14);
+ color:var(--ink);font:400 15px/1.75 "Songti SC","SimSun",serif;padding:56px 40px 120px}
+.wrap{max-width:1180px;margin:0 auto}
+.kicker{font:500 12px/1.6 "SF Mono",Consolas,monospace;letter-spacing:.18em;color:var(--gold);opacity:.85}
+h1{font:400 42px/1.25 "Songti SC","STZhongsong",serif;margin:14px 0 10px;letter-spacing:.02em}
+h1 em{color:var(--gold2);font-style:normal}
+.lead{color:var(--ink2);max-width:900px;font-size:15px}
+.lead b{color:var(--ink)}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 8px}
+.stat{flex:1 1 150px;background:linear-gradient(165deg,#1B1A28,#141320);border:1px solid var(--line);
+ border-radius:14px;padding:14px 16px}
+.stat .n{font:400 26px/1 "Songti SC",serif;color:var(--gold2)}
+.stat .l{font-size:11px;color:var(--ink3);margin-top:6px;letter-spacing:.04em}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;margin:22px 0 8px;font:12px/2 "SF Mono",Consolas,monospace;
+ color:var(--ink3);border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:14px}
+h2{font:400 26px/1.4 "Songti SC","STZhongsong",serif;margin:56px 0 6px;letter-spacing:.03em}
+h2 .idx{font:11px/1 "SF Mono",Consolas,monospace;color:var(--gold);letter-spacing:.12em;display:block;margin-bottom:10px}
+h3{font:400 18px/1.5 "Songti SC",serif;margin:28px 0 8px;color:var(--gold2)}
+p{margin:10px 0;color:var(--ink2)}
+p b{color:var(--ink)}
+.mono{font-family:"SF Mono",Consolas,monospace;font-size:12.5px;color:var(--gold2)}
+.tblwrap{overflow-x:auto;margin:14px 0 6px;border:1px solid rgba(255,255,255,.07);border-radius:12px;
+ background:rgba(255,255,255,.02)}
+table{border-collapse:collapse;width:100%;font-size:12.5px;min-width:640px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.055);vertical-align:top}
+th{font:500 11.5px/1.5 "SF Mono",Consolas,monospace;letter-spacing:.06em;color:var(--ink3);
+ background:rgba(255,255,255,.03);position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.v{font-family:"SF Mono",Consolas,monospace;color:var(--ink);white-space:nowrap}
+td.num{font-family:"SF Mono",Consolas,monospace;text-align:right;white-space:nowrap}
+.sw{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:7px;vertical-align:-1px;
+ border:1px solid rgba(255,255,255,.18)}
+.tag{display:inline-block;font:500 10.5px/1.5 "SF Mono",Consolas,monospace;padding:1px 7px;border-radius:999px;
+ border:1px solid var(--line);color:var(--gold2)}
+.tag.t-new{background:rgba(216,180,106,.12);border-color:rgba(216,180,106,.4)}
+.tag.t-old{color:var(--ink2);border-color:rgba(255,255,255,.14)}
+.tag.t-demo{color:var(--ink3);border-color:rgba(255,255,255,.1)}
+.note{border-left:2px solid var(--gold);padding:2px 0 2px 14px;margin:16px 0;color:var(--ink2);font-size:13.5px}
+.warnbox{border:1px solid rgba(216,180,106,.26);background:rgba(216,180,106,.05);border-radius:12px;
+ padding:16px 18px;margin:18px 0}
+.warnbox h4{margin:0 0 8px;font:500 13px/1.5 "SF Mono",Consolas,monospace;letter-spacing:.08em;color:var(--gold)}
+.warnbox ol,.warnbox ul{margin:0;padding-left:20px;color:var(--ink2);font-size:13.5px}
+.warnbox li{margin:6px 0}
+.kf{background:linear-gradient(165deg,#1B1A28,#141320);border:1px solid rgba(255,255,255,.07);
+ border-radius:12px;padding:14px 16px;margin:10px 0}
+.kf .h{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.kf .name{font:500 14px/1.4 "SF Mono",Consolas,monospace;color:var(--gold2)}
+.kf .meta{font:11.5px/1.5 "SF Mono",Consolas,monospace;color:var(--ink3)}
+.kf .steps{margin:8px 0 0;font:12px/1.7 "SF Mono",Consolas,monospace;color:var(--ink2);white-space:pre-wrap}
+footer{margin-top:64px;padding-top:18px;border-top:1px solid rgba(255,255,255,.07);
+ color:var(--ink3);font-size:12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+</style></head><body><div class="wrap">
+<div class="kicker">YUXIN · A2 · VISUAL SPEC</div>
+<h1>视觉规格表：<em>原型 style 的全量账本</em></h1>
+<p class="lead">这一页只回答一件事：原型那 30,644 字节样式，<b>哪一条要搬、搬成什么、搬过去用什么单位</b>。所有数字由 <span class="mono">tools/extract_tokens.py</span> 从源码解析生成，重生任意一次即可复算，没有一条是手抄的。真源指纹 <span class="mono">4873B0D48AC31BC8…F41D</span>（150,928 B / 1731 行）。</p>
+<div class="stats">
+<div class="stat"><div class="n">208</div><div class="l">屏内规则（要搬）</div></div>
+<div class="stat"><div class="n">39</div><div class="l">展示壳规则（不搬）</div></div>
+<div class="stat"><div class="n">36</div><div class="l">原型变量</div></div>
+<div class="stat"><div class="n">91</div><div class="l">屏内色值（全有 token）</div></div>
+<div class="stat"><div class="n">19</div><div class="l">字号档位</div></div>
+<div class="stat"><div class="n">70</div><div class="l">屏内 px 档位 → rpx</div></div>
+<div class="stat"><div class="n">8</div><div class="l">keyframes</div></div>
+</div>
+<div class="toc"><span>01 抽取口径</span><span>02 色板</span><span>03 字体与字号</span><span>04 行高字距</span><span>05 圆角与阴影</span><span>06 渐变</span><span>07 px→rpx 对照表</span><span>08 关键帧与动效</span><span>09 落地规则</span><span>10 与开工清单的四处对账</span></div>
+<h2><span class="idx">01 / SCOPE</span>抽取口径：先把展示壳切出去</h2>
+<p>原型是“网页里的手机模型”，页面上有一层<b>不属于产品</b>的东西：<span class="mono">.phone</span> 手机壳、<span class="mono">.screen</span> 内屏框、<span class="mono">.hero</span> 深色舞台、<span class="mono">.demo-bar / .demo-note / .demo-tip</span> 演示说明、<span class="mono">body / h1 / footer</span> 的落地页排版。这些在小程序里没有对应对象（内屏就是真机屏幕），必须<b>整段不搬</b>；否则 WXSS 会带着一套手机边框和演示文案，或者在真机上被裁掉、被压扁。</p>
+<div class="note">切分规则写死在脚本里：<span class="mono">.phone / .screen / .hero / .demo-bar / .demo-note / .demo-tip / .dv / .kicker / .wrap / .stars / body / h1 / footer</span> 命中即判为 <span class="tag t-demo">demo</span>，其余为 <span class="tag">app</span>。结果是 208 条搬、39 条不搬，逐条可在 tokens.json 的 <span class="mono">rules[].scope</span> 里核对。</div>
+<p>颜色分三类各自处理：<b>hex</b> 与 <b>rgba</b> 归并为命名 token（屏内 91 个色值全部有名字，零裸色值）；<b>渐变</b>不做 token——渐变是“几何 + 色标”的混合体，拆成 token 反而看不出角度和停止点，A4 时整条内联写、只把色标换成 <span class="mono">var()</span>；<b>body 内的 base64 图</b>与 <span class="mono">data:image</span> 图标不在颜色统计里（另有 5 个 tab 图标单独走烘焙，见开工清单 NT-07）。</p>
+<h2><span class="idx">02 / PALETTE</span>色板：95 个颜色 token（另有 3 个尺寸变量）</h2>
+<p>左列是 token 名（直接进 <span class="mono">page{}</span>），值是<b>原文字面</b>，一位都没动。<span class="tag t-old">原型既有</span> 来自原型自己的 <span class="mono">:root</span>；<span class="tag t-new">A2 新增</span> 是我为原型的裸色值起的语义名——只加名字，不改色。同一色值被多个变量引用时（如 <span class="mono">#D8B46A</span> 同时是 <span class="mono">--gold</span> 与 <span class="mono">--moon-2</span>），取语义最基础的一个作规范名。其中 91 个是屏内样式里真出现过字面值的色值；另外 4 个虽只在展示壳规则里露过字面值，但原型把它们定义在 <span class="mono">:root</span>，变量本身是屏内资源（例如 <span class="mono">--nav-text</span> 给 tabBar 文字用），因此照样保留。</p>
+<h3>2.1 原型既有变量（36）</h3>
+<div class="tblwrap"><table><thead><tr><th>token</th><th>值</th><th>类型</th><th>px 值 → rpx</th><th>定义位置</th><th>作用域</th></tr></thead><tbody>
+<tr><td class="v">--btn-a</td><td class="v"><span class="sw" style="background:#E8CF97"></span>#E8CF97</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--btn-b</td><td class="v"><span class="sw" style="background:#C9A96A"></span>#C9A96A</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--btn-text</td><td class="v"><span class="sw" style="background:#2B2620"></span>#2B2620</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--card-a</td><td class="v"><span class="sw" style="background:#F5F1E8"></span>#F5F1E8</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--card-b</td><td class="v"><span class="sw" style="background:#EDE6D4"></span>#EDE6D4</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--card-line</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(233,226,210,.6)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--ghost-bg</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(243,239,230,.1)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--ghost-line</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.45)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--ghost-text</td><td class="v"><span class="sw" style="background:#E8CF97"></span>#E8CF97</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--gold</td><td class="v"><span class="sw" style="background:#D8B46A"></span>#D8B46A</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--gold-deep</td><td class="v"><span class="sw" style="background:#B08D4A"></span>#B08D4A</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--gold-soft</td><td class="v"><span class="sw" style="background:#E8CF97"></span>#E8CF97</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--green</td><td class="v"><span class="sw" style="background:#5E7A5C"></span>#5E7A5C</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--ink</td><td class="v"><span class="sw" style="background:#2B2620"></span>#2B2620</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--ink-faint</td><td class="v"><span class="sw" style="background:#9A927F"></span>#9A927F</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--ink-soft</td><td class="v"><span class="sw" style="background:#6A6255"></span>#6A6255</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--moon-1</td><td class="v"><span class="sw" style="background:#F6EFD8"></span>#F6EFD8</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--moon-2</td><td class="v"><span class="sw" style="background:#D8B46A"></span>#D8B46A</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--moon-glow</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.5)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--nav-bg</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(20,20,31,.72)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--nav-line</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.16)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--nav-text</td><td class="v"><span class="sw" style="background:#8A8474"></span>#8A8474</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--qian-line</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(176,141,74,.35)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--red</td><td class="v"><span class="sw" style="background:#A8452E"></span>#A8452E</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--shell-1</td><td class="v"><span class="sw" style="background:#2E2C3E"></span>#2E2C3E</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--shell-2</td><td class="v"><span class="sw" style="background:#1B1A28"></span>#1B1A28</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--shell-line</td><td class="v"><span class="sw" style="background:#3A3750"></span>#3A3750</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--sky-1</td><td class="v"><span class="sw" style="background:#2B2A40"></span>#2B2A40</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--sky-2</td><td class="v"><span class="sw" style="background:#1A1929"></span>#1A1929</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--sky-3</td><td class="v"><span class="sw" style="background:#141420"></span>#141420</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--star</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(243,239,230,.55)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--tint-bg</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.1)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--tint-line</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.26)</td><td>颜色</td><td class="num"></td><td class="v">:root</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--ang</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>32deg</td><td>其他</td><td class="num"></td><td class="v">.qian-tube .q-stick,.qian-tube .q-stick:nth-child(1),.qian-t</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--d</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>10ms</td><td>其他</td><td class="num"></td><td class="v">.qian-tube .q-stick,.qian-tube .q-stick:nth-child(1),.qian-t</td><td><span class="tag">app</span></td></tr>
+<tr><td class="v">--dx</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>24px</td><td>尺寸</td><td class="num">58.8</td><td class="v">.qian-tube .q-stick,.qian-tube .q-stick:nth-child(1),.qian-t</td><td><span class="tag">app</span></td></tr>
+</tbody></table></div>
+<h3>2.2 A2 新增 token（62）——裸色值归并</h3>
+<div class="tblwrap"><table><thead><tr><th>token</th><th>值</th><th>原文字面出现</th><th>用在（屏内选择器）</th></tr></thead><tbody>
+<tr><td class="v">--cardink</td><td class="v"><span class="sw" style="background:#4a3417"></span>#4a3417</td><td class="num">5</td><td class="v">.coin .c-f · .t-card-mini .t-name · .t-card-mini .t-sym · .tarot-card .t-name · .tarot-card .t-sym</td></tr>
+<tr><td class="v">--black-a30</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.3)</td><td class="num">5</td><td class="v">.coin · .coin.sm · .qian-tube .t-body · .seal · .tarot-card .t-front</td></tr>
+<tr><td class="v">--wooddeep</td><td class="v"><span class="sw" style="background:#7c5a24"></span>#7c5a24</td><td class="num">3</td><td class="v">.qian-tube .t-base · .qian-tube .t-body · .qian-tube .t-rim</td></tr>
+<tr><td class="v">--woodmid</td><td class="v"><span class="sw" style="background:#b08a3f"></span>#b08a3f</td><td class="num">3</td><td class="v">.qian-tube .t-base · .qian-tube .t-body · .qian-tube .t-rim</td></tr>
+<tr><td class="v">--black-a35</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.35)</td><td class="num">3</td><td class="v">.coin · .qian-tube .t-base · .qian-tube .t-rim</td></tr>
+<tr><td class="v">--black-a40</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.4)</td><td class="num">3</td><td class="v">.qian-tube .t-body · .ring · .tarot-card .t-back</td></tr>
+<tr><td class="v">--black-a50</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.5)</td><td class="num">2</td><td class="v">.phone · .qian-tube .q-stick · .qian-tube .t-body</td></tr>
+<tr><td class="v">--black-a55</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.55)</td><td class="num">2</td><td class="v">.confirm · .qian-tube .q-stick.out · .shwrap canvas</td></tr>
+<tr><td class="v">--gold-a22</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.22)</td><td class="num">2</td><td class="v">.demo-note · .ob-chip.on · .shwrap canvas</td></tr>
+<tr><td class="v">--backdeep</td><td class="v"><span class="sw" style="background:#241b12"></span>#241b12</td><td class="num">2</td><td class="v">.tarot-card .t-back · .vip-tag-sm</td></tr>
+<tr><td class="v">--ember</td><td class="v"><span class="sw" style="background:#ffb35c"></span>#ffb35c</td><td class="num">2</td><td class="v">.incense-stick .ember</td></tr>
+<tr><td class="v">--black-a24</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.24)</td><td class="num">2</td><td class="v">.pcard · .sq-card</td></tr>
+<tr><td class="v">--gold-a55</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.55)</td><td class="num">2</td><td class="v">.page[data-page="ritual"]::-webkit-scrollbar-thumb</td></tr>
+<tr><td class="v">--textlight</td><td class="v"><span class="sw" style="background:#e6e1d4"></span>#e6e1d4</td><td class="num">1</td><td class="v">.echo .e-b · body</td></tr>
+<tr><td class="v">--canvasbg</td><td class="v"><span class="sw" style="background:#0a0d18"></span>#0a0d18</td><td class="num">1</td><td class="v">.shwrap canvas</td></tr>
+<tr><td class="v">--mouthdark</td><td class="v"><span class="sw" style="background:#0e0a04"></span>#0e0a04</td><td class="num">1</td><td class="v">.qian-tube .t-mouth</td></tr>
+<tr><td class="v">--mouth</td><td class="v"><span class="sw" style="background:#241a09"></span>#241a09</td><td class="num">1</td><td class="v">.qian-tube .t-mouth</td></tr>
+<tr><td class="v">--woodinner</td><td class="v"><span class="sw" style="background:#2c2008"></span>#2c2008</td><td class="num">1</td><td class="v">.qian-tube .t-body::before</td></tr>
+<tr><td class="v">--backtop</td><td class="v"><span class="sw" style="background:#3a2c1a"></span>#3a2c1a</td><td class="num">1</td><td class="v">.tarot-card .t-back</td></tr>
+<tr><td class="v">--stickedge</td><td class="v"><span class="sw" style="background:#5d4216"></span>#5d4216</td><td class="num">1</td><td class="v">.qian-tube .q-stick::after</td></tr>
+<tr><td class="v">--woodbody</td><td class="v"><span class="sw" style="background:#6b4a1d"></span>#6b4a1d</td><td class="num">1</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v">--ashdeep</td><td class="v"><span class="sw" style="background:#8e7f63"></span>#8e7f63</td><td class="num">1</td><td class="v">.incense-stick .ash</td></tr>
+<tr><td class="v">--stickline</td><td class="v"><span class="sw" style="background:#96722f"></span>#96722f</td><td class="num">1</td><td class="v">.qian-tube .q-stick::before</td></tr>
+<tr><td class="v">--coincore</td><td class="v"><span class="sw" style="background:#9c7b3c"></span>#9c7b3c</td><td class="num">1</td><td class="v">.coin</td></tr>
+<tr><td class="v">--woodlight</td><td class="v"><span class="sw" style="background:#a97b33"></span>#a97b33</td><td class="num">1</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v">--ashlight</td><td class="v"><span class="sw" style="background:#b9a98a"></span>#b9a98a</td><td class="num">1</td><td class="v">.incense-stick .ash</td></tr>
+<tr><td class="v">--stickshade</td><td class="v"><span class="sw" style="background:#dec98f"></span>#dec98f</td><td class="num">1</td><td class="v">.qian-tube .q-stick</td></tr>
+<tr><td class="v">--rim</td><td class="v"><span class="sw" style="background:#e3c586"></span>#e3c586</td><td class="num">1</td><td class="v">.qian-tube .t-rim</td></tr>
+<tr><td class="v">--stickglow</td><td class="v"><span class="sw" style="background:#e8c98a"></span>#e8c98a</td><td class="num">1</td><td class="v">.qian-tube .q-stick::before</td></tr>
+<tr><td class="v">--sticklight</td><td class="v"><span class="sw" style="background:#f2e4bc"></span>#f2e4bc</td><td class="num">1</td><td class="v">.qian-tube .q-stick</td></tr>
+<tr><td class="v">--starcore</td><td class="v"><span class="sw" style="background:#fff6de"></span>#fff6de</td><td class="num">1</td><td class="v">.ring .const .cstar</td></tr>
+<tr><td class="v">--black-a25</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.25)</td><td class="num">1</td><td class="v">.coin.sm</td></tr>
+<tr><td class="v">--black-a28</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.28)</td><td class="num">1</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v">--black-a45</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.45)</td><td class="num">1</td><td class="v">.qian-tube .t-body::before</td></tr>
+<tr><td class="v">--black-a85</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(0,0,0,.85)</td><td class="num">1</td><td class="v">.qian-tube .t-mouth</td></tr>
+<tr><td class="v">--night-a40</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(11,14,26,.4)</td><td class="num">1</td><td class="v">.page[data-page="ritual"]::-webkit-scrollbar-track</td></tr>
+<tr><td class="v">--woodshadow-a22</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(130,95,40,.22)</td><td class="num">1</td><td class="v">.qian-tube .q-stick</td></tr>
+<tr><td class="v">--wood-a50</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(140,100,40,.5)</td><td class="num">1</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v">--gold-deep-a38</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(176,141,74,.38)</td><td class="num">1</td><td class="v">.page[data-page="ritual"]::-webkit-scrollbar-thumb</td></tr>
+<tr><td class="v">--coin-a50</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(190,150,70,.5)</td><td class="num">1</td><td class="v">.qian-tube .t-body::before</td></tr>
+<tr><td class="v">--gold-a08</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.08)</td><td class="num">1</td><td class="v">.page[data-page="ritual"]::-webkit-scrollbar-track</td></tr>
+<tr><td class="v">--gold-a09</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.09)</td><td class="num">1</td><td class="v">.ob-input:focus</td></tr>
+<tr><td class="v">--gold-a18</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.18)</td><td class="num">1</td><td class="v">.ob-dots i</td></tr>
+<tr><td class="v">--gold-a30</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.3)</td><td class="num">1</td><td class="v">.echo</td></tr>
+<tr><td class="v">--gold-a35</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.35)</td><td class="num">1</td><td class="v">.page[data-page="ritual"]</td></tr>
+<tr><td class="v">--gold-a60</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.6)</td><td class="num">1</td><td class="v">.ob-input:focus</td></tr>
+<tr><td class="v">--gold-a65</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.65)</td><td class="num">1</td><td class="v">.tarot-card .t-back::before</td></tr>
+<tr><td class="v">--gold-a72</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.72)</td><td class="num">1</td><td class="v">.page[data-page="ritual"]::-webkit-scrollbar-thumb:hover</td></tr>
+<tr><td class="v">--holder-a42</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,201,170,.42)</td><td class="num">1</td><td class="v">.ob-input::placeholder</td></tr>
+<tr><td class="v">--gold-soft-a16</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(232,207,151,.16)</td><td class="num">1</td><td class="v">.ring .const .chalo</td></tr>
+<tr><td class="v">--gold-soft-a25</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(232,207,151,.25)</td><td class="num">1</td><td class="v">.coin .c-f,.coin .c-b</td></tr>
+<tr><td class="v">--gold-soft-a40</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(232,207,151,.4)</td><td class="num">1</td><td class="v">.qian-tube .t-mouth</td></tr>
+<tr><td class="v">--gold-soft-a50</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(232,207,151,.5)</td><td class="num">1</td><td class="v">.incense-stick .smoke</td></tr>
+<tr><td class="v">--gold-soft-a90</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(232,207,151,.9)</td><td class="num">1</td><td class="v">.ring .const .cstar</td></tr>
+<tr><td class="v">--warm-a95</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(238,214,150,.95)</td><td class="num">1</td><td class="v">.qian-tube .t-body::before</td></tr>
+<tr><td class="v">--sunk-a14</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(255,226,160,.14)</td><td class="num">1</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v">--hilite-a80</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(255,240,210,.8)</td><td class="num">1</td><td class="v">.qian-tube .t-rim</td></tr>
+<tr><td class="v">--white-a04</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(255,255,255,.04)</td><td class="num">1</td><td class="v">.ob-chip</td></tr>
+<tr><td class="v">--white-a05</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(255,255,255,.05)</td><td class="num">1</td><td class="v">.ob-input</td></tr>
+<tr><td class="v">--white-a16</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(255,255,255,.16)</td><td class="num">1</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v">--cardink-a50</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(74,52,23,.5)</td><td class="num">1</td><td class="v">.coin .c-f,.coin .c-b</td></tr>
+<tr><td class="v">--cardink-a55</td><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(74,52,23,.55)</td><td class="num">1</td><td class="v">.coin .c-b::before</td></tr>
+</tbody></table></div>
+<h3>2.3 只在展示壳里出现的色值（不建 token）</h3>
+<div class="tblwrap"><table><thead><tr><th>值</th><th>出现位置</th><th>处置</th></tr></thead><tbody>
+<tr><td class="v"><span class="sw" style="background:#a99f8e"></span>#a99f8e</td><td class="v">.confirm .c-d · .demo-note · .sub</td><td>不搬（属手机壳/演示说明）</td></tr>
+<tr><td class="v"><span class="sw" style="background:#12111c"></span>#12111c</td><td class="v">.hero · body</td><td>不搬（属手机壳/演示说明）</td></tr>
+<tr><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.05)</td><td class="v">.lv-chip · .vip-banner</td><td>不搬（属手机壳/演示说明）</td></tr>
+<tr><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.4)</td><td class="v">.confirm · .toast</td><td>不搬（属手机壳/演示说明）</td></tr>
+<tr><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(20,20,31,.92)</td><td class="v">.toast</td><td>不搬（属手机壳/演示说明）</td></tr>
+<tr><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(20,20,31,.96)</td><td class="v">.confirm</td><td>不搬（属手机壳/演示说明）</td></tr>
+<tr><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.06)</td><td class="v">.demo-note</td><td>不搬（属手机壳/演示说明）</td></tr>
+<tr><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.2)</td><td class="v">.vip-banner</td><td>不搬（属手机壳/演示说明）</td></tr>
+<tr><td class="v"><span class="sw" style="background:repeating-linear-gradient(45deg,#2a2740 0 3px,#3a3550 3px 6px)"></span>rgba(216,180,106,.42)</td><td class="v">.vip-banner</td><td>不搬（属手机壳/演示说明）</td></tr>
+</tbody></table></div>
+<h2><span class="idx">03 / TYPE</span>字体与字号</h2>
+<p>原型一共 7 条 <span class="mono">font-family</span> 声明，去重后是 4 套字族 + 若干 <span class="mono">inherit</span>。这一层是<b>唯一必须跨平台替换的资源层</b>：Windows 有 SimSun，macOS 有 Songti SC，Android 两个都没有。D5 已定 F1：打包思源宋体子集、云存储下发、<span class="mono">wx.loadFontFace</span> 注册，字族栈固定为 <span class="mono">"YXSong","Songti SC","serif"</span>，等宽栈固定为 <span class="mono">"SF Mono","Consolas",monospace</span>（仅用于数字与代码块，Android 落到 monospace 也可接受）。</p>
+<div class="tblwrap"><table><thead><tr><th>原字族栈</th><th>出现</th><th>小程序落地</th></tr></thead><tbody>
+<tr><td class="v">"PingFang SC","Microsoft YaHei",sans-serif</td><td class="num">3</td><td>系统无衬线栈，原样保留（只用于极少数辅助字）</td></tr>
+<tr><td class="v">"SF Mono",Consolas,monospace</td><td class="num">4</td><td>等宽栈原样保留</td></tr>
+<tr><td class="v">"Songti SC","SimSun",serif</td><td class="num">3</td><td>替换为 <span class="mono">"YXSong","Songti SC",serif</span></td></tr>
+<tr><td class="v">"Songti SC",serif</td><td class="num">2</td><td>替换为 <span class="mono">"YXSong","Songti SC",serif</span></td></tr>
+<tr><td class="v">"Songti SC","STZhongsong",serif</td><td class="num">2</td><td>替换为 <span class="mono">"YXSong","Songti SC",serif</span></td></tr>
+<tr><td class="v">'Songti SC',serif</td><td class="num">6</td><td>替换为 <span class="mono">"YXSong","Songti SC",serif</span></td></tr>
+<tr><td class="v">inherit</td><td class="num">4</td><td>继承父级（WXSS 同样支持，保留）</td></tr>
+</tbody></table></div>
+<h3>3.1 字号阶梯（21 档，屏内 19 档）</h3>
+<p>口径按你的硬约束：<b>字号 px 乘以 k=2.450980 后取整到 0.5rpx</b>。右列同时给出取整误差——最大 0.25rpx ≈ 0.10px，低于一个物理像素的三分之一，肉眼与 diff 都不会抓到。字号<b>不用</b> <span class="mono">min-height</span> 那套比例推导，就是这一张表定死。</p>
+<div class="tblwrap"><table><thead><tr><th>原型字号</th><th>rpx（0.5 取整）</th><th>误差</th><th>屏内用了几处</th><th>用在</th></tr></thead><tbody>
+<tr><td class="v">34px</td><td class="v">83.5rpx</td><td class="num">+0.17</td><td class="num">0 / 1</td><td class="v">h1</td></tr>
+<tr><td class="v">21px</td><td class="v">51.5rpx</td><td class="num">+0.03</td><td class="num">1 / 1</td><td class="v">.tarot-card .t-sym</td></tr>
+<tr><td class="v">20px</td><td class="v">49rpx</td><td class="num">-0.02</td><td class="num">1 / 1</td><td class="v">.qian-tube .t-body::before</td></tr>
+<tr><td class="v">19px</td><td class="v">46.5rpx</td><td class="num">-0.07</td><td class="num">1 / 1</td><td class="v">.coin .c-f</td></tr>
+<tr><td class="v">18.5px</td><td class="v">45.5rpx</td><td class="num">+0.16</td><td class="num">1 / 1</td><td class="v">.sq-mid .q-line</td></tr>
+<tr><td class="v">18px</td><td class="v">44rpx</td><td class="num">-0.12</td><td class="num">1 / 1</td><td class="v">.page-hd .pt</td></tr>
+<tr><td class="v">17px</td><td class="v">41.5rpx</td><td class="num">-0.17</td><td class="num">1 / 1</td><td class="v">.t-card-mini .t-sym</td></tr>
+<tr><td class="v">16px</td><td class="v">39rpx</td><td class="num">-0.22</td><td class="num">2 / 3</td><td class="v">.sq-mid .q-line.sec · .confirm .c-t · .ob-input</td></tr>
+<tr><td class="v">15px</td><td class="v">37rpx</td><td class="num">+0.24</td><td class="num">2 / 2</td><td class="v">.pbtn · .ob-label</td></tr>
+<tr><td class="v">14px</td><td class="v">34.5rpx</td><td class="num">+0.19</td><td class="num">2 / 3</td><td class="v">.sub · .coin.sm .c-f · .ob-chip</td></tr>
+<tr><td class="v">13.5px</td><td class="v">33rpx</td><td class="num">-0.09</td><td class="num">2 / 3</td><td class="v">.vswitch button · .list-row · .ritual-card .r-name</td></tr>
+<tr><td class="v">13px</td><td class="v">32rpx</td><td class="num">+0.14</td><td class="num">3 / 3</td><td class="v">.lv-cell b · .echo .e-b · .btn-row .pbtn</td></tr>
+<tr><td class="v">12.5px</td><td class="v">30.5rpx</td><td class="num">-0.14</td><td class="num">4 / 7</td><td class="v">.seal · .pchip · .toast · .list-row .lr-v · .yi-badge,.ji-badge · .confirm .c-d · footer</td></tr>
+<tr><td class="v">12px</td><td class="v">29.5rpx</td><td class="num">+0.09</td><td class="num">2 / 6</td><td class="v">.kicker · .demo-bar .dv · .demo-tip · .demo-note .dn-t · .ob-u · .ob-no</td></tr>
+<tr><td class="v">11.5px</td><td class="v">28rpx</td><td class="num">-0.19</td><td class="num">4 / 6</td><td class="v">.demo-note · .status · .ritual-card .r-desc · .ob-hint · .ob-skip · .vip-banner</td></tr>
+<tr><td class="v">11px</td><td class="v">27rpx</td><td class="num">+0.04</td><td class="num">8 / 9</td><td class="v">.page-hd .ps · .pcard .crh .cl · .pcard .crh .cd · .sq-top .seal · .r-stat · .echo .e-t · .ob-k </td></tr>
+<tr><td class="v">10.5px</td><td class="v">25.5rpx</td><td class="num">-0.24</td><td class="num">8 / 9</td><td class="v">.lv-cell small · .pnav div · .sq-top · .ring .cname · .rit-note · .tarot-card .t-name · .ask-foo</td></tr>
+<tr><td class="v">10px</td><td class="v">24.5rpx</td><td class="num">-0.01</td><td class="num">2 / 2</td><td class="v">.vip-tag-sm · .t-card-mini .t-name</td></tr>
+<tr><td class="v">9.5px</td><td class="v">23.5rpx</td><td class="num">+0.22</td><td class="num">0 / 1</td><td class="v">.lv-chip</td></tr>
+<tr><td class="v">8.5px</td><td class="v">21rpx</td><td class="num">+0.17</td><td class="num">2 / 2</td><td class="v">.qian-tube .q-stick::after · .tarot-card .t-tag</td></tr>
+<tr><td class="v">8px</td><td class="v">19.5rpx</td><td class="num">-0.11</td><td class="num">1 / 1</td><td class="v">.t-card-mini .t-tag</td></tr>
+</tbody></table></div>
+<h2><span class="idx">04 / LEADING</span>行高与字距</h2>
+<p>行高只有一处是 px（<span class="mono">42px</span>，需转 102.9rpx），其余是<b>无单位倍数</b>，原样保留即可——倍数行高在 WXSS 里同样生效，且不随字号取整漂移。</p>
+<div class="tblwrap"><table><thead><tr><th>声明</th><th>出现</th><th>处置</th></tr></thead><tbody>
+<tr><td class="v">line-height: 1.7</td><td class="num">3</td><td>原样（无单位倍数）</td></tr>
+<tr><td class="v">line-height: 1.35</td><td class="num">1</td><td>原样（无单位倍数）</td></tr>
+<tr><td class="v">line-height: 1.6</td><td class="num">2</td><td>原样（无单位倍数）</td></tr>
+<tr><td class="v">line-height: 1.55</td><td class="num">1</td><td>原样（无单位倍数）</td></tr>
+<tr><td class="v">line-height: 1.8</td><td class="num">1</td><td>原样（无单位倍数）</td></tr>
+<tr><td class="v">line-height: 42px</td><td class="num">1</td><td>转 102.9rpx</td></tr>
+<tr><td class="v">line-height: 1</td><td class="num">2</td><td>原样（无单位倍数）</td></tr>
+<tr><td class="v">line-height: 1.65</td><td class="num">1</td><td>原样（无单位倍数）</td></tr>
+<tr><td class="v">line-height: 1.4</td><td class="num">1</td><td>原样（无单位倍数）</td></tr>
+<tr><td class="v">line-height: 1.5</td><td class="num">2</td><td>原样（无单位倍数）</td></tr>
+<tr><td class="v">letter-spacing: .22em</td><td class="num">1</td><td>0.5&nbsp;rpx</td></tr>
+<tr><td class="v">letter-spacing: .06em</td><td class="num">6</td><td>0.1&nbsp;rpx</td></tr>
+<tr><td class="v">letter-spacing: .12em</td><td class="num">2</td><td>0.3&nbsp;rpx</td></tr>
+<tr><td class="v">letter-spacing: .14em</td><td class="num">2</td><td>0.3&nbsp;rpx</td></tr>
+<tr><td class="v">letter-spacing: .1em</td><td class="num">1</td><td>0.2&nbsp;rpx</td></tr>
+<tr><td class="v">letter-spacing: .16em</td><td class="num">1</td><td>0.4&nbsp;rpx</td></tr>
+<tr><td class="v">letter-spacing: .08em</td><td class="num">3</td><td>0.2&nbsp;rpx</td></tr>
+<tr><td class="v">letter-spacing: 0</td><td class="num">1</td><td>0&nbsp;rpx</td></tr>
+<tr><td class="v">letter-spacing: .04em</td><td class="num">2</td><td>0.1&nbsp;rpx</td></tr>
+</tbody></table></div>
+<h2><span class="idx">05 / SURFACE</span>圆角与阴影</h2>
+<p>圆角共 17 种写法。其中 <span class="mono">38px</span> / <span class="mono">30px</span> 属于手机壳与内屏框，D2 已定这两处不计入比对、也不搬；屏内真正要用的是 <span class="mono">16px</span>（卡）、<span class="mono">14px</span>（仪式卡/回响）、<span class="mono">12px</span>（输入框/横幅）、<span class="mono">999px</span>（胶囊）这几档。百分比圆角（星空点、铜钱、签筒）在 WXSS 里同样有效，不动。</p>
+<div class="tblwrap"><table><thead><tr><th>声明</th><th>rpx</th><th>用在</th></tr></thead><tbody>
+<tr><td class="v">999px</td><td class="v">2448.5</td><td class="v">.vswitch button · .pbtn · .pchip · .toast · .vip-tag-sm · .lv-chip · .shid .chip</td></tr>
+<tr><td class="v">12px</td><td class="v">29.4</td><td class="v">.demo-note · .lv-cell · .ob-input · .vip-banner · .lv-strip</td></tr>
+<tr><td class="v">38px</td><td class="v">93.1</td><td class="v">.phone</td></tr>
+<tr><td class="v">30px</td><td class="v">73.5</td><td class="v">.screen</td></tr>
+<tr><td class="v">50%</td><td class="v">—</td><td class="v">.stars i · .incense-stick .ember · .ring · .ring::before · .qian-tube .t-base · .qian-tube .t-mouth </td></tr>
+<tr><td class="v">99px</td><td class="v">242.6</td><td class="v">.page[data-page="ritual"]::-webkit-scrollbar-track · .page[data-page="ritual"]::-webkit-scrollbar-th</td></tr>
+<tr><td class="v">3px</td><td class="v">7.4</td><td class="v">.page[data-page="ritual"]::-webkit-scrollbar-track · .page[data-page="ritual"]::-webkit-scrollbar-th</td></tr>
+<tr><td class="v">16px</td><td class="v">39.2</td><td class="v">.pcard · .sq-card · .confirm</td></tr>
+<tr><td class="v">5px</td><td class="v">12.3</td><td class="v">.seal</td></tr>
+<tr><td class="v">2px</td><td class="v">4.9</td><td class="v">.pnav div.on::after · .yi-badge::before,.ji-badge::before · .incense-stick .rod · .incense-stick .as</td></tr>
+<tr><td class="v">10px</td><td class="v">24.5</td><td class="v">.sq-card::before · .qian-tube .t-rim · .ob-chip</td></tr>
+<tr><td class="v">14px</td><td class="v">34.3</td><td class="v">.ritual-card · .echo · .lv-card</td></tr>
+<tr><td class="v">12px 12px 22px 22px</td><td class="v">29.4 / 29.4 / 53.9 / 53.9</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v">8px</td><td class="v">19.6</td><td class="v">.qian-tube .t-body::before · .tarot-card .t-back,.tarot-card .t-front · .t-card-mini</td></tr>
+<tr><td class="v">3px 3px 0 0</td><td class="v">7.4 / 7.4 / 0 / 0</td><td class="v">.qian-tube .q-stick::before</td></tr>
+<tr><td class="v">4px</td><td class="v">9.8</td><td class="v">.tarot-card .t-back::before</td></tr>
+<tr><td class="v">11px</td><td class="v">27</td><td class="v">.shwrap canvas</td></tr>
+</tbody></table></div>
+<h3>5.1 阴影（20 条，其中屏内 18 条）</h3>
+<p>阴影我给了<b>整条 token</b>，不是拆颜色：一条阴影是“位移 + 模糊 + 扩散 + 颜色（含内阴影）”的复合体，拆开写极易在搬运时把 inset 顺序或模糊半径写反。屏内 19 条阴影各自有名字，页面里写 <span class="mono">box-shadow: var(--sh-card)</span> 即可。</p>
+<div class="tblwrap"><table><thead><tr><th>token</th><th>值</th><th>原型选择器</th></tr></thead><tbody>
+<tr><td class="v"><span class="tag t-demo">不搬</span></td><td class="v">0 24px 60px rgba(0,0,0,.5)</td><td class="v">.phone</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-pcard</span></td><td class="v">0 10px 26px rgba(0,0,0,.24)</td><td class="v">.pcard · .sq-card</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-seal</span></td><td class="v">0 2px 6px rgba(0,0,0,.3)</td><td class="v">.seal</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-pbtn-gold</span></td><td class="v">0 8px 20px var(--moon-glow)</td><td class="v">.pbtn.gold</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-ember</span></td><td class="v">0 0 14px #FFB35C</td><td class="v">.incense-stick .ember</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-ring</span></td><td class="v">0 0 30px var(--moon-glow),inset 0 0 24px rgba(0,0,0,.4)</td><td class="v">.ring</td></tr>
+<tr><td class="v"><span class="tag t-demo">不搬</span></td><td class="v">0 18px 44px rgba(0,0,0,.55)</td><td class="v">.confirm</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-base</span></td><td class="v">0 4px 10px rgba(0,0,0,.35)</td><td class="v">.qian-tube .t-base</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-body</span></td><td class="v">inset 0 -16px 26px rgba(0,0,0,.5),inset 0 10px 14px rgba(255,226,160,.14),0 10px 24px rgba(0,0,0,.4)</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-body-before</span></td><td class="v">0 1px 3px rgba(0,0,0,.45)</td><td class="v">.qian-tube .t-body::before</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-rim</span></td><td class="v">0 3px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,240,210,.8)</td><td class="v">.qian-tube .t-rim</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-mouth</span></td><td class="v">inset 0 3px 8px rgba(0,0,0,.85),0 1px 0 rgba(232,207,151,.4)</td><td class="v">.qian-tube .t-mouth</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-stick</span></td><td class="v">0 1px 2px rgba(0,0,0,.5),inset 0 -3px 5px rgba(130,95,40,.22)</td><td class="v">.qian-tube .q-stick</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-stick-out</span></td><td class="v">0 6px 14px rgba(0,0,0,.55)</td><td class="v">.qian-tube .q-stick.out</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-back</span></td><td class="v">0 8px 18px rgba(0,0,0,.4)</td><td class="v">.tarot-card .t-back</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-front</span></td><td class="v">0 8px 18px rgba(0,0,0,.3)</td><td class="v">.tarot-card .t-front</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-coin</span></td><td class="v">0 7px 16px rgba(0,0,0,.35),inset 0 0 10px rgba(0,0,0,.3)</td><td class="v">.coin</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-coin-sm</span></td><td class="v">0 4px 10px rgba(0,0,0,.3),inset 0 0 8px rgba(0,0,0,.25)</td><td class="v">.coin.sm</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-chip-on</span></td><td class="v">0 4px 14px rgba(216,180,106,.22)</td><td class="v">.ob-chip.on</td></tr>
+<tr><td class="v"><span class="tag t-new">--sh-canvas</span></td><td class="v">0 14px 34px rgba(0,0,0,.55),0 0 0 1px rgba(216,180,106,.22)</td><td class="v">.shwrap canvas</td></tr>
+</tbody></table></div>
+<h2><span class="idx">06 / GRADIENT</span>渐变：28 个唯一值、共 34 次使用</h2>
+<p>不建 token，理由写在 01。这里给的是<b>唯一值清单</b>：A4 写页面时从这里整条取，只把其中出现的 hex / rgba 换成 02 节的 token 名。有 <span class="mono">var()</span> 的已经是变量版，直接用。</p>
+<div class="tblwrap"><table><thead><tr><th>渐变（唯一值）</th><th>用了几次</th><th>用在</th></tr></thead><tbody>
+<tr><td class="v">linear-gradient(135deg,var(--btn-a),var(--btn-b))</td><td class="num">6</td><td class="v">.vswitch button.on</td></tr>
+<tr><td class="v">linear-gradient(165deg,#F5F1E8,#EDE6D4)</td><td class="num">2</td><td class="v">.tarot-card .t-front</td></tr>
+<tr><td class="v">linear-gradient(135deg,#D8B46A,#B08D4A)</td><td class="num">1</td><td class="v">.vip-tag-sm</td></tr>
+<tr><td class="v">linear-gradient(135deg,rgba(216,180,106,.2),rgba(216,180,106,.05))</td><td class="num">1</td><td class="v">.vip-banner</td></tr>
+<tr><td class="v">linear-gradient(135deg,var(--btn-a),var(--gold-deep))</td><td class="num">1</td><td class="v">.ob-chip.on</td></tr>
+<tr><td class="v">linear-gradient(160deg,#3A2C1A,#241B12)</td><td class="num">1</td><td class="v">.tarot-card .t-back</td></tr>
+<tr><td class="v">linear-gradient(160deg,var(--shell-1),var(--shell-2))</td><td class="num">1</td><td class="v">.phone</td></tr>
+<tr><td class="v">linear-gradient(165deg,var(--card-a),var(--card-b))</td><td class="num">1</td><td class="v">.pcard</td></tr>
+<tr><td class="v">linear-gradient(170deg,var(--card-a),var(--card-b))</td><td class="num">1</td><td class="v">.sq-card</td></tr>
+<tr><td class="v">linear-gradient(175deg,var(--sky-1),var(--sky-2) 55%,var(--sky-3))</td><td class="num">1</td><td class="v">.screen</td></tr>
+<tr><td class="v">linear-gradient(180deg,#B08A3F,#7C5A24)</td><td class="num">1</td><td class="v">.qian-tube .t-base</td></tr>
+<tr><td class="v">linear-gradient(180deg,#B9A98A,#8E7F63)</td><td class="num">1</td><td class="v">.incense-stick .ash</td></tr>
+<tr><td class="v">linear-gradient(180deg,#E3C586,#B08A3F 55%,#7C5A24)</td><td class="num">1</td><td class="v">.qian-tube .t-rim</td></tr>
+<tr><td class="v">linear-gradient(180deg,#E8C98A,#96722F)</td><td class="num">1</td><td class="v">.qian-tube .q-stick::before</td></tr>
+<tr><td class="v">linear-gradient(180deg,#E8CF97,#B08D4A)</td><td class="num">1</td><td class="v">.incense-stick .rod</td></tr>
+<tr><td class="v">linear-gradient(180deg,#F2E4BC,#DEC98F)</td><td class="num">1</td><td class="v">.qian-tube .q-stick</td></tr>
+<tr><td class="v">linear-gradient(180deg,rgba(216,180,106,.55),rgba(176,141,74,.35))</td><td class="num">1</td><td class="v">.page[data-page="ritual"]::-webkit-scrollbar-thumb</td></tr>
+<tr><td class="v">linear-gradient(180deg,rgba(216,180,106,.55),rgba(176,141,74,.38))</td><td class="num">1</td><td class="v">.page[data-page="ritual"]::-webkit-scrollbar-thumb</td></tr>
+<tr><td class="v">linear-gradient(90deg,#6B4A1D,#A97B33 32%,#7C5A24 72%,#B08A3F)</td><td class="num">1</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v">linear-gradient(90deg,rgba(0,0,0,.28),transparent 35%,rgba(255,255,255,.16) 60%,rgba(0,0,0,.3))</td><td class="num">1</td><td class="v">.qian-tube .t-body</td></tr>
+<tr><td class="v">linear-gradient(90deg,var(--gold-deep),var(--gold-soft))</td><td class="num">1</td><td class="v">.r-bar&gt;div</td></tr>
+<tr><td class="v">radial-gradient(120% 140% at 20% 0%,#2B2A40 0%,#1B1A28 42%,#12111C 100%)</td><td class="num">1</td><td class="v">.hero</td></tr>
+<tr><td class="v">radial-gradient(28px 38px at 50% 50%,rgba(238,214,150,.95),rgba(190,150,70,.5))</td><td class="num">1</td><td class="v">.qian-tube .t-body::before</td></tr>
+<tr><td class="v">radial-gradient(circle at 35% 30%,#E8CF97,#9C7B3C)</td><td class="num">1</td><td class="v">.coin</td></tr>
+<tr><td class="v">radial-gradient(circle at 50% 42%,var(--sky-2),var(--sky-3))</td><td class="num">1</td><td class="v">.ring</td></tr>
+<tr><td class="v">radial-gradient(ellipse at 50% 100%,rgba(232,207,151,.5),transparent 70%)</td><td class="num">1</td><td class="v">.incense-stick .smoke</td></tr>
+<tr><td class="v">radial-gradient(ellipse at 50% 40%,#241A09,#0E0A04 78%)</td><td class="num">1</td><td class="v">.qian-tube .t-mouth</td></tr>
+<tr><td class="v">repeating-linear-gradient(0deg,transparent 0 15px,rgba(140,100,40,.5) 15px 17px)</td><td class="num">1</td><td class="v">.qian-tube .t-body</td></tr>
+</tbody></table></div>
+<h2><span class="idx">07 / SCALE</span>px→rpx 对照表（80 档）</h2>
+<p>k = 750 / 306 = <span class="mono">2.450980</span>。全表按“长度取 1 位小数、字号取 0.5rpx”两列并排给出，<b>写代码时照右两列抄</b>，不要现场心算。标注 <span class="tag t-demo">demo</span> 的档位只在展示壳出现，不进小程序（保留在表里是为了将来重跑原型截图时能对上）。</p>
+<div class="tblwrap"><table><thead><tr><th>px</th><th>rpx（长度，1 位小数）</th><th>rpx（字号，0.5 取整）</th><th>出现</th><th>属性</th><th>作用域</th></tr></thead><tbody>
+<tr><td class="num">-128</td><td class="num">-313.7</td><td class="num">-313.5</td><td class="num">1</td><td class="v">transform</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">-38</td><td class="num">-93.1</td><td class="num">-93</td><td class="num">1</td><td class="v">transform</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">-24</td><td class="num">-58.8</td><td class="num">-59</td><td class="num">1</td><td class="v">--dx</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">-16</td><td class="num">-39.2</td><td class="num">-39</td><td class="num">3</td><td class="v">box-shadow, --dx, transform</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">-9</td><td class="num">-22.1</td><td class="num">-22</td><td class="num">1</td><td class="v">top</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">-8</td><td class="num">-19.6</td><td class="num">-19.5</td><td class="num">1</td><td class="v">--dx</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">-6</td><td class="num">-14.7</td><td class="num">-14.5</td><td class="num">1</td><td class="v">transform</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">-4</td><td class="num">-9.8</td><td class="num">-10</td><td class="num">1</td><td class="v">bottom</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">-3</td><td class="num">-7.4</td><td class="num">-7.5</td><td class="num">1</td><td class="v">box-shadow</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">0</td><td class="num">0</td><td class="num">0</td><td class="num">2</td><td class="v">--dx</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">1</td><td class="num">2.5</td><td class="num">2.5</td><td class="num">42</td><td class="v">border-bottom, border, border-top, padding, box-shadow, margin-top</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">2</td><td class="num">4.9</td><td class="num">5</td><td class="num">25</td><td class="v">margin, width, height, box-shadow, gap, top, border-radius, padding, m</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">3</td><td class="num">7.4</td><td class="num">7.5</td><td class="num">20</td><td class="v">margin-bottom, width, height, border-radius, margin-top, filter, box-s</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">4</td><td class="num">9.8</td><td class="num">10</td><td class="num">19</td><td class="v">padding, filter, margin-bottom, box-shadow, gap, border-radius, inset,</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">5</td><td class="num">12.3</td><td class="num">12.5</td><td class="num">12</td><td class="v">width, border-radius, padding, height, box-shadow, margin, gap</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">6</td><td class="num">14.7</td><td class="num">14.5</td><td class="num">16</td><td class="v">gap, box-shadow, padding, margin, margin-left, margin-bottom, margin-t</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">7</td><td class="num">17.2</td><td class="num">17</td><td class="num">8</td><td class="v">gap, padding, bottom, box-shadow, margin-top</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">8</td><td class="num">19.6</td><td class="num">19.5</td><td class="num">33</td><td class="v">padding, margin-top, margin-left, box-shadow, backdrop-filter, gap, pa</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">8.5</td><td class="num">20.8</td><td class="num">21</td><td class="num">2</td><td class="v">font-size</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">9</td><td class="num">22.1</td><td class="num">22</td><td class="num">15</td><td class="v">padding, width, height, margin-top, gap, transform</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">9.5</td><td class="num">23.3</td><td class="num">23.5</td><td class="num">1</td><td class="v">font-size</td><td><span class="tag t-demo">demo</span></td></tr>
+<tr><td class="num">10</td><td class="num">24.5</td><td class="num">24.5</td><td class="num">25</td><td class="v">margin-top, padding, box-shadow, transform, inset, border-radius, font</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">10.5</td><td class="num">25.7</td><td class="num">25.5</td><td class="num">9</td><td class="v">font-size</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">11</td><td class="num">27</td><td class="num">27</td><td class="num">17</td><td class="v">margin, font-size, padding, border-radius</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">11.5</td><td class="num">28.2</td><td class="num">28</td><td class="num">6</td><td class="v">font-size</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">12</td><td class="num">29.4</td><td class="num">29.5</td><td class="num">25</td><td class="v">font-size, border-radius, padding, padding-bottom, gap, top, margin, h</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">12.5</td><td class="num">30.6</td><td class="num">30.5</td><td class="num">7</td><td class="v">font-size</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">13</td><td class="num">31.9</td><td class="num">32</td><td class="num">9</td><td class="v">padding, font-size, width, height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">13.5</td><td class="num">33.1</td><td class="num">33</td><td class="num">3</td><td class="v">font-size</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">14</td><td class="num">34.3</td><td class="num">34.5</td><td class="num">27</td><td class="v">margin-bottom, font-size, margin, padding, border-radius, box-shadow, </td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">15</td><td class="num">36.8</td><td class="num">37</td><td class="num">8</td><td class="v">padding, font-size, left, right, background</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">16</td><td class="num">39.2</td><td class="num">39</td><td class="num">17</td><td class="v">padding, margin, border-radius, width, height, font-size, top, --dx, g</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">17</td><td class="num">41.7</td><td class="num">41.5</td><td class="num">3</td><td class="v">background, height, font-size</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">18</td><td class="num">44.1</td><td class="num">44</td><td class="num">7</td><td class="v">gap, font-size, padding, box-shadow, height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">18.5</td><td class="num">45.3</td><td class="num">45.5</td><td class="num">1</td><td class="v">font-size</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">19</td><td class="num">46.6</td><td class="num">46.5</td><td class="num">2</td><td class="v">padding-top, font-size</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">20</td><td class="num">49</td><td class="num">49</td><td class="num">6</td><td class="v">padding, box-shadow, font-size, height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">21</td><td class="num">51.5</td><td class="num">51.5</td><td class="num">2</td><td class="v">top, font-size</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">22</td><td class="num">53.9</td><td class="num">54</td><td class="num">7</td><td class="v">padding, width, height, gap, border-radius</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">24</td><td class="num">58.8</td><td class="num">59</td><td class="num">6</td><td class="v">gap, box-shadow, inset, --dx</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">25</td><td class="num">61.3</td><td class="num">61.5</td><td class="num">2</td><td class="v">width, height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">26</td><td class="num">63.7</td><td class="num">63.5</td><td class="num">5</td><td class="v">box-shadow, width, padding</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">28</td><td class="num">68.6</td><td class="num">68.5</td><td class="num">2</td><td class="v">background, margin-top</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">30</td><td class="num">73.5</td><td class="num">73.5</td><td class="num">5</td><td class="v">border-radius, box-shadow, width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">34</td><td class="num">83.3</td><td class="num">83.5</td><td class="num">4</td><td class="v">padding, font-size, top, box-shadow</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">38</td><td class="num">93.1</td><td class="num">93</td><td class="num">2</td><td class="v">border-radius, background</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">40</td><td class="num">98</td><td class="num">98</td><td class="num">2</td><td class="v">width, height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">42</td><td class="num">102.9</td><td class="num">103</td><td class="num">3</td><td class="v">height, line-height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">44</td><td class="num">107.8</td><td class="num">108</td><td class="num">1</td><td class="v">box-shadow</td><td><span class="tag t-demo">demo</span></td></tr>
+<tr><td class="num">54</td><td class="num">132.4</td><td class="num">132.5</td><td class="num">1</td><td class="v">width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">56</td><td class="num">137.3</td><td class="num">137.5</td><td class="num">1</td><td class="v">height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">58</td><td class="num">142.2</td><td class="num">142</td><td class="num">3</td><td class="v">height, width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">60</td><td class="num">147.1</td><td class="num">147</td><td class="num">1</td><td class="v">box-shadow</td><td><span class="tag t-demo">demo</span></td></tr>
+<tr><td class="num">68</td><td class="num">166.7</td><td class="num">166.5</td><td class="num">1</td><td class="v">width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">80</td><td class="num">196.1</td><td class="num">196</td><td class="num">1</td><td class="v">bottom</td><td><span class="tag t-demo">demo</span></td></tr>
+<tr><td class="num">92</td><td class="num">225.5</td><td class="num">225.5</td><td class="num">1</td><td class="v">width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">96</td><td class="num">235.3</td><td class="num">235.5</td><td class="num">1</td><td class="v">height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">99</td><td class="num">242.6</td><td class="num">242.5</td><td class="num">2</td><td class="v">border-radius</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">100</td><td class="num">245.1</td><td class="num">245</td><td class="num">1</td><td class="v">height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">104</td><td class="num">254.9</td><td class="num">255</td><td class="num">1</td><td class="v">width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">108</td><td class="num">264.7</td><td class="num">264.5</td><td class="num">1</td><td class="v">width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">118</td><td class="num">289.2</td><td class="num">289</td><td class="num">1</td><td class="v">width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">122</td><td class="num">299</td><td class="num">299</td><td class="num">1</td><td class="v">width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">124</td><td class="num">303.9</td><td class="num">304</td><td class="num">1</td><td class="v">height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">126</td><td class="num">308.8</td><td class="num">309</td><td class="num">1</td><td class="v">bottom</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">130</td><td class="num">318.6</td><td class="num">318.5</td><td class="num">2</td><td class="v">width, height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">140</td><td class="num">343.1</td><td class="num">343</td><td class="num">1</td><td class="v">bottom</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">150</td><td class="num">367.6</td><td class="num">367.5</td><td class="num">2</td><td class="v">width, bottom</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">178</td><td class="num">436.3</td><td class="num">436.5</td><td class="num">1</td><td class="v">height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">188</td><td class="num">460.8</td><td class="num">461</td><td class="num">2</td><td class="v">width, height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">216</td><td class="num">529.4</td><td class="num">529.5</td><td class="num">1</td><td class="v">width</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">288</td><td class="num">705.9</td><td class="num">706</td><td class="num">1</td><td class="v">height</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">300</td><td class="num">735.3</td><td class="num">735.5</td><td class="num">1</td><td class="v">flex</td><td><span class="tag t-demo">demo</span></td></tr>
+<tr><td class="num">306</td><td class="num">750</td><td class="num">750</td><td class="num">1</td><td class="v">width</td><td><span class="tag t-demo">demo</span></td></tr>
+<tr><td class="num">330</td><td class="num">808.8</td><td class="num">809</td><td class="num">1</td><td class="v">max-width</td><td><span class="tag t-demo">demo</span></td></tr>
+<tr><td class="num">640</td><td class="num">1568.6</td><td class="num">1568.5</td><td class="num">1</td><td class="v">height</td><td><span class="tag t-demo">demo</span></td></tr>
+<tr><td class="num">700</td><td class="num">1715.7</td><td class="num">1715.5</td><td class="num">1</td><td class="v">perspective</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">840</td><td class="num">2058.8</td><td class="num">2059</td><td class="num">1</td><td class="v">max-width</td><td><span class="tag t-demo">demo</span></td></tr>
+<tr><td class="num">999</td><td class="num">2448.5</td><td class="num">2448.5</td><td class="num">7</td><td class="v">border-radius</td><td><span class="tag">app</span></td></tr>
+<tr><td class="num">1120</td><td class="num">2745.1</td><td class="num">2745</td><td class="num">1</td><td class="v">max-width</td><td><span class="tag t-demo">demo</span></td></tr>
+</tbody></table></div>
+<div class="warnbox"><h4>三个非整数陷阱</h4><ol><li><b>1px 边框</b> → 2.45rpx。真机上 2.45rpx ≈ 1.00px，直接用即可；但若某台机型 DPR 折算后落在半个物理像素，线会“发虚”。处置：先按 2.45rpx 写，真机三机型比对时若发现发虚，再对该处单独换 <span class="mono">transform: scaleY()</span> 的 hairline 方案——不预先改，避免大多数机型反而变粗。</li><li><b>动画位移</b>里的 px 不要转 rpx。签筒 7 根签的 <span class="mono">translate</span> 是 rAF 逐帧数学，A5 烘焙 keyframes 时要<b>按 px 采样的比例换算成百分比或 rpx 字面值</b>，两者不能混用，否则位移幅度随屏宽变化。</li><li><b>字距 letter-spacing</b> 介于字体与布局之间，一律按 px→rpx 转，不保留 px（保留会导致小屏上标题撑行）。</li></ol></div>
+<h2><span class="idx">08 / MOTION</span>关键帧与动效</h2>
+<p>原型共 8 个 <span class="mono">@keyframes</span>、26 条动效声明（含 transition）。时长与缓动<b>原样搬运，不重编</b>；只有签筒那 5.6 秒是 rAF 数学，A5 用构建期采样烘焙成 keyframes（见 NT-09）。下面每张卡的关键帧内容都是从源码逐条读出来的，可直接对照。</p>
+<div class="kf"><div class="h"><span class="name">@keyframes pageIn</span><span class="meta">时长 .35s/.3s · 引用 2 处 · 原型第 79 行</span></div>
+<div class="steps">from {     opacity:0; transform:translateY(9px)
+to {       opacity:1; transform:none</div></div>
+<div class="kf"><div class="h"><span class="name">@keyframes ember</span><span class="meta">时长 1.2s · 引用 1 处 · 原型第 142 行</span></div>
+<div class="steps">0%,100% {  opacity:1; transform:translateX(-50%) scale(1)
+50% {      opacity:.6; transform:translateX(-50%) scale(.8)</div></div>
+<div class="kf"><div class="h"><span class="name">@keyframes smoke</span><span class="meta">时长 3.2s · 引用 1 处 · 原型第 144 行</span></div>
+<div class="steps">0% {       opacity:.15; transform:translateX(-50%) translateY(10px) scale(.9)
+50% {      opacity:.5; transform:translateX(-56%) translateY(-6px) scale(1.05)
+100% {     opacity:.15; transform:translateX(-50%) translateY(10px) scale(.9)</div></div>
+<div class="kf"><div class="h"><span class="name">@keyframes drawSeg</span><span class="meta">时长 .45s · 引用 1 处 · 原型第 157 行</span></div>
+<div class="steps">to {       stroke-dashoffset:0</div></div>
+<div class="kf"><div class="h"><span class="name">@keyframes starIn</span><span class="meta">时长 .5s · 引用 1 处 · 原型第 158 行</span></div>
+<div class="steps">from {     opacity:0
+to {       opacity:1</div></div>
+<div class="kf"><div class="h"><span class="name">@keyframes shake</span><span class="meta">时长 .62s · 引用 1 处 · 原型第 215 行</span></div>
+<div class="steps">0%,100% {  transform:rotate(0)
+15% {      transform:rotate(-6deg)
+30% {      transform:rotate(6.4deg)
+45% {      transform:rotate(-5deg)
+60% {      transform:rotate(4.4deg)
+75% {      transform:rotate(-2.6deg)</div></div>
+<div class="kf"><div class="h"><span class="name">@keyframes stickShake</span><span class="meta">时长 .62s · 引用 1 处 · 原型第 217 行</span></div>
+<div class="steps">0%,100% {  transform:translateX(-50%) translateX(var(--dx)) rotate(var(--ang))
+20% {      transform:translateX(-50%) translateX(var(--dx)) rotate(calc(var(--ang) - 11deg))
+40% {      transform:translateX(-50%) translateX(var(--dx)) rotate(calc(var(--ang) + 11deg))
+60% {      transform:translateX(-50%) translateX(var(--dx)) rotate(calc(var(--ang) - 7deg))
+80% {      transform:translateX(-50%) translateX(var(--dx)) rotate(calc(var(--ang) + 7deg))</div></div>
+<div class="kf"><div class="h"><span class="name">@keyframes coinToss</span><span class="meta">时长 .5s · 引用 1 处 · 原型第 253 行</span></div>
+<div class="steps">0% {       transform:translateY(0) rotate(0)
+40% {      transform:translateY(-16px) rotate(160deg)
+70% {      transform:translateY(2px) rotate(300deg)
+100% {     transform:translateY(0) rotate(360deg)</div></div>
+<h3>8.1 动效声明明细（26 条）</h3>
+<div class="tblwrap"><table><thead><tr><th>选择器</th><th>类型</th><th>参数</th><th>行</th></tr></thead><tbody>
+<tr><td class="v">.vswitch button</td><td>transition</td><td class="v">all .18s</td><td class="num">34</td></tr>
+<tr><td class="v">.lv-cell</td><td>transition</td><td class="v">transform .15s</td><td class="num">73</td></tr>
+<tr><td class="v">.page.on</td><td><span class="tag t-new">anim</span></td><td class="v">name=pageIn, duration=.3s, easing=ease, delay=—, iter=—, fill=—</td><td class="num">78</td></tr>
+<tr><td class="v">.pbtn</td><td>transition</td><td class="v">transform .12s,box-shadow .12s</td><td class="num">88</td></tr>
+<tr><td class="v">.pchip</td><td>transition</td><td class="v">all .15s</td><td class="num">93</td></tr>
+<tr><td class="v">.toast</td><td>transition</td><td class="v">opacity .25s,transform .25s</td><td class="num">107</td></tr>
+<tr><td class="v">.ritual-card</td><td>transition</td><td class="v">opacity .2s,transform .15s</td><td class="num">130</td></tr>
+<tr><td class="v">.incense-stick .ember</td><td><span class="tag t-new">anim</span></td><td class="v">name=ember, duration=1.2s, easing=ease-in-out, delay=—, iter=infinite, fill=—</td><td class="num">141</td></tr>
+<tr><td class="v">.incense-stick .smoke</td><td><span class="tag t-new">anim</span></td><td class="v">name=smoke, duration=3.2s, easing=ease-in-out, delay=—, iter=infinite, fill=—</td><td class="num">143</td></tr>
+<tr><td class="v">.ring .const</td><td>transition</td><td class="v">opacity .3s</td><td class="num">149</td></tr>
+<tr><td class="v">.ring.trace .const.on .cstar,.ring.trace .const.on .chal</td><td><span class="tag t-new">anim</span></td><td class="v">name=starIn, duration=.5s, easing=ease, delay=var(--d,0s), iter=—, fill=—</td><td class="num">154</td></tr>
+<tr><td class="v">.ring.trace .const.on .cline</td><td><span class="tag t-new">anim</span></td><td class="v">name=drawSeg, duration=.45s, easing=linear, delay=var(--d,0s), iter=—, fill=—</td><td class="num">155</td></tr>
+<tr><td class="v">.confirm</td><td>transition</td><td class="v">opacity .22s,transform .22s</td><td class="num">159</td></tr>
+<tr><td class="v">.echo</td><td><span class="tag t-new">anim</span></td><td class="v">name=pageIn, duration=.35s, easing=ease, delay=—, iter=—, fill=—</td><td class="num">171</td></tr>
+<tr><td class="v">.qian-tube .q-stick</td><td>transition</td><td class="v">none</td><td class="num">199</td></tr>
+<tr><td class="v">.qian-tube.shake</td><td><span class="tag t-new">anim</span></td><td class="v">name=shake, duration=.62s, easing=ease, delay=—, iter=—, fill=—</td><td class="num">214</td></tr>
+<tr><td class="v">.qian-tube.shake .q-stick</td><td><span class="tag t-new">anim</span></td><td class="v">name=stickShake, duration=.62s, easing=ease-in-out, delay=var(--d), iter=—, fill=—</td><td class="num">216</td></tr>
+<tr><td class="v">.qian-tube .q-stick.rise</td><td>transition</td><td class="v">transform .38s cubic-bezier(.2,.9,.3,1)</td><td class="num">224</td></tr>
+<tr><td class="v">.qian-tube .q-stick.riseout</td><td>transition</td><td class="v">transform .5s ease-in,opacity .45s ease</td><td class="num">227</td></tr>
+<tr><td class="v">.tarot-card</td><td>transition</td><td class="v">transform .7s cubic-bezier(.3,.8,.4,1)</td><td class="num">231</td></tr>
+<tr><td class="v">.coin</td><td>transition</td><td class="v">transform .5s ease</td><td class="num">246</td></tr>
+<tr><td class="v">.coin.toss</td><td><span class="tag t-new">anim</span></td><td class="v">name=coinToss, duration=.5s, easing=ease, delay=—, iter=—, fill=—</td><td class="num">251</td></tr>
+<tr><td class="v">.ob-input</td><td>transition</td><td class="v">border-color .15s,background .15s</td><td class="num">263</td></tr>
+<tr><td class="v">.ob-chip</td><td>transition</td><td class="v">.15s</td><td class="num">273</td></tr>
+<tr><td class="v">.ob-dots i</td><td>transition</td><td class="v">.2s</td><td class="num">278</td></tr>
+<tr><td class="v">.shid .chip</td><td>transition</td><td class="v">all .18s</td><td class="num">312</td></tr>
+</tbody></table></div>
+<h2><span class="idx">09 / RULES</span>落地规则（写 WXSS 时照这七条）</h2>
+<div class="warnbox"><h4>硬规则</h4><ol><li><b>零裸色值</b>：页面 WXSS 里只允许出现 <span class="mono">var(--…)</span>。检验方式是一条脚本：对 <span class="mono">miniprogram/pages/**/*.wxss</span> 扫 <span class="mono">#hex</span> 与 <span class="mono">rgba(</span>，命中即失败。</li><li><b>字号只从 03 节抄</b>：21 档已在表里，出现表外字号即视为新增设计，需要先改本表。</li><li><b>长度只用 07 节两列</b>：不要现场心算 k；长度 1 位小数、字号 0.5 取整。</li><li><b>展示壳样式一条都不搬</b>：<span class="mono">.phone / .screen / .hero / .demo-* / body / footer</span>。真机屏幕就是内屏，没有壳。</li><li><b>渐变内联、阴影取 token</b>：渐变整条写，只换色标；阴影一律 <span class="mono">var(--sh-…)</span>。</li><li><b>keyframes 数值写死</b>：不在 keyframes 里用 <span class="mono">var()</span> 做插值（iOS 上有已知不稳），变量只用在选择器端的 <span class="mono">animation-duration/delay</span>。</li><li><b>字体三件套</b>：<span class="mono">loadFontFace</span> 成功回调后再触发任何 canvas 文字绘制（NT-18），失败则整页落 <span class="mono">Songti SC / serif</span> 并在报告里标注。</li></ol></div>
+<p>关于 <span class="mono">var()</span> 的可靠性：WXSS 跑在 WKWebView / XWeb 上，自定义属性是支持的；风险只在“变量被用在 keyframes 内部插值”这一处。因此 tokens.wxss 里变量照常声明，但 A5 的签筒 keyframes 一律用字面数值。若真机三机型里真的出现某台机型变量失效（历史上有过 X5 内核老版本），兜底方案是构建期把 <span class="mono">var(--x)</span> 就地展开成字面值——tokens.json 里每个 token 都带原值，展开是机械操作，不需要重写样式。</p>
+<h2><span class="idx">10 / RECONCILE</span>与开工清单的四处对账</h2>
+<p>清单是先读源码手写结论、本页是脚本全量解析，两者有一处数字对不上，以本页为准：</p>
+<div class="tblwrap"><table><thead><tr><th>项</th><th>清单里写的</th><th>脚本实测</th><th>结论</th></tr></thead><tbody>
+<tr><td class="v">CSS 变量个数</td><td class="v">37 个</td><td class="v">36 个（原文 57 次同名声明）</td><td>37 是把同名变量在不同选择器下的重复声明也数进去了；去重后 36（:root 33 + 元素级 3）</td></tr>
+<tr><td class="v">颜色个数</td><td class="v">110 处 hex + 103 处 rgba</td><td class="v">100 个唯一色值（hex 44 + rgba 56）+ 28 条渐变字面</td><td>清单数的是“出现次数”不是“唯一值”，两者不冲突；A2 按唯一值建 token</td></tr>
+<tr><td class="v">px 声明</td><td class="v">809 处 px 声明</td><td class="v">462 处出现、80 个唯一值（屏内 70 个）</td><td>同上，唯一值才是要转的；重复值复用同一行 rpx</td></tr>
+<tr><td class="v">规则条数</td><td class="v">未统计</td><td class="v">247 条（屏内 208 / 展示壳 39）</td><td>展示壳 39 条整段不搬，这是清单里没量化的一项，也是避免带壳进小程序的关键</td></tr>
+</tbody></table></div>
+<p>另外补一条清单里没有、但 A3 一定会撞上的：<b>内屏高度</b>。原型 <span class="mono">.screen{height:640px}</span>，换算 1568.6rpx；但真机屏高不是 640px，所以 D2 的“基准对齐模式”要用 <span class="mono">656.25rpx 的安全区换算</span>之外的一套：A3 里用 <span class="mono">flex:1 + min-height:1466.7rpx</span>（= 598.45px，扣除自绘状态栏 41.55px），这个数字已写进开工清单 NT-02，本表不重复推导。</p>
+<footer><span>A2 视觉规格表 · 由 tokens.json 生成，勿手改</span><span class="mono">源 SHA256 4873B0D48AC31BC89F9CE7C7</span></footer>…
+</div></body></html>

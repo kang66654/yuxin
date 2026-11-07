@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>观星 · 星图仪式 — 设计稿</title>
+<style>
+  html,body{margin:0;padding:0;width:402px;background:#05060f;
+    font-family:'PingFang SC','Microsoft YaHei',sans-serif;-webkit-font-smoothing:antialiased;}
+  .phone{
+    position:relative;width:402px;height:874px;overflow:hidden;margin:0;
+    background:linear-gradient(175deg,#1D1E3C 0%,#12132B 45%,#0A0B1A 100%);
+    border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.6);
+  }
+  /* ---------- 氛围层 ---------- */
+  .halo{position:absolute;left:-99px;top:-160px;width:600px;height:440px;
+    background:radial-gradient(circle,rgba(110,100,196,.16),rgba(110,100,196,0) 70%);}
+  .galaxy{position:absolute;left:-90px;top:250px;width:600px;height:190px;transform:rotate(-24deg);
+    background:linear-gradient(90deg,rgba(214,220,255,0) 0%,rgba(214,220,255,.055) 35%,rgba(232,201,138,.05) 55%,rgba(214,220,255,0) 100%);
+    filter:blur(2px);}
+  .stars{position:absolute;left:0;top:0;}
+  /* ---------- 状态栏 ---------- */
+  .sb-time{position:absolute;left:26px;top:16px;font:600 15px 'Inter','Microsoft YaHei';color:#EDEFF8;letter-spacing:.3px;}
+  .wxcap{position:absolute;right:12px;top:14px;width:88px;height:32px;border-radius:16px;
+    border:1px solid rgba(255,255,255,.22);background:rgba(10,11,26,.35);
+    display:flex;align-items:center;justify-content:center;gap:0;}
+  .wxcap .dots{letter-spacing:1.5px;font-size:11px;color:#EDEFF8;padding:0 10px;}
+  .wxcap .div{width:1px;height:14px;background:rgba(255,255,255,.25);}
+  .wxcap .circ{width:15px;height:15px;border:1.6px solid #EDEFF8;border-radius:50%;margin-left:10px;position:relative;}
+  .wxcap .circ::after{content:'';position:absolute;inset:3.2px;border-radius:50%;background:#EDEFF8;}
+  /* ---------- 标题区（字体规范：H1 41.5rpx→22px/700/.06em 宋体；Caption 24rpx→13px/.12em） ---------- */
+  .hd{position:absolute;left:24px;top:56px;display:flex;align-items:baseline;gap:10px;}
+  .hd .t{font:700 22px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#F2EFE6;letter-spacing:.06em;}
+  .hd .s{font:400 13px 'PingFang SC','Microsoft YaHei',sans-serif;color:#8B90AC;letter-spacing:.12em;}
+  .vip{position:absolute;right:16px;top:60px;height:28px;padding:0 12px;border-radius:14px;
+    border:1px solid rgba(232,201,138,.28);background:rgba(255,255,255,.05);
+    display:flex;align-items:center;gap:5px;font:700 11.5px 'PingFang SC',sans-serif;color:#E8C98A;letter-spacing:.04em;}
+  .sub{position:absolute;left:24px;top:96px;font:400 13px 'PingFang SC',sans-serif;color:#6F769A;letter-spacing:.12em;}
+  /* ---------- 心情 chips ---------- */
+  .chips{position:absolute;left:16px;top:126px;display:flex;gap:9px;}
+  .chip{height:36px;padding:0 15px;border-radius:18px;display:flex;align-items:center;
+    font:600 13.5px 'PingFang SC',sans-serif;color:#8B90AC;letter-spacing:.04em;
+    background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.10);}
+  .chip.on{background:linear-gradient(90deg,#F2DFA8,#D9B96A);color:#3A2A10;font-weight:700;
+    border:none;box-shadow:0 4px 14px rgba(232,201,138,.28);}
+  /* ---------- 星图舞台 ---------- */
+  .ring{position:absolute;left:41px;top:238px;}
+  .const{position:absolute;left:61px;top:262px;}
+  .meteor{position:absolute;left:250px;top:186px;}
+  .mount{position:absolute;left:0;top:542px;}
+  .status-pill{position:absolute;left:81px;top:584px;width:240px;height:32px;border-radius:16px;
+    background:rgba(13,14,34,.80);border:1px solid rgba(232,201,138,.20);
+    display:flex;align-items:center;justify-content:center;
+    font:600 13px 'PingFang SC',sans-serif;color:#E8C98A;letter-spacing:.12em;}
+  /* ---------- 按钮（按钮主字 34.5rpx→18.5px/700/.08em 宋体） ---------- */
+  .btn-main{position:absolute;left:24px;top:646px;width:354px;height:54px;border-radius:27px;
+    background:linear-gradient(90deg,#F2DFA8,#D9B96A);
+    display:flex;align-items:center;justify-content:center;
+    font:700 18.5px 'Songti SC','Source Han Serif SC','SimSun',serif;color:#3A2A10;letter-spacing:.08em;text-indent:.08em;
+    box-shadow:0 8px 26px rgba(232,201,138,.30);}
+  .btn-sub{position:absolute;left:24px;top:710px;width:354px;height:44px;border-radius:22px;
+    background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.12);
+    display:flex;align-items:center;justify-content:center;
+    font:600 15px 'PingFang SC',sans-serif;color:#C9CFE8;letter-spacing:.08em;text-indent:.08em;}
+  .foot{position:absolute;left:0;top:764px;width:402px;text-align:center;
+    font:400 13px 'PingFang SC',sans-serif;color:#5F6689;letter-spacing:.12em;}
+  /* ---------- Tab ---------- */
+  .tab{position:absolute;left:12px;top:796px;width:378px;height:62px;border-radius:36px;
+    background:rgba(18,19,43,.90);border:1px solid rgba(255,255,255,.09);
+    display:flex;padding:4px 6px;box-sizing:border-box;}
+  .ti{width:73px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;}
+  .ti span{font:600 11.5px 'PingFang SC',sans-serif;color:#8B90AC;letter-spacing:.02em;}
+  .ti.on{width:73px;height:54px;border-radius:27px;background:linear-gradient(90deg,#F2DFA8,#D9B96A);
+    box-shadow:0 3px 12px rgba(232,201,138,.30);}
+  .ti.on span{color:#3A2A10;font-weight:700;}
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="halo"></div>
+  <div class="galaxy"></div>
+
+  <!-- 星空 -->
+  <svg class="stars" width="402" height="560" viewBox="0 0 402 560" fill="none">
+    <defs>
+      <radialGradient id="sg" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stop-color="#FFF8E7" stop-opacity="0.9"/>
+        <stop offset="1" stop-color="#FFF8E7" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <g fill="#C9CFF0">
+      <circle cx="30" cy="120" r="1" opacity=".5"/><circle cx="72" cy="64" r=".8" opacity=".4"/>
+      <circle cx="120" cy="150" r="1.1" opacity=".45"/><circle cx="160" cy="52" r=".8" opacity=".35"/>
+      <circle cx="238" cy="96" r="1.2" opacity=".5"/><circle cx="292" cy="60" r=".9" opacity=".4"/>
+      <circle cx="352" cy="128" r="1" opacity=".45"/><circle cx="382" cy="78" r=".8" opacity=".35"/>
+      <circle cx="48" cy="216" r=".9" opacity=".4"/><circle cx="356" cy="208" r="1" opacity=".4"/>
+      <circle cx="24" cy="330" r="1" opacity=".35"/><circle cx="378" cy="320" r=".9" opacity=".35"/>
+      <circle cx="60" cy="430" r="1" opacity=".3"/><circle cx="344" cy="452" r="1" opacity=".3"/>
+      <circle cx="120" cy="500" r=".9" opacity=".28"/><circle cx="290" cy="512" r=".9" opacity=".28"/>
+    </g>
+    <g stroke="#FFF8E7" stroke-linecap="round" opacity=".8">
+      <path d="M100 176v14M93 183h14" stroke-width="1"/>
+      <path d="M318 242v11M312.5 247.5h11" stroke-width=".9" opacity=".8"/>
+    </g>
+    <circle cx="100" cy="183" r="7" fill="url(#sg)"/>
+    <circle cx="318" cy="247" r="5.5" fill="url(#sg)"/>
+  </svg>
+
+  <!-- 状态栏 -->
+  <div class="sb-time">14:51</div>
+  <div class="wxcap"><span class="dots">•••</span><span class="div"></span><span class="circ"></span></div>
+
+  <!-- 标题 -->
+  <div class="hd"><span class="t">观星</span><span class="s">星图仪式</span></div>
+  <div class="vip">✦ 会员专属 · 不限次</div>
+  <div class="sub">以今日心情，连线属于你的星语</div>
+
+  <!-- 心情 chips -->
+  <div class="chips">
+    <div class="chip on">微光</div>
+    <div class="chip">起风</div>
+    <div class="chip">星晴</div>
+    <div class="chip">迷航</div>
+    <div class="chip">圆满</div>
+  </div>
+
+  <!-- 星盘环 -->
+  <svg class="ring" width="320" height="320" viewBox="0 0 320 320" fill="none">
+    <circle cx="160" cy="160" r="150" stroke="#E8C98A" stroke-opacity=".16" stroke-width="1"/>
+    <circle cx="160" cy="160" r="142" stroke="#E8C98A" stroke-opacity=".22" stroke-width="1" stroke-dasharray="1.5 9"/>
+    <circle cx="160" cy="160" r="116" stroke="#E8C98A" stroke-opacity=".10" stroke-width="1" stroke-dasharray="2 14"/>
+    <g fill="#E8C98A" fill-opacity=".55">
+      <rect x="157" y="7" width="6" height="6" transform="rotate(45 160 10)"/>
+      <rect x="307" y="157" width="6" height="6" transform="rotate(45 310 160)"/>
+      <rect x="157" y="307" width="6" height="6" transform="rotate(45 160 310)"/>
+      <rect x="7" y="157" width="6" height="6" transform="rotate(45 10 160)"/>
+    </g>
+  </svg>
+
+  <!-- 主星座 -->
+  <svg class="const" width="280" height="240" viewBox="0 0 280 240" fill="none">
+    <defs>
+      <radialGradient id="cg" cx="0.5" cy="0.5" r="0.5">
+        <stop offset="0" stop-color="#FFF3D6" stop-opacity=".85"/>
+        <stop offset="0.4" stop-color="#FFE9BC" stop-opacity=".28"/>
+        <stop offset="1" stop-color="#FFE9BC" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="line" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#E8C98A" stop-opacity=".25"/>
+        <stop offset=".5" stop-color="#E8C98A" stop-opacity=".6"/>
+        <stop offset="1" stop-color="#E8C98A" stop-opacity=".25"/>
+      </linearGradient>
+    </defs>
+    <!-- 连线 -->
+    <path d="M30 152 L70 114 L118 128 L150 88 L198 102 L226 144" stroke="url(#line)" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M118 128 L128 178 L172 198" stroke="url(#line)" stroke-width="1.1" stroke-linejoin="round" opacity=".8"/>
+    <!-- 星光晕 -->
+    <circle cx="150" cy="88" r="16" fill="url(#cg)"/>
+    <circle cx="70" cy="114" r="12" fill="url(#cg)"/>
+    <circle cx="198" cy="102" r="10" fill="url(#cg)"/>
+    <circle cx="128" cy="178" r="9" fill="url(#cg)"/>
+    <!-- 星芒 -->
+    <g stroke="#FFF8E7" stroke-linecap="round">
+      <path d="M150 78v20M140 88h20" stroke-width="1" opacity=".9"/>
+      <path d="M70 107v14M63 114h14" stroke-width=".9" opacity=".75"/>
+    </g>
+    <!-- 星点 -->
+    <g fill="#FFF8E7">
+      <circle cx="30" cy="152" r="2.6"/><circle cx="70" cy="114" r="3.4"/>
+      <circle cx="118" cy="128" r="2.8"/><circle cx="150" cy="88" r="4.2"/>
+      <circle cx="198" cy="102" r="3"/><circle cx="226" cy="144" r="2.6"/>
+      <circle cx="128" cy="178" r="2.4"/><circle cx="172" cy="198" r="2.2"/>
+    </g>
+    <!-- 散星 -->
+    <g fill="#C9CFF0">
+      <circle cx="16" cy="60" r="1" opacity=".4"/><circle cx="250" cy="40" r="1.1" opacity=".45"/>
+      <circle cx="266" cy="90" r=".9" opacity=".35"/><circle cx="240" cy="180" r="1" opacity=".4"/>
+      <circle cx="40" cy="212" r="1" opacity=".35"/><circle cx="96" cy="36" r=".9" opacity=".35"/>
+      <circle cx="196" cy="222" r=".9" opacity=".3"/><circle cx="258" cy="140" r=".8" opacity=".35"/>
+      <circle cx="12" cy="108" r=".9" opacity=".3"/><circle cx="212" cy="52" r=".9" opacity=".4"/>
+    </g>
+  </svg>
+
+  <!-- 流星 -->
+  <svg class="meteor" width="140" height="80" viewBox="0 0 140 80" fill="none">
+    <defs><linearGradient id="mt" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFF8E7" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#FFF8E7" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="M134 6 L52 62" stroke="url(#mt)" stroke-width="1.6" stroke-linecap="round"/>
+    <circle cx="134" cy="6" r="1.8" fill="#FFF8E7"/>
+  </svg>
+
+  <!-- 地平线山影 -->
+  <svg class="mount" width="402" height="130" viewBox="0 0 402 130" fill="none">
+    <path d="M0 62 C60 30 122 68 192 44 C262 22 322 60 402 34 L402 130 L0 130 Z" fill="#0D0E22" opacity=".9"/>
+    <path d="M0 92 C80 64 152 98 232 78 C302 62 352 88 402 72 L402 130 L0 130 Z" fill="#060714" opacity=".95"/>
+  </svg>
+
+  <!-- 状态提示 -->
+  <div class="status-pill">今日星位已就位 · 心情「微光」</div>
+
+  <!-- 按钮 -->
+  <div class="btn-main">观 星 · 取 星 语</div>
+  <div class="btn-sub">返回仪式库</div>
+  <div class="foot">会员专属 · 不限次 · 谕心仅供娱乐 · 不构成任何建议</div>
+
+  <!-- Tab -->
+  <div class="tab">
+    <div class="ti">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3.5 9L10 3.5L16.5 9M5 8V16.5H8.5V12H11.5V16.5H15V8" stroke="#7E86A8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>首页</span>
+    </div>
+    <div class="ti">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3C14.4 3 17.5 5.9 17.5 9.5C17.5 13.1 14.4 16 10 16C8.8 16 7.7 15.8 6.7 15.4L3.5 16.5L4.4 13.6C3.5 12.5 3 11.1 3 9.5C3 5.9 5.6 3 10 3Z" stroke="#7E86A8" stroke-width="1.5" stroke-linejoin="round"/><circle cx="7" cy="9.5" r="1" fill="#7E86A8"/><circle cx="10" cy="9.5" r="1" fill="#7E86A8"/><circle cx="13" cy="9.5" r="1" fill="#7E86A8"/></svg>
+      <span>问事</span>
+    </div>
+    <div class="ti">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2.5C13.6 2.5 16.5 5.2 16.5 8.5C16.5 11 15 13.1 12.8 14.1V17H7.2V14.1C5 13.1 3.5 11 3.5 8.5C3.5 5.2 6.4 2.5 10 2.5Z" stroke="#7E86A8" stroke-width="1.5" stroke-linejoin="round"/><ellipse cx="10" cy="9" rx="2.2" ry="3" stroke="#7E86A8" stroke-width="1.3"/></svg>
+      <span>树洞</span>
+    </div>
+    <div class="ti on">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7.2" stroke="#3A2A10" stroke-width="1.5"/><path d="M10 5.6L11 8.6L14 9.4L11 10.4L10 13.4L9 10.4L6 9.4L9 8.6Z" fill="#3A2A10"/></svg>
+      <span>仪式</span>
+    </div>
+    <div class="ti">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="6.5" r="3.2" stroke="#7E86A8" stroke-width="1.5"/><path d="M3.8 16.5C4.6 13.9 7 12.4 10 12.4C13 12.4 15.4 13.9 16.2 16.5" stroke="#7E86A8" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>我的</span>
+    </div>
+  </div>
+</div>
+</body>
+</html>

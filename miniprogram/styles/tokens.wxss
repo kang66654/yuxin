@@ -1,0 +1,232 @@
+/* 由 tools/extract_tokens.py 生成，勿手改。
+   源：谕心夜色神谕签筒完整可演示Demo.html  SHA256 4873B0D48AC31BC89F9CE7C7C660B6D9C48C18C973AD6CA88706DDD8FFA7F41D
+   306px ↔ 750rpx，k = 2.450980；字号已按 0.5rpx 取整口径登记在 tokens.json */
+page, .yx-varscope {
+  --btn-a: #E8CF97;
+  --btn-b: #C9A96A;
+  --btn-text: #2B2620;
+  --card-a: #F5F1E8;
+  --card-b: #EDE6D4;
+  --card-line: rgba(233,226,210,.6);
+  --ghost-bg: rgba(243,239,230,.1);
+  --ghost-line: rgba(216,180,106,.45);
+  --ghost-text: #E8CF97;
+  --gold: #D8B46A;
+  --gold-deep: #B08D4A;
+  --gold-soft: #E8CF97;
+  --green: #5E7A5C;
+  --ink: #2B2620;
+  --ink-faint: #9A927F;
+  --ink-soft: #6A6255;
+  --moon-1: #F6EFD8;
+  --moon-2: #D8B46A;
+  --moon-glow: rgba(216,180,106,.5);
+  --nav-bg: rgba(20,20,31,.72);
+  --nav-line: rgba(216,180,106,.16);
+  --nav-text: #8A8474;
+  --qian-line: rgba(176,141,74,.35);
+  --red: #A8452E;
+  --shell-1: #2E2C3E;
+  --shell-2: #1B1A28;
+  --shell-line: #3A3750;
+  --sky-1: #2B2A40;
+  --sky-2: #1A1929;
+  --sky-3: #141420;
+  --star: rgba(243,239,230,.55);
+  --tint-bg: rgba(216,180,106,.1);
+  --tint-line: rgba(216,180,106,.26);
+  --ang: 32deg;
+  --d: 10ms;
+  --dx: 24px;
+
+  /* 以下为 A2 新增：原型裸色值按语义归并，值与原文字面完全一致 */
+  --ashdeep: #8e7f63;
+  --ashlight: #b9a98a;
+  --backdeep: #241b12;
+  --backtop: #3a2c1a;
+  --black-a24: rgba(0,0,0,.24);
+  --black-a25: rgba(0,0,0,.25);
+  --black-a28: rgba(0,0,0,.28);
+  --black-a30: rgba(0,0,0,.3);
+  --black-a35: rgba(0,0,0,.35);
+  --black-a40: rgba(0,0,0,.4);
+  --black-a45: rgba(0,0,0,.45);
+  --black-a50: rgba(0,0,0,.5);
+  --black-a55: rgba(0,0,0,.55);
+  --black-a85: rgba(0,0,0,.85);
+  --canvasbg: #0a0d18;
+  --cardink: #4a3417;
+  --cardink-a50: rgba(74,52,23,.5);
+  --cardink-a55: rgba(74,52,23,.55);
+  --coin-a50: rgba(190,150,70,.5);
+  --coincore: #9c7b3c;
+  --ember: #ffb35c;
+  --gold-a08: rgba(216,180,106,.08);
+  --gold-a09: rgba(216,180,106,.09);
+  --gold-a18: rgba(216,180,106,.18);
+  --gold-a22: rgba(216,180,106,.22);
+  --gold-a30: rgba(216,180,106,.3);
+  --gold-a35: rgba(216,180,106,.35);
+  --gold-a55: rgba(216,180,106,.55);
+  --gold-a60: rgba(216,180,106,.6);
+  --gold-a65: rgba(216,180,106,.65);
+  --gold-a72: rgba(216,180,106,.72);
+  --gold-deep-a38: rgba(176,141,74,.38);
+  --gold-soft-a16: rgba(232,207,151,.16);
+  --gold-soft-a25: rgba(232,207,151,.25);
+  --gold-soft-a40: rgba(232,207,151,.4);
+  --gold-soft-a50: rgba(232,207,151,.5);
+  --gold-soft-a90: rgba(232,207,151,.9);
+  --hilite-a80: rgba(255,240,210,.8);
+  --holder-a42: rgba(216,201,170,.42);
+  --mouth: #241a09;
+  --mouthdark: #0e0a04;
+  --night-a40: rgba(11,14,26,.4);
+  --rim: #e3c586;
+  --starcore: #fff6de;
+  --stickedge: #5d4216;
+  --stickglow: #e8c98a;
+  --sticklight: #f2e4bc;
+  --stickline: #96722f;
+  --stickshade: #dec98f;
+  --sunk-a14: rgba(255,226,160,.14);
+  --textlight: #e6e1d4;
+  --warm-a95: rgba(238,214,150,.95);
+  --white-a04: rgba(255,255,255,.04);
+  --white-a05: rgba(255,255,255,.05);
+  --white-a16: rgba(255,255,255,.16);
+  --wood-a50: rgba(140,100,40,.5);
+  --woodbody: #6b4a1d;
+  --wooddeep: #7c5a24;
+  --woodinner: #2c2008;
+  --woodlight: #a97b33;
+  --woodmid: #b08a3f;
+  --woodshadow-a22: rgba(130,95,40,.22);
+
+  /* 复合 token：阴影与渐变整条搬运，避免拆散后走形 */
+  --sh-pcard: 0 10px 26px rgba(0,0,0,.24);
+  --sh-seal: 0 2px 6px rgba(0,0,0,.3);
+  --sh-pbtn-gold: 0 8px 20px var(--moon-glow);
+  --sh-ember: 0 0 14px #FFB35C;
+  --sh-ring: 0 0 30px var(--moon-glow),inset 0 0 24px rgba(0,0,0,.4);
+  --sh-base: 0 4px 10px rgba(0,0,0,.35);
+  --sh-body: inset 0 -16px 26px rgba(0,0,0,.5),inset 0 10px 14px rgba(255,226,160,.14),0 10px 24px rgba(0,0,0,.4);
+  --sh-body-before: 0 1px 3px rgba(0,0,0,.45);
+  --sh-rim: 0 3px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,240,210,.8);
+  --sh-mouth: inset 0 3px 8px rgba(0,0,0,.85),0 1px 0 rgba(232,207,151,.4);
+  --sh-stick: 0 1px 2px rgba(0,0,0,.5),inset 0 -3px 5px rgba(130,95,40,.22);
+  --sh-stick-out: 0 6px 14px rgba(0,0,0,.55);
+  --sh-back: 0 8px 18px rgba(0,0,0,.4);
+  --sh-front: 0 8px 18px rgba(0,0,0,.3);
+  --sh-coin: 0 7px 16px rgba(0,0,0,.35),inset 0 0 10px rgba(0,0,0,.3);
+  --sh-coin-sm: 0 4px 10px rgba(0,0,0,.3),inset 0 0 8px rgba(0,0,0,.25);
+  --sh-chip-on: 0 4px 14px rgba(216,180,106,.22);
+  --sh-canvas: 0 14px 34px rgba(0,0,0,.55),0 0 0 1px rgba(216,180,106,.22);
+}
+
+@keyframes pageIn {
+  from {
+    opacity: 0;
+    transform: translateY(9px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes ember {
+  0%,100% {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+  50% {
+    opacity: .6;
+    transform: translateX(-50%) scale(.8);
+  }
+}
+
+@keyframes smoke {
+  0% {
+    opacity: .15;
+    transform: translateX(-50%) translateY(10px) scale(.9);
+  }
+  50% {
+    opacity: .5;
+    transform: translateX(-56%) translateY(-6px) scale(1.05);
+  }
+  100% {
+    opacity: .15;
+    transform: translateX(-50%) translateY(10px) scale(.9);
+  }
+}
+
+@keyframes drawSeg {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes starIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes shake {
+  0%,100% {
+    transform: rotate(0);
+  }
+  15% {
+    transform: rotate(-6deg);
+  }
+  30% {
+    transform: rotate(6.4deg);
+  }
+  45% {
+    transform: rotate(-5deg);
+  }
+  60% {
+    transform: rotate(4.4deg);
+  }
+  75% {
+    transform: rotate(-2.6deg);
+  }
+}
+
+@keyframes stickShake {
+  0%,100% {
+    transform: translateX(-50%) translateX(var(--dx)) rotate(var(--ang));
+  }
+  20% {
+    transform: translateX(-50%) translateX(var(--dx)) rotate(calc(var(--ang) - 11deg));
+  }
+  40% {
+    transform: translateX(-50%) translateX(var(--dx)) rotate(calc(var(--ang) + 11deg));
+  }
+  60% {
+    transform: translateX(-50%) translateX(var(--dx)) rotate(calc(var(--ang) - 7deg));
+  }
+  80% {
+    transform: translateX(-50%) translateX(var(--dx)) rotate(calc(var(--ang) + 7deg));
+  }
+}
+
+@keyframes coinToss {
+  0% {
+    transform: translateY(0) rotate(0);
+  }
+  40% {
+    transform: translateY(-16px) rotate(160deg);
+  }
+  70% {
+    transform: translateY(2px) rotate(300deg);
+  }
+  100% {
+    transform: translateY(0) rotate(360deg);
+  }
+}
+

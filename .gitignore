@@ -1,0 +1,32 @@
+# 依赖目录（云端安装，不入库）
+node_modules/
+
+# 日志
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# 临时与缓存
+*.tmp
+*.temp
+
+# 微信开发者工具私有配置（本机 AppID / 编译差异）
+project.private.config.json
+
+# 云函数依赖（云端安装，不入库）
+cloudfunctions/*/node_modules/
+miniprogram_npm/
+
+# 内部工作文件与审计临时输出
+.workbuddy/
+.screenshots/
+docs/.*.txt
+
+# 原始 984×1986 基准截图（仓库使用 docs/images/screens 的压缩版）
+demo-screenshots/

@@ -1,0 +1,225 @@
+<view class="app-bg"></view>
+<view class="stars">
+  <view class="star star-1"></view><view class="star star-2"></view><view class="star star-3"></view>
+  <view class="star star-4"></view><view class="star star-5"></view>
+</view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+
+<view class="pbody">
+  <view class="page-view">
+
+    <!-- 仪式库 -->
+    <block wx:if="{{view==='lib'}}">
+      <view class="page-hd">
+        <text class="pt">仪式库</text>
+        <text class="ps">非会员 · 听风人 Lv1</text>
+      </view>
+      <view class="lib-sub">会员专属仪式 · 非会员可预览</view>
+
+      <view class="ritual-card" bindtap="openRit" data-k="incense">
+        <view class="free-only">
+          <view class="r-name">焚香 <text class="vip-tag-sm">会员专属</text></view>
+          <view class="r-desc">静心 3 分钟 · 烟纹签 · 会员不限次</view>
+          <view class="r-stat"><text>非会员不可用</text><text>¥12.9/月</text></view>
+        </view>
+      </view>
+
+      <view class="ritual-card" bindtap="openRit" data-k="star">
+        <view class="free-only">
+          <view class="r-name">观星 <text class="vip-tag-sm">会员专属</text></view>
+          <view class="r-desc">星图 · 星语签 · 会员不限次</view>
+          <view class="r-stat"><text>非会员不可用</text><text>¥12.9/月</text></view>
+        </view>
+      </view>
+
+      <view class="lv-wrap">
+        <view class="lv-t">身份等级 · 好运值 128 · 五级体系</view>
+        <view class="lv-strip">
+          <view class="lv-cell"><b>听风人</b><small>Lv1 · 0</small></view>
+          <view class="lv-cell cur"><b>执灯人</b><small>Lv2 · 100</small></view>
+          <view class="lv-cell"><b>观星人</b><small>Lv3 · 300</small></view>
+          <view class="lv-cell"><b>掌印人</b><small>Lv4 · 600</small></view>
+          <view class="lv-cell"><b>谕者</b><small>Lv5 · 1000</small></view>
+        </view>
+        <view class="lv-note">好运值 128 → 执灯人 Lv2 · 距观星人还差 172 · 身份只升不降 · 会员仅加速好运值</view>
+      </view>
+
+      <button class="pbtn gold lib-go" bindtap="openRit" data-k="incense">去完成今日仪式</button>
+    </block>
+
+    <!-- 焚香 overlay -->
+    <block wx:if="{{view==='incense'}}">
+      <view class="page-hd">
+        <text class="pt">焚香 · 静心仪式</text>
+        <text class="ps">会员专属 · 不限次</text>
+      </view>
+
+      <view wx:if="{{incenseStep==='start'}}" class="incense-start">
+        <view class="pcard incense-mood">
+          <view class="im-hint">此刻的心事（香燃期间可慢慢写）</view>
+          <textarea class="im-textarea" value="{{incenseWish}}" bindinput="onWishInput" auto-height maxlength="100" />
+        </view>
+        <view class="incense-box-wrap">
+          <view class="incense-box">
+            <view class="incense-stick"><view class="smoke"></view><view class="ember"></view><view class="rod"></view></view>
+            <view class="ib-title">一炷香 · 3 分钟</view>
+            <view class="ib-sub">可选白噪音：雨声 / 溪流 / 颂钵（V2）</view>
+          </view>
+        </view>
+        <button class="pbtn gold" bindtap="incenseStart">燃香 · 开始静心</button>
+        <button class="pbtn ghost btn-gap" bindtap="closeView">返回仪式库</button>
+        <view class="rit-note">会员专属 · 不限次 · 谕心仅供娱乐 · 不构成任何建议</view>
+      </view>
+
+      <view wx:if="{{incenseStep==='anim'}}" class="incense-anim">
+        <view class="incense-stick"><view class="smoke"></view><view class="ember"></view><view class="rod"></view></view>
+        <view class="anim-title">香火正燃 ……</view>
+        <view class="anim-sub">剩余 <text class="anim-t">{{incenseLeft}}</text> · 静心三分钟 · 不着急</view>
+        <button class="pbtn ghost anim-back" bindtap="closeView">返回仪式库</button>
+      </view>
+
+      <view wx:if="{{incenseStep==='result'}}" class="incense-start">
+        <view class="incense-box-wrap">
+          <view class="pcard">
+            <view class="crh">
+              <text class="cl">香签 · 烟纹</text>
+              <view class="crr"><text class="seal">香</text></view>
+            </view>
+            <view class="res-inner">
+              <view class="res-line">{{incenseResult.sign || '烟绕三匝，答案已在心中。'}}</view>
+              <view class="res-sub2" wx:if="{{incenseResult.sub}}">{{incenseResult.sub}}</view>
+              <view class="res-read">{{incenseResult.read || '你其实早就选了，今晚就照心里那个答案去做第一步。'}}</view>
+              <view class="res-yj">
+                <view class="yj-item yj-good">
+                  <text class="yj-tag">宜</text>
+                  <text class="yj-val">{{incenseResult.yi || '先走一步'}}</text>
+                </view>
+                <view class="yj-item yj-bad">
+                  <text class="yj-tag">忌</text>
+                  <text class="yj-val">{{incenseResult.ji || '反复推翻'}}</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <button class="pbtn dark" bindtap="closeView">收藏香签（去水印）</button>
+        <button class="pbtn gold btn-gap" bindtap="incenseReset">再燃一炷</button>
+        <button class="pbtn ghost btn-gap" bindtap="closeView">返回仪式库</button>
+        <view class="rit-note">会员不限次 · 谕心仅供娱乐 · 不构成任何建议</view>
+      </view>
+    </block>
+
+    <!-- 观星 overlay -->
+    <block wx:if="{{view==='star'}}">
+      <view class="star-scene"></view>
+      <view class="star-layer">
+
+        <view wx:if="{{starStep==='start'}}" class="star-start">
+          <view class="star-hd page-hd">
+            <view class="sh-l">
+              <text class="pt">观星</text>
+              <text class="ps">星图仪式</text>
+            </view>
+            <view class="sh-vip">
+              <text class="sh-vip-ic">✦</text>
+              <text class="sh-vip-tx">会员专属 · 不限次</text>
+            </view>
+          </view>
+          <view class="star-sub">以今日心情，连线属于你的星语</view>
+
+          <view class="star-chips">
+            <view wx:for="{{starMoods}}" wx:key="k"
+                  class="star-chip {{starMood===item.k?'on':''}}"
+                  data-k="{{item.k}}" data-n="{{item.name}}"
+                  bindtap="pickStarMood">{{item.name}}</view>
+          </view>
+
+          <!-- 自定义心情 -->
+          <view class="star-custom">
+            <input class="star-custom-input" placeholder="或写下此刻心情…"
+                   value="{{starCustomMood}}" bindinput="onStarCustomInput"
+                   confirm-type="done" maxlength="12" />
+            <view class="star-custom-btn" bindtap="confirmStarCustom">确定</view>
+          </view>
+
+          <!-- 星盘舞台 -->
+          <view class="star-stage">
+            <view class="ss-core">
+              <view class="ss-ring">
+                <view class="ss-mark ss-m-n"></view>
+                <view class="ss-mark ss-m-e"></view>
+                <view class="ss-mark ss-m-s"></view>
+                <view class="ss-mark ss-m-w"></view>
+              </view>
+              <view class="ss-const"></view>
+              <view class="ss-meteor"></view>
+            </view>
+            <view class="ss-mount"></view>
+            <view class="ss-pill">今日星位已就位 · 心情「{{starMoodName}}」</view>
+          </view>
+
+          <view class="star-main" bindtap="starStart">观 星 · 取 星 语</view>
+          <view class="star-sub-btn" bindtap="closeView">返回仪式库</view>
+          <view class="star-foot">会员专属 · 不限次 · 谕心仅供娱乐 · 不构成任何建议</view>
+        </view>
+
+        <view wx:if="{{starStep==='anim'}}" class="star-anim">
+          <view class="ss-core">
+            <view class="ss-ring">
+              <view class="ss-mark ss-m-n"></view>
+              <view class="ss-mark ss-m-e"></view>
+              <view class="ss-mark ss-m-s"></view>
+              <view class="ss-mark ss-m-w"></view>
+            </view>
+            <view class="ss-const ss-const--anim"></view>
+          </view>
+          <view class="anim-title">星图正在连好 ……</view>
+          <view class="anim-sub">夜色正在为你写星语，不着急</view>
+        </view>
+
+        <view wx:if="{{starStep==='result'}}" class="star-start">
+          <view class="star-hd page-hd">
+            <view class="sh-l">
+              <text class="pt">观星</text>
+              <text class="ps">星语签</text>
+            </view>
+            <view class="sh-vip">
+              <text class="sh-vip-ic">✦</text>
+              <text class="sh-vip-tx">会员专属</text>
+            </view>
+          </view>
+          <view class="star-center">
+            <view class="pcard">
+              <view class="crh">
+                <text class="cl">星语签 · 星图</text>
+                <view class="crr"><text class="seal">星</text></view>
+              </view>
+              <view class="res-inner">
+                <view class="res-line">{{starResult.line || '星光不问赶路人，却记得你的方向。'}}</view>
+                <view class="res-sub2" wx:if="{{starResult.sky}}">{{starResult.sky}}</view>
+                <view class="res-read">{{starResult.read || '微光也是光，把今天没做完的事，留给明天的自己。'}}</view>
+                <view class="res-yj">
+                  <view class="yj-item yj-good">
+                    <text class="yj-tag">宜</text>
+                    <text class="yj-val">{{starResult.yi || '安睡'}}</text>
+                  </view>
+                  <view class="yj-item yj-bad">
+                    <text class="yj-tag">忌</text>
+                    <text class="yj-val">{{starResult.ji || '睡前复盘'}}</text>
+                  </view>
+                </view>
+              </view>
+            </view>
+          </view>
+          <button class="pbtn dark" bindtap="closeView">收藏星语</button>
+          <button class="pbtn gold btn-gap" bindtap="starReset">再看一次</button>
+          <button class="pbtn ghost btn-gap" bindtap="closeView">返回仪式库</button>
+          <view class="rit-note">会员不限次 · 谕心仅供娱乐 · 不构成任何建议</view>
+        </view>
+
+      </view>
+    </block>
+
+  </view>
+  <view class="tab-space"></view>
+</view>

@@ -1,0 +1,21 @@
+<view class="app-bg"></view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd"><text class="pt">树洞记录</text><text class="ps">仅你可见 · {{list.length}} 条</text></view>
+    <view wx:if="{{loading}}" style="text-align:center;color:#8A8474;padding:60rpx 0">加载中…</view>
+    <view wx:elif="{{list.length===0}}" style="text-align:center;color:#8A8474;padding:60rpx 0">还没有树洞记录</view>
+    <view class="pcard rec-card" wx:for="{{list}}" wx:key="_id">
+      <view class="rec-row">
+        <view>
+          <view class="rec-t">{{item.content}}</view>
+          <view class="rec-s">{{item.mood}} · {{item.createdAt}}</view>
+        </view>
+        <button class="pbtn dark rec-btn" data-id="{{item._id}}" bindtap="delItem">删除</button>
+      </view>
+    </view>
+    <button class="pbtn ghost pin-bottom" bindtap="clearAll">清空全部记录</button>
+    <button class="pbtn dark" style="margin-top:15.7rpx" bindtap="goBack">返回我的</button>
+  </view>
+  <view class="tab-space"></view>
+</view>

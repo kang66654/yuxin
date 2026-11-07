@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>问事三式结果态 · 界面重设计方案</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230A0E1A'/%3E%3Crect x='12' y='11' width='8' height='12' rx='2' fill='none' stroke='%23C9A24F' stroke-width='1.6'/%3E%3Cpath d='M14 8h4M15 5h2' stroke='%23E9D29C' stroke-width='1.4'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --ink:#0A0E1A; --ink2:#111A2E; --ink3:#161F36;
+    --paper:#F4EBD8; --paper2:#EADFC6; --edge:#D6C6A6;
+    --gold:#C9A24F; --gold2:#E9D29C; --gold3:#A8842F;
+    --vermilion:#A93B2C; --jade:#6E8C5E; --rust:#B4553F;
+    --txt:#CFC8B7; --dim:#8A8375;
+    --mono:"SF Mono",Consolas,"Cascadia Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:#060912;color:var(--txt)}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    font-size:14px;line-height:1.7;
+    background:
+      radial-gradient(760px 460px at 78% -8%, rgba(201,162,79,.09), transparent 62%),
+      radial-gradient(600px 380px at 4% 10%, rgba(90,112,180,.07), transparent 60%),
+      #060912;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:40px 22px 90px}
+
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.24em;color:var(--gold)}
+  h1{font-family:"Songti SC","SimSun",serif;font-size:clamp(25px,3.6vw,38px);line-height:1.3;color:#F4EBD8;margin:12px 0 10px}
+  .lede{color:var(--dim);max-width:76ch}
+
+  h2{font-family:"Songti SC","SimSun",serif;font-size:21px;color:#F4EBD8;margin:44px 0 12px;padding-top:18px;border-top:1px solid rgba(201,162,79,.18)}
+  h3{font-size:14px;color:var(--gold2);margin:22px 0 10px;letter-spacing:.05em}
+
+  /* ---- 诊断 ---- */
+  .diag{display:grid;gap:9px;margin-top:14px}
+  .d{display:grid;grid-template-columns:26px 1fr;gap:10px;background:rgba(255,255,255,.022);border-left:2px solid rgba(201,162,79,.35);border-radius:0 8px 8px 0;padding:11px 14px;font-size:13.2px}
+  .d .i{font-family:var(--mono);color:var(--gold);font-size:11.5px;padding-top:2px}
+  .d b{color:#F0E4CB;font-weight:600}
+
+  /* ---- 屏幕 ---- */
+  .group{margin-top:26px}
+  .glabel{font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--gold);margin-bottom:14px}
+  .pair{display:flex;gap:26px;flex-wrap:wrap;align-items:flex-start}
+  .cell{flex:0 0 auto}
+  .ctag{font-family:var(--mono);font-size:11px;color:var(--dim);margin:0 0 8px 4px;letter-spacing:.1em}
+  .ctag em{font-style:normal;color:var(--gold2)}
+
+  .screen{
+    width:306px;height:640px;border-radius:28px;overflow:hidden;position:relative;
+    background:
+      radial-gradient(220px 300px at 50% 22%, rgba(201,162,79,.10), transparent 70%),
+      linear-gradient(178deg,#141D33 0%, #0D1425 46%, #0A0F1C 100%);
+    box-shadow:0 20px 52px rgba(0,0,0,.6), inset 0 0 0 1px rgba(201,162,79,.14);
+    display:flex;flex-direction:column;
+    color:#CFC8B7;
+  }
+  .screen.lite{background:linear-gradient(178deg,#161F36,#0C1322 60%,#090E19)}
+  .screen.papermode{background:linear-gradient(178deg,#101828,#0A0F1B)}
+
+  /* 状态栏 */
+  .sb{flex:0 0 auto;height:30px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;font-size:11px;color:#B9B2A2;position:relative}
+  .sb .mid{position:absolute;left:50%;transform:translateX(-50%);width:16px;height:16px;border-radius:4px;background:#12203A;border:1px solid rgba(201,162,79,.5);display:flex;align-items:center;justify-content:center;font-size:9.5px;color:var(--gold2);font-family:"Songti SC",serif}
+  .sb .rt{display:flex;align-items:center;gap:5px}
+  .caps{width:66px;height:20px;border-radius:10px;border:1px solid rgba(201,162,79,.28);display:flex;align-items:center;justify-content:center;gap:4px}
+  .caps i{display:block;width:4px;height:4px;border-radius:50%;background:rgba(201,162,79,.7)}
+
+  /* 头行 */
+  .head{flex:0 0 auto;display:flex;align-items:flex-end;justify-content:space-between;padding:10px 16px 8px}
+  .head .tt{font-family:"Songti SC","SimSun",serif;font-size:20px;color:#F4EBD8;letter-spacing:.04em;line-height:1.1}
+  .head .sub{font-size:10.5px;color:var(--dim);letter-spacing:.06em}
+  .head .quota{font-size:10.5px;color:var(--gold2);padding:2px 8px;border-radius:999px;border:1px solid rgba(201,162,79,.3);white-space:nowrap}
+
+  /* 引文（替代原输入框） */
+  .cite{flex:0 0 auto;margin:2px 16px 8px;padding:8px 10px 8px 11px;border-left:2px solid rgba(201,162,79,.5);background:rgba(244,235,216,.035);border-radius:0 8px 8px 0;display:flex;gap:8px;align-items:flex-start}
+  .cite p{margin:0;font-size:12px;color:#B4AC9C;line-height:1.5;font-family:"Songti SC",serif;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .cite p span{color:#E4D6B4}
+  .cite .edit{flex:0 0 auto;font-size:10px;color:var(--gold2);border:1px solid rgba(201,162,79,.32);border-radius:4px;padding:1px 6px}
+
+  /* 主视觉 */
+  .stage{flex:1 1 auto;position:relative;display:flex;align-items:flex-end;justify-content:center;min-height:0;padding-bottom:22px}
+  .halo{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);width:230px;height:230px;border-radius:50%;
+    background:radial-gradient(circle,rgba(233,210,156,.16),rgba(201,162,79,.06) 42%,transparent 68%);}
+  .specks{position:absolute;inset:0;pointer-events:none;opacity:.55;
+    background-image:radial-gradient(1px 1px at 22% 30%,rgba(233,210,156,.5),transparent),
+                      radial-gradient(1px 1px at 74% 24%,rgba(233,210,156,.4),transparent),
+                      radial-gradient(1.4px 1.4px at 62% 72%,rgba(233,210,156,.35),transparent),
+                      radial-gradient(1px 1px at 34% 80%,rgba(233,210,156,.3),transparent);}
+
+  /* 签条 */
+  .slip{position:relative;width:82px;padding:16px 6px 18px;border-radius:5px 5px 3px 3px;
+    background:linear-gradient(180deg,#E9D8AF,#DCC79A 72%,#C9AE79);
+    box-shadow:0 10px 22px rgba(0,0,0,.5), inset 0 0 0 1px rgba(120,92,40,.35);
+    display:flex;flex-direction:column;align-items:center;gap:10px;z-index:2}
+  .slip .seal{width:15px;height:15px;border-radius:2px;background:var(--vermilion);color:#F6E7CE;font-size:9px;font-family:"Songti SC",serif;display:flex;align-items:center;justify-content:center;transform:rotate(-4deg)}
+  .slip .vt{writing-mode:vertical-rl;font-family:"Songti SC","SimSun",serif;font-size:17px;color:#2A1D0B;letter-spacing:.18em;line-height:1.5}
+  .slip .no{font-size:8.5px;color:#6B5225;letter-spacing:.08em;text-align:center;line-height:1.5;font-family:"Songti SC",serif}
+  .rim{position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);width:120px;height:9px;border-radius:50%;
+    background:radial-gradient(ellipse at 50% 0%, rgba(201,162,79,.35), transparent 70%);filter:blur(1px)}
+
+  /* 三张牌 */
+  .cards3{display:flex;align-items:flex-end;gap:0;z-index:2}
+  .tp{width:70px;height:136px;border-radius:6px;background:linear-gradient(178deg,#F1E6CB,#E2D3AE);
+    box-shadow:0 10px 20px rgba(0,0,0,.45), inset 0 0 0 1px rgba(120,92,40,.28);
+    display:flex;flex-direction:column;align-items:center;padding:11px 5px 9px;position:relative}
+  .tp:nth-child(1){transform:rotate(-5deg) translateX(12px)}
+  .tp:nth-child(2){transform:translateY(-8px);z-index:3}
+  .tp:nth-child(3){transform:rotate(5deg) translateX(-12px)}
+  .tp .g{font-family:"Songti SC","SimSun",serif;font-size:26px;color:#2A1D0B;line-height:1.15}
+  .tp .n{font-family:"Songti SC",serif;font-size:9.5px;color:#4A3A1E;margin-top:4px}
+  .tp .p{font-size:7.5px;color:#8B7444;letter-spacing:.08em;margin-top:auto;white-space:nowrap}
+
+  /* 铜钱 */
+  .coins{display:flex;align-items:flex-end;gap:13px;z-index:2}
+  .cn{width:52px;height:52px;border-radius:50%;position:relative;
+    background:radial-gradient(circle at 34% 30%,#EFDCAF,#C9A24F 58%,#9C7A2C 100%);
+    box-shadow:0 8px 16px rgba(0,0,0,.45), inset 0 0 0 1px rgba(90,66,20,.4), inset 0 0 8px rgba(255,240,200,.25);
+    display:flex;align-items:center;justify-content:center}
+  .cn::after{content:"";position:absolute;inset:7px;border-radius:50%;border:1px dashed rgba(90,66,20,.42)}
+  .cn span{font-family:"Songti SC",serif;font-size:15px;color:#3A2A0C}
+  .cn:nth-child(2){transform:translateY(-9px)}
+  .arc{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:210px;height:14px;border-radius:50%;
+    background:radial-gradient(ellipse at 50% 100%,rgba(233,210,156,.42),rgba(201,162,79,.14) 46%,transparent 74%);}
+
+  /* 结果卡 */
+  .res{flex:0 0 auto;margin:0 16px 8px;background:linear-gradient(178deg,var(--paper),var(--paper2));
+    border-radius:12px;border:1px solid var(--edge);position:relative;overflow:hidden;
+    box-shadow:0 14px 30px rgba(0,0,0,.45), 0 -1px 0 rgba(255,255,255,.5) inset}
+  .res .bar{display:flex;align-items:center;gap:7px;padding:9px 38px 0 12px}
+  .res .bar .k{font-size:9.5px;color:#8B7444;letter-spacing:.16em;font-family:var(--mono)}
+  .res .bar .dash{flex:1;height:1px;background:linear-gradient(90deg,rgba(139,116,68,.35),transparent)}
+  .res .bar .kind{font-size:9.5px;color:#5E4A22;letter-spacing:.1em}
+  .res .stamp{position:absolute;top:8px;right:10px;width:19px;height:19px;border-radius:2px;background:var(--vermilion);color:#F8ECCF;font-family:"Songti SC",serif;font-size:11px;display:flex;align-items:center;justify-content:center;transform:rotate(-4deg);box-shadow:0 1px 3px rgba(120,40,30,.4)}
+  .res .body{padding:8px 12px 11px}
+  .res .lead{font-family:"Songti SC","SimSun",serif;font-size:17px;color:#241806;line-height:1.42;letter-spacing:.01em;margin:0 0 6px}
+  .res .lead.compact{font-size:15.5px}
+  .res .rd{font-size:11.2px;color:#4A4232;line-height:1.62;margin:0}
+  .res .rule{height:1px;margin:8px 0 7px;background:linear-gradient(90deg,rgba(139,116,68,.4),rgba(139,116,68,.06))}
+  .res .yj{display:flex;gap:14px}
+  .res .yj div{flex:1;display:flex;gap:4px;align-items:baseline}
+  .res .yj .l{font-size:9.5px;color:#8B7444;letter-spacing:.08em}
+  .res .yj .v{font-size:11px;font-weight:600}
+  .res .yj .yi{color:var(--jade)}
+  .res .yj .ji{color:var(--rust)}
+  .res .tri{display:flex;gap:6px;padding:6px 12px 0}
+  .res .tri div{flex:1;text-align:center;border-left:1px solid rgba(139,116,68,.22)}
+  .res .tri div:first-child{border-left:0}
+  .res .tri .c{font-family:"Songti SC",serif;font-size:11px;color:#241806}
+  .res .tri .t{font-size:8.5px;color:#8B7444;letter-spacing:.06em}
+
+  /* 底按钮 */
+  .acts{flex:0 0 auto;padding:2px 16px 0;display:flex;flex-direction:column;gap:7px}
+  .btn-main{height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:6px;
+    background:linear-gradient(135deg,#EFD9A6,#C9A24F 62%,#B58B33);color:#1E1505;
+    font-size:13.5px;font-weight:600;letter-spacing:.1em;box-shadow:0 8px 18px rgba(201,162,79,.22)}
+  .btn-row{display:flex;gap:8px}
+  .btn-ghost{flex:1;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(201,162,79,.30);color:#C8BC9C;font-size:11.5px;letter-spacing:.08em;background:rgba(255,255,255,.02)}
+  .btn-ghost.strong{color:var(--gold2);border-color:rgba(201,162,79,.5)}
+
+  .legal{flex:0 0 auto;text-align:center;font-size:8.5px;color:#6E6857;padding:6px 0 4px;letter-spacing:.04em}
+
+  /* tabbar */
+  .tab{flex:0 0 auto;height:46px;display:flex;border-top:1px solid rgba(201,162,79,.16);background:rgba(6,10,18,.5)}
+  .tab div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#6E6A5D;font-size:9px;line-height:1.1}
+  .tab div.on{color:var(--gold2)}
+  .tab svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.4}
+  .tab .bar{width:14px;height:2px;border-radius:1px;background:transparent;margin-top:4px}
+  .tab .on .bar{background:var(--gold)}
+
+  /* 笺纸方案：整页一张纸 */
+  .sheet{flex:1 1 auto;margin:6px 12px 8px;background:linear-gradient(176deg,#F6EEDC,#EADFC4);
+    border-radius:8px;border:1px solid var(--edge);position:relative;display:flex;flex-direction:column;
+    box-shadow:0 16px 34px rgba(0,0,0,.42)}
+  .sheet::before{content:"";position:absolute;inset:5px;border:1px solid rgba(160,132,74,.22);border-radius:5px;pointer-events:none}
+  .sheet .wm{position:absolute;right:18px;bottom:58px;writing-mode:vertical-rl;font-family:"Songti SC","SimSun",serif;font-size:38px;color:rgba(139,116,68,.155);letter-spacing:.3em;line-height:1;pointer-events:none}
+  .sheet .sh-head{display:flex;align-items:flex-start;justify-content:space-between;padding:14px 14px 0}
+  .sheet .kb{font-size:8.5px;color:#8B7444;letter-spacing:.2em;font-family:var(--mono);writing-mode:vertical-rl;line-height:1.4}
+  .sheet .sh-head .r{text-align:right}
+  .sheet .sh-head .r .n{font-size:9px;color:#8B7444;letter-spacing:.1em}
+  .sheet .sh-head .r .s{width:18px;height:18px;border-radius:2px;background:var(--vermilion);color:#F8ECCF;font-family:"Songti SC",serif;font-size:10.5px;display:inline-flex;align-items:center;justify-content:center;transform:rotate(-4deg);margin-top:5px}
+  .sheet .mid2{padding:4px 14px 0}
+  .sheet .big{font-family:"Songti SC","SimSun",serif;font-size:22px;color:#241806;line-height:1.4;letter-spacing:.03em;margin:0}
+  .sheet .hair{height:1px;margin:9px 0 8px;background:linear-gradient(90deg,rgba(139,116,68,.42),rgba(139,116,68,.05))}
+  .sheet .txt{font-size:11.2px;color:#443C2C;line-height:1.7;margin:0}
+  .sheet .yj2{display:flex;gap:16px;margin-top:8px}
+  .sheet .yj2 div{display:flex;gap:4px;align-items:baseline}
+  .sheet .yj2 .l{font-size:9.5px;color:#8B7444}
+  .sheet .yj2 .yi{color:var(--jade);font-size:11px;font-weight:600}
+  .sheet .yj2 .ji{color:var(--rust);font-size:11px;font-weight:600}
+  .sheet .foot{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;padding:0 14px 12px}
+  .sheet .sign{font-family:"Songti SC",serif;font-size:9.5px;color:#8B7444;letter-spacing:.12em}
+  .sheet .cols{display:flex;gap:8px}
+  .sheet .colrow{display:flex;margin-top:14px;padding-top:11px;border-top:1px solid rgba(139,116,68,.20)}
+  .sheet .colrow .col{flex:1;text-align:center}
+  .sheet .colrow .col + .col{border-left:1px solid rgba(139,116,68,.14)}
+  .sheet .colrow .cc{font-family:"Songti SC","SimSun",serif;font-size:12px;color:#241806}
+  .sheet .colrow .ct{font-size:8.5px;color:#8B7444;letter-spacing:.06em;margin-top:2px}
+  .sheet .col{text-align:center}
+  .sheet .col .cc{font-family:"Songti SC",serif;font-size:10px;color:#241806}
+  .sheet .col .ct{font-size:8px;color:#8B7444;letter-spacing:.04em}
+  .sheet .col .cd{width:1px;height:10px;background:rgba(139,116,68,.3);margin:0 auto 3px}
+
+  /* 竖排小钱 */
+  .vcoins{display:flex;flex-direction:column;gap:7px;align-items:center}
+  .vc{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#EFDCAF,#C9A24F 60%,#9C7A2C);
+    box-shadow:inset 0 0 0 1px rgba(90,66,20,.35);display:flex;align-items:center;justify-content:center;font-family:"Songti SC",serif;font-size:9px;color:#3A2A0C}
+
+  /* ---- 表格 ---- */
+  .tblwrap{overflow-x:auto;border:1px solid rgba(201,162,79,.2);border-radius:10px;background:#0D1526;margin-top:12px}
+  table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px;min-width:660px}
+  th,td{padding:10px 13px;text-align:left;vertical-align:top;border-bottom:1px solid rgba(201,162,79,.1)}
+  th{color:var(--gold2);font-size:12px;background:rgba(201,162,79,.055);font-weight:600}
+  td:first-child{color:#F0E4CB}
+  tr:last-child td{border-bottom:0}
+
+  /* ---- 提示词 ---- */
+  .prompt{border:1px solid rgba(201,162,79,.32);border-radius:12px;background:#080D18;margin-top:14px}
+  .phead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 15px;border-bottom:1px solid rgba(201,162,79,.18);background:rgba(201,162,79,.05)}
+  .phead .pt{font-family:var(--mono);font-size:11.5px;letter-spacing:.16em;color:var(--gold)}
+  button.cp{font:inherit;font-size:12px;padding:6px 13px;border-radius:999px;cursor:pointer;color:#1B1408;background:linear-gradient(135deg,#EFD9A6,#C19A46);border:0;white-space:nowrap}
+  button.cp:active{transform:translateY(1px)}
+  pre{margin:0;padding:16px 16px 20px;overflow-x:auto;font-family:var(--mono);font-size:12.2px;line-height:1.82;color:#CFC8B7;white-space:pre-wrap;word-break:break-word}
+  pre .h{color:var(--gold2)}
+
+  .note{border-left:2px solid rgba(201,162,79,.4);padding:2px 0 2px 12px;color:var(--dim);font-size:12.5px;margin-top:12px}
+
+  footer{border-top:1px solid rgba(201,162,79,.18);margin-top:36px;padding-top:16px;color:var(--dim);font-size:12px}
+
+  @media (max-width:760px){
+    .wrap{padding:28px 16px 70px}
+    .pair{justify-content:center}
+    .screen{transform:scale(.94);transform-origin:top left;margin-bottom:-38px}
+  }
+</style>
+</head>
+<body>
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3.5 10.5 12 3.5l8.5 7V20h-5.5v-6h-6v6H3.5z"/></symbol>
+  <symbol id="i-ask" viewBox="0 0 24 24"><rect x="8" y="8" width="8" height="12" rx="2"/><path d="M10 5h4M11 2.8h2M6 20h12"/></symbol>
+  <symbol id="i-tree" viewBox="0 0 24 24"><path d="M12 3.5 6.5 11h3.2L6 16h5v4.5h2V16h5l-3.7-5h3.2z"/></symbol>
+  <symbol id="i-rit" viewBox="0 0 24 24"><rect x="9.5" y="10" width="5" height="10" rx="1.6"/><path d="M12 7c0-1.6 1.6-1.6 1.6-3.2M10.4 6.4c0-1.4-1.4-1.4-1.4-2.6"/></symbol>
+  <symbol id="i-me" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M4.8 20c1.2-4 4-5.6 7.2-5.6S18 16 19.2 20"/></symbol>
+</svg>
+
+<div class="wrap">
+  <div class="kicker">YUXIN · ASK-RITUAL RESULT SCREEN</div>
+  <h1>问事三式结果态：把"上满下空"改成"一屏三区"</h1>
+  <p class="lede">抽签、翻牌、铜钱三张截图暴露的是同一个结构问题，不是三处独立瑕疵。下面先诊断，再给每式两套排版（A 沉浸式 / B 笺纸式），末尾附可直接使用的设计提示词。</p>
+
+  <h2>一 · 诊断：六个问题，三式共有</h2>
+  <div class="diag">
+    <div class="d"><span class="i">01</span><span><b>重心塌在上半屏</b>：结果卡底边到按钮之间空出约 200–330px，屏幕下半没有任何信息，人眼会以为"下面是空的"。</span></div>
+    <div class="d"><span class="i">02</span><span><b>结果态还留着输入框</b>：问题已问完，输入框仍占着最贵的第一屏位置，同时把结果往下挤。</span></div>
+    <div class="d"><span class="i">03</span><span><b>主视觉与结果卡断开</b>：抽签态一根窄签条悬在中央，下面是独立纸卡，两者之间没有承接；翻牌态三张牌高矮不一、字距松散。</span></div>
+    <div class="d"><span class="i">04</span><span><b>印章压字</b>：右上红色小印尺寸偏大且与"掷钱 · 今日""塔罗三张"几乎贴住，卡头一行被挤成两截。</span></div>
+    <div class="d"><span class="i">05</span><span><b>三按钮等权</b>：收藏／生成卡片／再求一次三等分，"生成卡片"这个增长入口没有主次优势。</span></div>
+    <div class="d"><span class="i">06</span><span><b>层级扁平</b>：标题、次数、卡头、签题、解读、宜忌字号差不足，第一视觉不明确，截图缩略时几乎糊成一片。</span></div>
+  </div>
+
+  <h2>二 · 方案 A：沉浸式（主视觉占位、卡片承接、主按钮满宽）</h2>
+  <p class="note">分区高度：状态栏 30｜头行 44｜引文 40｜主视觉 弹性（约 190）｜结果卡 自适应｜主按钮 40 + 次按钮 32｜合规 16｜tabbar 46。死白被主视觉光晕与前后的承接关系填满，而不是靠加内容。</p>
+
+  <div class="group">
+    <div class="glabel">A1 · 抽签结果（烟纹签）</div>
+    <div class="pair">
+      <div class="cell">
+        <div class="ctag">方案 A <em>· 沉浸式</em></div>
+        <div class="screen">
+          <div class="sb"><span>21:41</span><span class="mid">谕</span><span class="rt"><span style="font-size:9px">●●●</span><span class="caps"><i></i><i></i><i></i><span style="margin-left:2px;font-size:8px;color:#C9A24F">···</span></span></span></div>
+          <div class="head"><div><div class="tt">问事签</div><div class="sub">神谕签 · 抽签</div></div><span class="quota">剩余 2/3</span></div>
+          <div class="cite"><p><span>“要不要联系他？感觉现在不联系会遗憾。”</span></p><span class="edit">改</span></div>
+          <div class="stage">
+            <div class="halo"></div><div class="specks"></div>
+            <div class="rim"></div>
+            <div class="slip">
+              <div class="seal">香</div>
+              <div class="vt">烟绕三匝</div>
+              <div class="no">NO.04<br>答案在心</div>
+            </div>
+          </div>
+          <div class="res">
+            <div class="stamp">签</div>
+            <div class="bar"><span class="k">神谕签 · 烟纹</span><span class="dash"></span><span class="kind">今日</span></div>
+            <div class="body">
+              <p class="lead">烟绕三匝，答案已在心中。</p>
+              <p class="rd">你其实早就选了，只是想要一句肯定。今晚就照心里那个答案去做第一步。</p>
+              <div class="rule"></div>
+              <div class="yj"><div><span class="l">宜</span><span class="v yi">先走一步</span></div><div><span class="l">忌</span><span class="v ji">反复推翻</span></div></div>
+            </div>
+          </div>
+          <div class="acts">
+            <div class="btn-main">生成卡片 · 存为图片</div>
+            <div class="btn-row"><div class="btn-ghost">收藏</div><div class="btn-ghost strong">再求一次</div></div>
+          </div>
+          <div class="legal">谕心仅供娱乐 · 不构成任何建议</div>
+          <div class="tab">
+            <div><svg><use href="#i-home"/></svg>首页</div>
+            <div class="on"><svg><use href="#i-ask"/></svg>问事<div class="bar"></div></div>
+            <div><svg><use href="#i-tree"/></svg>树洞</div>
+            <div><svg><use href="#i-rit"/></svg>仪式</div>
+            <div><svg><use href="#i-me"/></svg>我的</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="glabel">A2 · 翻牌结果（塔罗三张）</div>
+    <div class="pair">
+      <div class="cell">
+        <div class="ctag">方案 A <em>· 沉浸式</em></div>
+        <div class="screen">
+          <div class="sb"><span>21:41</span><span class="mid">谕</span><span class="rt"><span style="font-size:9px">●●●</span><span class="caps"><i></i><i></i><i></i><span style="margin-left:2px;font-size:8px;color:#C9A24F">···</span></span></span></div>
+          <div class="head"><div><div class="tt">问事签</div><div class="sub">塔罗 · 翻牌</div></div><span class="quota">剩余 2/3</span></div>
+          <div class="cite"><p><span>“要不要联系他？感觉现在不联系会遗憾。”</span></p><span class="edit">改</span></div>
+          <div class="stage" style="padding-top:4px">
+            <div class="halo" style="width:210px;height:210px"></div>
+            <div class="specks"></div>
+            <div class="cards3">
+              <div class="tp"><div class="g">力</div><div class="n">力量</div><div class="p">过去 · 正位</div></div>
+              <div class="tp"><div class="g">节</div><div class="n">节制</div><div class="p">现在 · 正位</div></div>
+              <div class="tp"><div class="g">审</div><div class="n">审判</div><div class="p">未来 · 正位</div></div>
+            </div>
+          </div>
+          <div class="res">
+            <div class="stamp">星</div>
+            <div class="bar"><span class="k">塔罗三张</span><span class="dash"></span><span class="kind">今日</span></div>
+            <div class="tri"><div><div class="c">太阳</div><div class="t">过去 正位</div></div><div><div class="c">隐士</div><div class="t">现在 正位</div></div><div><div class="c">命运之轮</div><div class="t">未来 正位</div></div></div>
+            <div class="body">
+              <p class="lead compact">过去明朗可期，现在克制内省，未来转机将至。</p>
+              <p class="rd">不必急着定下来，今晚先让答案在心里沉淀。</p>
+              <div class="rule"></div>
+              <div class="yj"><div><span class="l">宜</span><span class="v yi">慢一点</span></div><div><span class="l">忌</span><span class="v ji">冲动决定</span></div></div>
+            </div>
+          </div>
+          <div class="acts">
+            <div class="btn-main">生成卡片 · 存为图片</div>
+            <div class="btn-row"><div class="btn-ghost">收藏</div><div class="btn-ghost strong">再求一次</div></div>
+          </div>
+          <div class="legal">谕心仅供娱乐 · 不构成任何建议</div>
+          <div class="tab">
+            <div><svg><use href="#i-home"/></svg>首页</div>
+            <div class="on"><svg><use href="#i-ask"/></svg>问事<div class="bar"></div></div>
+            <div><svg><use href="#i-tree"/></svg>树洞</div>
+            <div><svg><use href="#i-rit"/></svg>仪式</div>
+            <div><svg><use href="#i-me"/></svg>我的</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="group">
+    <div class="glabel">A3 · 铜钱结果（三钱问路）</div>
+    <div class="pair">
+      <div class="cell">
+        <div class="ctag">方案 A <em>· 沉浸式</em></div>
+        <div class="screen">
+          <div class="sb"><span>21:41</span><span class="mid">谕</span><span class="rt"><span style="font-size:9px">●●●</span><span class="caps"><i></i><i></i><i></i><span style="margin-left:2px;font-size:8px;color:#C9A24F">···</span></span></span></div>
+          <div class="head"><div><div class="tt">问事签</div><div class="sub">铜钱 · 掷钱</div></div><span class="quota">剩余 2/3</span></div>
+          <div class="cite"><p><span>“要不要联系他？感觉现在不联系会遗憾。”</span></p><span class="edit">改</span></div>
+          <div class="stage">
+            <div class="halo" style="width:200px;height:200px"></div>
+            <div class="specks"></div>
+            <div class="arc"></div>
+            <div class="coins"><div class="cn"><span>谕</span></div><div class="cn"><span>谕</span></div><div class="cn"><span>谕</span></div></div>
+          </div>
+          <div class="res">
+            <div class="stamp">钱</div>
+            <div class="bar"><span class="k">三钱问路</span><span class="dash"></span><span class="kind">今日</span></div>
+            <div class="body">
+              <p class="lead">两正一背</p>
+              <p class="rd">大方向已明，细节慢慢来。先迈出去，答案在路上。</p>
+              <div class="rule"></div>
+              <div class="yj"><div><span class="l">宜</span><span class="v yi">先走一步</span></div><div><span class="l">忌</span><span class="v ji">反复推翻</span></div></div>
+            </div>
+          </div>
+          <div class="acts">
+            <div class="btn-main">生成卡片 · 存为图片</div>
+            <div class="btn-row"><div class="btn-ghost">收藏</div><div class="btn-ghost strong">再求一次</div></div>
+          </div>
+          <div class="legal">谕心仅供娱乐 · 不构成任何建议</div>
+          <div class="tab">
+            <div><svg><use href="#i-home"/></svg>首页</div>
+            <div class="on"><svg><use href="#i-ask"/></svg>问事<div class="bar"></div></div>
+            <div><svg><use href="#i-tree"/></svg>树洞</div>
+            <div><svg><use href="#i-rit"/></svg>仪式</div>
+            <div><svg><use href="#i-me"/></svg>我的</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>三 · 方案 B：笺纸式（整页一张纸，字当图）</h2>
+  <p class="note">去掉实物与光晕，把结果做成一张"题跋笺"：式名竖排居左、朱印右上、签题大字、细线、解读、宜忌、右下落款。适合"更沉、更贵"的表达；代价是无动效亮点，靠字体与留白取胜。</p>
+
+  <div class="group">
+    <div class="glabel">B1 · 抽签 / B2 · 翻牌 / B3 · 铜钱</div>
+    <div class="pair">
+      <div class="cell">
+        <div class="ctag">B1 <em>· 笺纸式 · 抽签</em></div>
+        <div class="screen lite papermode">
+          <div class="sb"><span>21:41</span><span class="mid">谕</span><span class="rt"><span style="font-size:9px">●●●</span><span class="caps"><i></i><i></i><i></i><span style="margin-left:2px;font-size:8px;color:#C9A24F">···</span></span></span></div>
+          <div class="head"><div><div class="tt" style="font-size:17px">问事 · 神谕签</div></div><span class="quota" style="font-size:9.5px">剩余 2/3</span></div>
+          <div class="sheet">
+            <div class="wm">谕心素笺</div>
+            <div class="sh-head">
+              <div class="kb">神谕签　烟纹</div>
+              <div class="r"><div class="n">今日</div><div class="s">签</div></div>
+            </div>
+            <div class="mid2">
+              <p class="big">烟绕三匝，<br>答案已在心中。</p>
+              <div class="hair"></div>
+              <p class="txt">你其实早就选了，只是想要一句肯定。今晚就照心里那个答案去做第一步。</p>
+              <div class="yj2"><div><span class="l">宜</span><span class="yi">先走一步</span></div><div><span class="l">忌</span><span class="ji">反复推翻</span></div></div>
+            </div>
+            <div class="foot"><div class="sign">谕心 · 素笺　NO.04</div><div class="sign" style="opacity:.6">烟纹</div></div>
+          </div>
+          <div class="acts">
+            <div class="btn-main">生成卡片 · 存为图片</div>
+            <div class="btn-row"><div class="btn-ghost">收藏</div><div class="btn-ghost strong">再求一次</div></div>
+          </div>
+          <div class="legal">谕心仅供娱乐 · 不构成任何建议</div>
+          <div class="tab">
+            <div><svg><use href="#i-home"/></svg>首页</div>
+            <div class="on"><svg><use href="#i-ask"/></svg>问事<div class="bar"></div></div>
+            <div><svg><use href="#i-tree"/></svg>树洞</div>
+            <div><svg><use href="#i-rit"/></svg>仪式</div>
+            <div><svg><use href="#i-me"/></svg>我的</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cell">
+        <div class="ctag">B2 <em>· 笺纸式 · 翻牌</em></div>
+        <div class="screen lite papermode">
+          <div class="sb"><span>21:41</span><span class="mid">谕</span><span class="rt"><span style="font-size:9px">●●●</span><span class="caps"><i></i><i></i><i></i><span style="margin-left:2px;font-size:8px;color:#C9A24F">···</span></span></span></div>
+          <div class="head"><div><div class="tt" style="font-size:17px">问事 · 塔罗三张</div></div><span class="quota" style="font-size:9.5px">剩余 2/3</span></div>
+          <div class="sheet">
+            <div class="wm">谕心素笺</div>
+            <div class="sh-head">
+              <div class="kb">塔罗　三张</div>
+              <div class="r"><div class="n">今日</div><div class="s">星</div></div>
+            </div>
+            <div class="mid2">
+              <p class="big" style="font-size:19px">过去明朗，现在内省，<br>未来转机将至。</p>
+              <div class="hair"></div>
+              <p class="txt">不必急着定下来，今晚先让答案在心里沉淀。</p>
+              <div class="yj2"><div><span class="l">宜</span><span class="yi">慢一点</span></div><div><span class="l">忌</span><span class="ji">冲动决定</span></div></div>
+              <div class="colrow">
+                <div class="col"><div class="cc">太阳</div><div class="ct">过去 正位</div></div>
+                <div class="col"><div class="cc">隐士</div><div class="ct">现在 正位</div></div>
+                <div class="col"><div class="cc">命运之轮</div><div class="ct">未来 正位</div></div>
+              </div>
+            </div>
+            <div class="foot"><div class="sign">谕心 · 素笺</div><div class="sign" style="opacity:.6">塔罗三张</div></div>
+          </div>
+          <div class="acts">
+            <div class="btn-main">生成卡片 · 存为图片</div>
+            <div class="btn-row"><div class="btn-ghost">收藏</div><div class="btn-ghost strong">再求一次</div></div>
+          </div>
+          <div class="legal">谕心仅供娱乐 · 不构成任何建议</div>
+          <div class="tab">
+            <div><svg><use href="#i-home"/></svg>首页</div>
+            <div class="on"><svg><use href="#i-ask"/></svg>问事<div class="bar"></div></div>
+            <div><svg><use href="#i-tree"/></svg>树洞</div>
+            <div><svg><use href="#i-rit"/></svg>仪式</div>
+            <div><svg><use href="#i-me"/></svg>我的</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cell">
+        <div class="ctag">B3 <em>· 笺纸式 · 铜钱</em></div>
+        <div class="screen lite papermode">
+          <div class="sb"><span>21:41</span><span class="mid">谕</span><span class="rt"><span style="font-size:9px">●●●</span><span class="caps"><i></i><i></i><i></i><span style="margin-left:2px;font-size:8px;color:#C9A24F">···</span></span></span></div>
+          <div class="head"><div><div class="tt" style="font-size:17px">问事 · 三钱问路</div></div><span class="quota" style="font-size:9.5px">剩余 2/3</span></div>
+          <div class="sheet">
+            <div class="sh-head">
+              <div class="kb">三钱问路</div>
+              <div class="r">
+                <div class="vcoins"><div class="vc">谕</div><div class="vc">谕</div><div class="vc">谕</div></div>
+              </div>
+            </div>
+            <div class="mid2">
+              <p class="big">两正一背</p>
+              <div class="hair"></div>
+              <p class="txt">大方向已明，细节慢慢来。先迈出去，答案在路上。</p>
+              <div class="yj2"><div><span class="l">宜</span><span class="yi">先走一步</span></div><div><span class="l">忌</span><span class="ji">反复推翻</span></div></div>
+            </div>
+            <div class="foot"><div class="sign">谕心 · 素笺　NO.04</div><div class="sign" style="opacity:.6">钱</div></div>
+          </div>
+          <div class="acts">
+            <div class="btn-main">生成卡片 · 存为图片</div>
+            <div class="btn-row"><div class="btn-ghost">收藏</div><div class="btn-ghost strong">再求一次</div></div>
+          </div>
+          <div class="legal">谕心仅供娱乐 · 不构成任何建议</div>
+          <div class="tab">
+            <div><svg><use href="#i-home"/></svg>首页</div>
+            <div class="on"><svg><use href="#i-ask"/></svg>问事<div class="bar"></div></div>
+            <div><svg><use href="#i-tree"/></svg>树洞</div>
+            <div><svg><use href="#i-rit"/></svg>仪式</div>
+            <div><svg><use href="#i-me"/></svg>我的</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2>四 · 两方案怎么选</h2>
+  <div class="tblwrap">
+    <table>
+      <colgroup><col style="width:18%"><col style="width:41%"><col style="width:41%"></colgroup>
+      <tr><th>维度</th><th>A · 沉浸式</th><th>B · 笺纸式</th></tr>
+      <tr><td>第一眼</td><td>主体在场：签条／牌／铜钱是视觉中心，仪式感靠"物"</td><td>字在场：一张笺纸铺满，气质靠结构与排印</td></tr>
+      <tr><td>动效空间</td><td>大：落定、光晕呼吸、牌面微颤、铜钱错落</td><td>小：只有细线生长与字块淡入</td></tr>
+      <tr><td>与分享卡关系</td><td>两套语汇（页面偏器物、卡片偏题跋），需统一</td><td>同源：页面即卡片的放大版，品牌一致性最好</td></tr>
+      <tr><td>实现成本</td><td>中：需处理三张牌错位与 canvas 光晕</td><td>低：纯文字与细线，rpx 可控</td></tr>
+      <tr><td>适合</td><td>要"惊艳、可截图传播"</td><td>要"安静、耐看、贵"</td></tr>
+    </table>
+  </div>
+
+  <h2>五 · 优化后的提示词</h2>
+  <p class="lede" style="font-size:13px">你原来的说法是"更合理、更吸引眼球、更美观"——这三个词无法验收。下面把它改写成有诊断、有约束、有验收的版本，可直接交给设计或开发执行。</p>
+
+  <div class="prompt">
+    <div class="phead"><span class="pt">PROMPT · 问事三式结果态重设计</span><button class="cp" onclick="cp('p1', this)">复制全文</button></div>
+<pre id="p1"><span class="h">【角色与范围】</span>
+你是负责「谕心」小程序的 UI 设计工程师。本轮只重做「问事」页的结果态界面（抽签 / 翻牌 / 铜钱三式），不改产品逻辑、不改文案内容、不改五 tab 结构。视觉语言必须与既有品牌同源：深靛夜色底、素笺暖纸、鎏金描边、朱砂小印、宋体标题。
+
+<span class="h">【已确认的现状问题（不要重新调研，直接修）】</span>
+1. 结果卡底边到按钮之间空白 200–330px，屏幕下半无信息，重心塌在上半屏。
+2. 结果态仍显示输入框，占用第一屏且把结果下压。
+3. 主视觉与结果卡之间无承接：抽签是一根 50px 窄签条孤立悬空；翻牌三张高矮不齐、字距松散。
+4. 右上红印章尺寸偏大，与"掷钱 · 今日""塔罗三张"贴得太近，卡头被挤断。
+5. 三个按钮等分，主次不分，"生成卡片"没有优势。
+6. 字号层级扁平：标题、卡头、签题、解读、宜忌差异不足，缩略后糊成一片。
+
+<span class="h">【设计目标（可验收，不是形容词）】</span>
+- 三层结构：问题引文（可折叠一行）→ 主视觉（弹性格，约 190–220px）→ 结果纸卡（承接主视觉，间距 ≤12px）。
+- 结果态不得出现输入框；问题收拢成一行斜体宋体引文，右侧一个"改"。
+- 单页无效留白 ≤80px（光晕、星尘、细线算有效）。
+- 主按钮满宽 40px；次按钮并排两个 32px 描边；按钮区与合规语合计 ≤90px。
+- 印章 ≤20px，固定在卡片右上外沿，不得压任何文字。
+- 每式风格同源：同一套色值、同一套圆角（卡片 12px、按钮 10px、印章 2px）、同一套字号阶梯（20/17/13/11.5/9.5）。
+
+<span class="h">【版式要求】</span>
+- 屏基准 306×640，等比换算 750rpx（系数 2.4509）；字号取整到 0.5rpx。
+- 字号阶梯：页面标题 20、签题 17（长句 15.5）、解读 11.2、卡头 9.5、合规 8.5。
+- 抽签：签条加宽到 78px、高占比 ≥62%，竖排两列（签题 + 侧批），下沿加签筒口沿阴影与地面弧光。
+- 翻牌：三张统一 74×150，扇形 −7°/0/+7°，叠距 14px，中间一张抬起 8px；牌名、牌位、正逆三行左对齐。
+- 铜钱：三枚 52px 横排，间距 13px，中间一枚抬起 9px，底部一道弧光。
+- 结果卡内部顺序：卡头（式名 + 细线 + 今日）→ 签题大字 → 解读 → 细分隔线 → 宜忌双列。
+- 翻牌态的"太阳·正位 → 隐士·正位 → 命运之轮·正位"改为三列小栏（牌名／位置各一行），不要一行长句。
+
+<span class="h">【输出】</span>
+每式给两套方案：A 沉浸式（主视觉 + 光晕 + 承接卡）、B 笺纸式（整页一张笺纸，字当图，右下落款）。
+每套必须说明：分区高度占比、元素清单、字号与色彩用法、入退场动效（入场 320ms 缓出，落定 480ms 回弹，禁止全局匀速）。
+
+<span class="h">【约束】</span>
+- 不改文案、不改色值、不加组件库、不用 emoji 与图标字体，图标用内联 SVG 线稿。
+- 所有按钮必须有真实反馈（跳转、toast 或状态变化），禁止僵尸按钮。
+- 合规语「谕心仅供娱乐 · 不构成任何建议」必须在按钮下方原样出现。
+- 宜忌不要做成两行红绿粗体：必须"小标签 + 单行内容"，颜色只用于内容字。
+
+<span class="h">【验收清单（逐条打勾）】</span>
+1. 结果态无输入框；2. 卡片与主视觉间距 ≤12px；3. 单页无效留白 ≤80px；4. 主按钮满宽且高于次按钮；5. 印章 ≤20px 不压字；6. 三式字号与色值完全同源；7. 截图缩到 306px 宽仍能一眼分清签题与解读。
+</pre>
+  </div>
+
+  <h2>六 · 需要你先挑一处</h2>
+  <p class="lede" style="font-size:13px">A 与 B 的差别不在细节，在气质：A 靠"器物在场"，B 靠"纸与字"。你选一个方向，我就把它落到三式全部页面（含 rpx 规格表与动效参数），再同步改小程序端与原型。</p>
+
+  <footer>
+    参考基准：demo-screenshots 的 03 抽签结果、04 翻牌结果、05 铜钱结果；以及本轮小程序模拟器截图两张（抽签态、翻牌态）。<br>
+    第三张截图未随附件上传，铜钱态以基准图 05 为准。
+  </footer>
+</div>
+
+<div id="toast" style="position:fixed;left:50%;transform:translateX(-50%) translateY(12px);bottom:28px;background:#F4EBD8;color:#211808;font-size:13px;padding:9px 18px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;z-index:9"></div>
+<script>
+function showToast(t){
+  var el=document.getElementById('toast');
+  el.textContent=t; el.style.opacity='1'; el.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(window._t);
+  window._t=setTimeout(function(){ el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(12px)'; },1600);
+}
+function cp(id,btn){
+  var txt=document.getElementById(id).innerText, ok=false;
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    try{ navigator.clipboard.writeText(txt); ok=true; }catch(e){ ok=false; }
+  }
+  if(!ok){
+    var ta=document.createElement('textarea');
+    ta.value=txt; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ ok=document.execCommand('copy'); }catch(e){ ok=false; }
+    document.body.removeChild(ta);
+  }
+  btn.textContent = ok ? '已复制' : '已选中，请按 Ctrl+C';
+  showToast(ok ? '提示词已复制' : '自动复制受限，已全选文本');
+  setTimeout(function(){ btn.textContent='复制全文'; },1800);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/home/home",
+    "pages/ask/ask",
+    "pages/tree/tree",
+    "pages/ritual/ritual",
+    "pages/me/me",
+    "pages/share/share",
+    "pages/intro/intro",
+    "pages/mt/mt",
+    "pages/records/records",
+    "pages/fav/fav",
+    "pages/lv/lv",
+    "pages/ritrec/ritrec",
+    "pages/vipbuy/vipbuy"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#0B0E1A",
+    "backgroundTextStyle": "light",
+    "navigationBarTextStyle": "white",
+    "navigationBarTitleText": "谕心"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#8A8474",
+    "selectedColor": "#D8B46A",
+    "backgroundColor": "#0B0E1A",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/home/home", "text": "首页" },
+      { "pagePath": "pages/ask/ask", "text": "问事" },
+      { "pagePath": "pages/tree/tree", "text": "树洞" },
+      { "pagePath": "pages/ritual/ritual", "text": "仪式" },
+      { "pagePath": "pages/me/me", "text": "我的" }
+    ]
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "darkmode": false
+}

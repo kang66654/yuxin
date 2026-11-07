@@ -1,0 +1,134 @@
+<view class="app-bg"></view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+
+<!-- ====== 好友答题模式 ====== -->
+<view class="pbody" wx:if="{{friendMode}}">
+  <view class="page-view">
+    <view class="page-hd"><text class="pt">好友邀你答题</text></view>
+
+    <view wx:if="{{loading}}" style="text-align:center;color:rgba(232,228,216,.4);padding:80rpx 0">加载中…</view>
+
+    <!-- 此题已被其他好友答了 -->
+    <view wx:elif="{{alreadyTaken}}" style="text-align:center;color:rgba(232,228,216,.5);padding:100rpx 0;line-height:2;font-size:28rpx">
+      这道题已经有好友回答了<br/>换个好友的邀请试试吧
+    </view>
+
+    <!-- 答题界面 -->
+    <block wx:else>
+      <view class="pcard" style="padding:40rpx 32rpx;margin-top:20rpx">
+        <view class="frq-question">{{friendQuestion}}</view>
+        <view class="frq-options">
+          <view wx:for="{{friendOptions}}" wx:key="*this"
+                class="frq-opt {{friendPick===item?'on':''}}"
+                data-v="{{item}}" bindtap="pickFriend">{{item}}</view>
+        </view>
+      </view>
+      <button class="pbtn gold" style="margin-top:30rpx" bindtap="submitFriendAnswer" disabled="{{!friendPick || friendSubmitting}}">
+        {{friendSubmitting ? '提交中…' : '提交答案'}}
+      </button>
+      <view wx:if="{{friendDone}}" style="text-align:center;color:#7ab87a;margin-top:30rpx;font-size:28rpx">
+        已提交，等好友揭晓同频结果吧 ✦
+      </view>
+    </block>
+  </view>
+</view>
+
+<!-- ====== 正常列表模式 ====== -->
+<view class="pbody" wx:else>
+  <view class="page-view">
+    <view class="page-hd"><text class="pt">互测历史</text><text class="ps">仅你可见 · {{list.length}} 次</text></view>
+
+    <view wx:if="{{loading}}" style="text-align:center;color:#8A8474;padding:60rpx 0">加载中…</view>
+    <view wx:elif="{{list.length===0}}" style="text-align:center;color:#8A8474;padding:60rpx 0">还没有互测记录</view>
+
+    <view class="pcard rec-card" wx:for="{{list}}" wx:key="_id">
+      <view class="rec-row">
+        <view style="width:100%">
+          <view class="rec-t">题「{{item.question}}」</view>
+          <view class="rec-options" wx:if="{{item.options && item.options.length}}">
+            <text class="rec-opt" wx:for="{{item.options}}" wx:for-item="op" wx:key="*this">{{op}}</text>
+          </view>
+          <view class="rec-s">
+            {{item.friendReplied ? '✦ 好友已答 · 点我评分' : '等待好友回答…'}}
+          </view>
+          <view style="display:flex;gap:16rpx;margin-top:16rpx">
+            <!-- 等待好友回答：分享按钮 -->
+            <button wx:if="{{!item.friendReplied}}" class="pbtn gold rec-score-btn" open-type="share"
+                    data-id="{{item._id}}" style="flex:1;font-size:28rpx">
+              分享给好友
+            </button>
+            <!-- 好友已答：评分按钮 -->
+            <button wx:else class="pbtn gold rec-score-btn" data-id="{{item._id}}"
+                    data-options="{{item.options}}" bindtap="openScore" style="flex:1;font-size:28rpx">
+              查看同频评分
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <button class="pbtn gold pin-bottom" bindtap="showCreateModal">发起新互测</button>
+    <button class="pbtn dark" style="margin-top:15.7rpx" bindtap="goBack">返回我的</button>
+  </view>
+  <view class="tab-space"></view>
+</view>
+
+<!-- 出题弹窗 -->
+<view wx:if="{{showCreate}}" class="mt-mask">
+  <view class="mt-modal">
+    <view class="mt-modal-title">AI 出一道互测题</view>
+    <view class="mt-label">选主题</view>
+    <view class="mt-chips">
+      <view wx:for="{{themes}}" wx:key="*this"
+            class="mt-chip {{theme===item?'on':''}}" data-v="{{item}}" bindtap="pickTheme">{{item}}</view>
+    </view>
+    <view class="mt-label">我的心情</view>
+    <view class="mt-chips">
+      <view wx:for="{{moods}}" wx:key="*this"
+            class="mt-chip {{mood===item?'on':''}}" data-v="{{item}}" bindtap="pickMood">{{item}}</view>
+    </view>
+    <view class="mt-actions">
+      <button class="mt-btn ghost" bindtap="closeCreate">取消</button>
+      <button class="mt-btn gold" bindtap="createMatch">{{creating?'生成中…':'让 AI 出题'}}</button>
+    </view>
+  </view>
+</view>
+
+<!-- 评分弹窗 -->
+<view wx:if="{{showScore}}" class="mt-mask">
+  <view class="mt-modal" wx:if="{{!scoreResult}}">
+    <view class="mt-modal-title">选择你的答案</view>
+    <view class="mt-label">我的答案</view>
+    <view class="mt-chips">
+      <view wx:for="{{scoreOptions}}" wx:key="*this"
+            class="mt-chip {{myAnswer===item?'on':''}}" data-v="{{item}}" bindtap="pickMy">{{item}}</view>
+    </view>
+    <!-- 好友已答：显示好友答案（只读） -->
+    <block wx:if="{{friendReplied}}">
+      <view class="mt-label">TA 的答案（已自动带入）</view>
+      <view class="mt-chips">
+        <view class="mt-chip on" style="opacity:.6">{{friendAnswer}}</view>
+      </view>
+    </block>
+    <!-- 好友未答：手选模拟 -->
+    <block wx:else>
+      <view class="mt-label">TA 的答案（模拟）</view>
+      <view class="mt-chips">
+        <view wx:for="{{scoreOptions}}" wx:key="*this"
+              class="mt-chip {{friendAnswer===item?'on':''}}" data-v="{{item}}" bindtap="pickFriendScore">{{item}}</view>
+      </view>
+    </block>
+    <view class="mt-actions">
+      <button class="mt-btn ghost" bindtap="closeScore">取消</button>
+      <button class="mt-btn gold" bindtap="submitScore">{{scoring?'评分中…':'查看同频'}}</button>
+    </view>
+  </view>
+
+  <view class="mt-modal" wx:if="{{scoreResult}}">
+    <view class="mt-modal-title">同频指数</view>
+    <view class="mt-score">{{scoreResult.score}}</view>
+    <view class="mt-score-read">{{scoreResult.read}}</view>
+    <view class="mt-score-tip" wx:if="{{scoreResult.tip}}">{{scoreResult.tip}}</view>
+    <button class="mt-btn gold" bindtap="closeScore">我知道了</button>
+  </view>
+</view>

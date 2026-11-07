@@ -1,0 +1,346 @@
+/* 仪式库 + 焚香/观星 overlay：原型 L549–735 行内样式换算 */
+
+.lib-sub { font-size: 29.4rpx; color: var(--nav-text); margin: 4.9rpx 0 9.8rpx; }
+.lib-go { margin-top: 29.4rpx; }
+
+.lv-wrap { margin-top: 31.9rpx; }
+.lv-t { font-size: 29.4rpx; color: var(--nav-text); margin-bottom: 17.1rpx; }
+.lv-note { font-size: 27rpx; color: var(--gold-soft); margin-top: 14.7rpx; line-height: 1.6; }
+
+/* 焚香 */
+.incense-start { flex: 1; display: flex; flex-direction: column; }
+.incense-box-wrap { flex: 1; display: flex; align-items: center; justify-content: center; }
+.incense-start .pbtn:first-of-type { margin-top: auto; }
+.btn-gap { margin-top: 19.6rpx; }
+.incense-mood { padding: 31.9rpx 34.3rpx; }
+.im-hint { font-size: 29.4rpx; color: var(--ink-faint); margin-bottom: 14.7rpx; }
+.im-text { font-size: 34.3rpx; color: var(--ink-soft); line-height: 1.6; }
+.im-textarea { width:100%; font-size: 34.3rpx; color: var(--ink-soft); line-height: 1.6; min-height:60rpx; }
+.ib-title {
+  font-family: 'Songti SC', 'Source Han Serif SC', serif;
+  font-size: 32rpx; color: var(--gold-soft); letter-spacing: .14em; margin-top: 19.6rpx; text-align: center;
+}
+.ib-sub { font-size: 27rpx; color: var(--nav-text); margin-top: 9.8rpx; text-align: center; }
+.anim-title {
+  font-family: 'Songti SC', 'Source Han Serif SC', serif;
+  font-size: 36rpx; color: var(--gold-soft); letter-spacing: .18em; margin-top: 39rpx;
+}
+.anim-sub { font-size: 29.4rpx; color: var(--nav-text); margin-top: 14.7rpx; }
+.anim-t { color: var(--gold-soft); font-weight: 700; }
+.anim-back { margin-top: auto; }
+
+/* ================= 观星 · 星图仪式（按设计稿重绘）
+   402px 设计宽度 → 750rpx，1px ≈ 1.866rpx
+   夜色 #1D1E3C→#12132B→#0A0B1A，金 #E8C98A / 亮金 #F2DFA8 ================= */
+
+/* 场景底：固定层，只在 star 态出现 */
+.star-scene {
+  position: fixed;
+  left: 0; top: 0; right: 0; bottom: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(175deg, #1D1E3C 0%, #12132B 45%, #0A0B1A 100%);
+}
+/* 斜向银河带 */
+.star-scene::before {
+  content: "";
+  position: absolute;
+  left: -170rpx; top: 430rpx;
+  width: 1120rpx; height: 355rpx;
+  transform: rotate(-24deg);
+  background: linear-gradient(90deg, rgba(214,220,255,0) 0%, rgba(214,220,255,.055) 35%, rgba(232,201,138,.05) 55%, rgba(214,220,255,0) 100%);
+  filter: blur(4rpx);
+}
+/* 顶部紫晕 */
+.star-scene::after {
+  content: "";
+  position: absolute;
+  left: 50%; top: -300rpx;
+  width: 1120rpx; height: 820rpx;
+  margin-left: -560rpx;
+  background: radial-gradient(ellipse at 50% 50%, rgba(110,100,196,.16), rgba(110,100,196,0) 68%);
+}
+
+.star-layer {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- 标题区 ---------- */
+.star-hd {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 0 8rpx;
+}
+.sh-l { display: flex; align-items: baseline; }
+/* 标题/副题直接复用全局 .page-hd .pt / .ps（宋体 44rpx + 金色副题），与其他界面一致 */
+.sh-vip {
+  display: flex;
+  align-items: center;
+  height: 52rpx;
+  padding: 0 22rpx;
+  border-radius: 26rpx;
+  background: rgba(255,255,255,.05);
+  border: 1rpx solid rgba(232,201,138,.28);
+}
+.sh-vip-ic { font-size: 20rpx; color: #E8C98A; line-height: 1; margin-right: 8rpx; }
+.sh-vip-tx { font-size: 22rpx; color: #E8C98A; letter-spacing: .02em; line-height: 1; }
+
+.star-sub {
+  font-size: 24rpx;
+  color: #6F769A;
+  letter-spacing: .06em;
+  margin-top: 6rpx;
+}
+
+/* ---------- 心情胶囊（一行五枚）---------- */
+.star-chips {
+  display: flex;
+  gap: 17rpx;
+  margin: 26rpx 0 0;
+}
+.star-chip {
+  flex: 1;
+  height: 67rpx;
+  border-radius: 34rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #8B90AC;
+  letter-spacing: .14em;
+  background: rgba(255,255,255,.05);
+  border: 1rpx solid rgba(255,255,255,.10);
+  transition: all .18s;
+}
+.star-chip.on {
+  background: linear-gradient(90deg, #F2DFA8, #D9B96A);
+  color: #3A2A10;
+  font-weight: 700;
+  border-color: transparent;
+  box-shadow: 0 8rpx 26rpx rgba(232,201,138,.28);
+}
+
+/* 自定义心情输入 */
+.star-custom {
+  display: flex;
+  gap: 14rpx;
+  margin-top: 18rpx;
+  align-items: center;
+}
+.star-custom-input {
+  flex: 1;
+  height: 72rpx;
+  padding: 0 24rpx;
+  border-radius: 36rpx;
+  background: rgba(255,255,255,.06);
+  border: 1rpx solid rgba(255,255,255,.12);
+  font-size: 26rpx;
+  color: #E8E4D8;
+}
+.star-custom-btn {
+  flex: 0 0 auto;
+  height: 72rpx;
+  padding: 0 32rpx;
+  border-radius: 36rpx;
+  background: linear-gradient(135deg, #F2DFA8, #D9B96A);
+  color: #3A2A10;
+  font-size: 26rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- 星盘舞台 ---------- */
+.star-stage {
+  position: relative;
+  flex: 1;
+  min-height: 760rpx;
+  margin-top: 14rpx;
+}
+.ss-core { position: relative; width: 600rpx; height: 600rpx; }
+.star-stage .ss-core {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  margin-left: -300rpx;
+}
+
+/* 刻度星盘环 */
+.ss-ring {
+  position: absolute;
+  left: 0; top: 0;
+  width: 600rpx; height: 600rpx;
+  border-radius: 50%;
+  border: 1rpx solid rgba(232,201,138,.20);
+}
+.ss-ring::before {
+  content: "";
+  position: absolute;
+  left: 35rpx; top: 35rpx; right: 35rpx; bottom: 35rpx;
+  border-radius: 50%;
+  border: 1rpx dashed rgba(232,201,138,.26);
+}
+.ss-ring::after {
+  content: "";
+  position: absolute;
+  left: 84rpx; top: 84rpx; right: 84rpx; bottom: 84rpx;
+  border-radius: 50%;
+  border: 1rpx dashed rgba(232,201,138,.14);
+}
+/* 四方位菱形刻度 */
+.ss-mark {
+  position: absolute;
+  width: 11rpx; height: 11rpx;
+  background: rgba(232,201,138,.55);
+  transform: rotate(45deg);
+}
+.ss-m-n { left: 50%; top: -6rpx; margin-left: -5.5rpx; }
+.ss-m-s { left: 50%; bottom: -6rpx; margin-left: -5.5rpx; }
+.ss-m-e { top: 50%; right: -6rpx; margin-top: -5.5rpx; }
+.ss-m-w { top: 50%; left: -6rpx; margin-top: -5.5rpx; }
+
+/* 主星座 */
+.ss-const {
+  position: absolute;
+  left: 37rpx; top: 45rpx;
+  width: 522rpx; height: 448rpx;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22280%22%20height%3D%22240%22%20viewBox%3D%220%200%20280%20240%22%20fill%3D%22none%22%3E%3Cdefs%3E%3CradialGradient%20id%3D%22cg%22%20cx%3D%220.5%22%20cy%3D%220.5%22%20r%3D%220.5%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23FFF3D6%22%20stop-opacity%3D%220.85%22%2F%3E%3Cstop%20offset%3D%220.4%22%20stop-color%3D%22%23FFE9BC%22%20stop-opacity%3D%220.28%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23FFE9BC%22%20stop-opacity%3D%220%22%2F%3E%3C%2FradialGradient%3E%3ClinearGradient%20id%3D%22ln%22%20x1%3D%220%22%20y1%3D%220%22%20x2%3D%221%22%20y2%3D%220%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23E8C98A%22%20stop-opacity%3D%220.25%22%2F%3E%3Cstop%20offset%3D%220.5%22%20stop-color%3D%22%23E8C98A%22%20stop-opacity%3D%220.6%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23E8C98A%22%20stop-opacity%3D%220.25%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M30%20152%20L70%20114%20L118%20128%20L150%2088%20L198%20102%20L226%20144%22%20stroke%3D%22url%28%23ln%29%22%20stroke-width%3D%221.3%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M118%20128%20L128%20178%20L172%20198%22%20stroke%3D%22url%28%23ln%29%22%20stroke-width%3D%221.1%22%20stroke-linejoin%3D%22round%22%20opacity%3D%220.8%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%2288%22%20r%3D%2216%22%20fill%3D%22url%28%23cg%29%22%2F%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%22114%22%20r%3D%2212%22%20fill%3D%22url%28%23cg%29%22%2F%3E%3Ccircle%20cx%3D%22198%22%20cy%3D%22102%22%20r%3D%2210%22%20fill%3D%22url%28%23cg%29%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22178%22%20r%3D%229%22%20fill%3D%22url%28%23cg%29%22%2F%3E%3Cg%20stroke%3D%22%23FFF8E7%22%20stroke-linecap%3D%22round%22%3E%3Cpath%20d%3D%22M150%2078v20M140%2088h20%22%20stroke-width%3D%221%22%20opacity%3D%220.9%22%2F%3E%3Cpath%20d%3D%22M70%20107v14M63%20114h14%22%20stroke-width%3D%220.9%22%20opacity%3D%220.75%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23FFF8E7%22%3E%3Ccircle%20cx%3D%2230%22%20cy%3D%22152%22%20r%3D%222.6%22%2F%3E%3Ccircle%20cx%3D%2270%22%20cy%3D%22114%22%20r%3D%223.4%22%2F%3E%3Ccircle%20cx%3D%22118%22%20cy%3D%22128%22%20r%3D%222.8%22%2F%3E%3Ccircle%20cx%3D%22150%22%20cy%3D%2288%22%20r%3D%224.2%22%2F%3E%3Ccircle%20cx%3D%22198%22%20cy%3D%22102%22%20r%3D%223%22%2F%3E%3Ccircle%20cx%3D%22226%22%20cy%3D%22144%22%20r%3D%222.6%22%2F%3E%3Ccircle%20cx%3D%22128%22%20cy%3D%22178%22%20r%3D%222.4%22%2F%3E%3Ccircle%20cx%3D%22172%22%20cy%3D%22198%22%20r%3D%222.2%22%2F%3E%3C%2Fg%3E%3Cg%20fill%3D%22%23C9CFF0%22%3E%3Ccircle%20cx%3D%2216%22%20cy%3D%2260%22%20r%3D%221%22%20opacity%3D%220.4%22%2F%3E%3Ccircle%20cx%3D%22250%22%20cy%3D%2240%22%20r%3D%221.1%22%20opacity%3D%220.45%22%2F%3E%3Ccircle%20cx%3D%22266%22%20cy%3D%2290%22%20r%3D%220.9%22%20opacity%3D%220.35%22%2F%3E%3Ccircle%20cx%3D%22240%22%20cy%3D%22180%22%20r%3D%221%22%20opacity%3D%220.4%22%2F%3E%3Ccircle%20cx%3D%2240%22%20cy%3D%22212%22%20r%3D%221%22%20opacity%3D%220.35%22%2F%3E%3Ccircle%20cx%3D%2296%22%20cy%3D%2236%22%20r%3D%220.9%22%20opacity%3D%220.35%22%2F%3E%3Ccircle%20cx%3D%22196%22%20cy%3D%22222%22%20r%3D%220.9%22%20opacity%3D%220.3%22%2F%3E%3Ccircle%20cx%3D%22258%22%20cy%3D%22140%22%20r%3D%220.8%22%20opacity%3D%220.35%22%2F%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%22108%22%20r%3D%220.9%22%20opacity%3D%220.3%22%2F%3E%3Ccircle%20cx%3D%22212%22%20cy%3D%2252%22%20r%3D%220.9%22%20opacity%3D%220.35%22%2F%3E%3C%2Fg%3E%3C%2Fsvg%3E") center / contain no-repeat;
+}
+.ss-const--anim { animation: constGlow 2.6s ease-in-out infinite; }
+@keyframes constGlow {
+  0%, 100% { opacity: .55; }
+  50% { opacity: 1; }
+}
+/* 流星 */
+.ss-meteor {
+  position: absolute;
+  left: 372rpx; top: -30rpx;
+  width: 261rpx; height: 149rpx;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22140%22%20height%3D%2280%22%20viewBox%3D%220%200%20140%2080%22%20fill%3D%22none%22%3E%3Cdefs%3E%3ClinearGradient%20id%3D%22mt%22%20x1%3D%221%22%20y1%3D%220%22%20x2%3D%220%22%20y2%3D%221%22%3E%3Cstop%20offset%3D%220%22%20stop-color%3D%22%23FFF8E7%22%20stop-opacity%3D%220.85%22%2F%3E%3Cstop%20offset%3D%221%22%20stop-color%3D%22%23FFF8E7%22%20stop-opacity%3D%220%22%2F%3E%3C%2FlinearGradient%3E%3C%2Fdefs%3E%3Cpath%20d%3D%22M134%206%20L52%2062%22%20stroke%3D%22url%28%23mt%29%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%2F%3E%3Ccircle%20cx%3D%22134%22%20cy%3D%226%22%20r%3D%221.8%22%20fill%3D%22%23FFF8E7%22%2F%3E%3C%2Fsvg%3E") center / contain no-repeat;
+  opacity: .9;
+}
+/* 地平线山影 */
+.ss-mount {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 120rpx;
+  background: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22402%22%20height%3D%2280%22%20viewBox%3D%220%200%20402%2080%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M0%2040%20C60%2020%20122%2044%20192%2030%20C262%2016%20322%2040%20402%2022%20L402%2080%20L0%2080%20Z%22%20fill%3D%22%230D0E22%22%20fill-opacity%3D%220.5%22%2F%3E%3Cpath%20d%3D%22M0%2058%20C80%2040%20152%2062%20232%2050%20C302%2040%20352%2056%20402%2046%20L402%2080%20L0%2080%20Z%22%20fill%3D%22%23060714%22%20fill-opacity%3D%220.6%22%2F%3E%3C%2Fsvg%3E") center bottom / 100% 100% no-repeat;
+}
+/* 状态提示胶囊 */
+.ss-pill {
+  position: absolute;
+  left: 50%;
+  bottom: 74rpx;
+  transform: translateX(-50%);
+  height: 60rpx;
+  padding: 0 30rpx;
+  border-radius: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  background: rgba(13,14,34,.8);
+  border: 1rpx solid rgba(232,201,138,.2);
+  font-family: "Songti SC", "SimSun", serif;
+  font-size: 24rpx;
+  color: #E8C98A;
+  letter-spacing: .12em;
+}
+
+/* ---------- 按钮 ---------- */
+.star-main {
+  margin-top: 18rpx;
+  height: 106rpx;
+  border-radius: 53rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #F2DFA8, #D9B96A);
+  color: #3A2A10;
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 34rpx;
+  font-weight: 700;
+  letter-spacing: .08em;
+  box-shadow: 0 16rpx 44rpx rgba(232,201,138,.34);
+  transition: transform .12s;
+}
+.star-main:active { transform: scale(.97); }
+
+.star-sub-btn {
+  margin-top: 18rpx;
+  height: 82rpx;
+  border-radius: 41rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.045);
+  border: 1rpx solid rgba(255,255,255,.12);
+  font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #C9CFE8;
+  letter-spacing: .04em;
+}
+.star-sub-btn:active { opacity: .82; }
+
+.star-foot {
+  margin-top: 20rpx;
+  text-align: center;
+  font-size: 22rpx;
+  color: #6A7194;
+  letter-spacing: .04em;
+}
+
+/* ---------- 各态通用 ---------- */
+.star-start, .star-anim {
+  position: relative;
+  z-index: 1;
+}
+.star-start { flex: 1; display: flex; flex-direction: column; }
+.star-center { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.star-start .pbtn:first-of-type { margin-top: auto; }
+
+.star-anim {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---- 结果卡文字：与问事页统一 ---- */
+.res-inner { padding: 8rpx 28rpx 24rpx; }
+.res-line {
+  font-family: 'Songti SC', 'Source Han Serif SC', serif;
+  font-size: 36rpx; font-weight: 700; color: var(--ink);
+  line-height: 1.45; letter-spacing: .02em;
+}
+.res-sub2 {
+  font-family: 'Songti SC', serif;
+  font-size: 28rpx; font-weight: 600; letter-spacing: .08em;
+  color: var(--gold-deep, #b8924a);
+  margin-top: 8rpx;
+}
+.res-read {
+  font-size: 26rpx; color: var(--ink-faint, #7a7263);
+  margin: 16rpx 0 20rpx; line-height: 1.7;
+}
+.res-yj { display: flex; flex-wrap: wrap; gap: 16rpx 28rpx; }
+.yj-item { display: flex; align-items: center; }
+.yj-tag {
+  width: 44rpx; height: 44rpx; border-radius: 12rpx;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Songti SC', serif; font-size: 26rpx; font-weight: 700;
+  margin-right: 12rpx;
+}
+.yj-val { font-size: 27rpx; font-weight: 600; }
+.yj-good .yj-tag { background: rgba(94, 122, 92, .16); color: var(--green, #5e7a5c); }
+.yj-good .yj-val { color: var(--green, #5e7a5c); }
+.yj-bad .yj-tag { background: rgba(168, 69, 46, .14); color: var(--red, #a8452e); }
+.yj-bad .yj-val { color: var(--red, #a8452e); }

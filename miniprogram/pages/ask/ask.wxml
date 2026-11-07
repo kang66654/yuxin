@@ -1,0 +1,190 @@
+<view class="app-bg"></view>
+<view class="ask-aurora"></view>
+<view class="stars">
+  <view class="star star-1"></view><view class="star star-2"></view><view class="star star-3"></view>
+  <view class="star star-4"></view><view class="star star-5"></view>
+</view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+<canvas type="2d" id="condense" class="condense-canvas {{fxFading ? 'fx-fade' : ''}}" wx:if="{{condensing}}" bindtap="onFxSkip"></canvas>
+<canvas type="2d" id="coinfx" class="condense-canvas {{coinFxFading ? 'fx-fade' : ''}}" wx:if="{{coinFx}}" bindtap="onFxSkip"></canvas>
+
+<!-- 掷钱过场 HUD：阶段胶囊 + 跳过提示（文字用页面字体规范，不画在画布上） -->
+<view class="cfx-hud" wx:if="{{coinFx}}" bindtap="onFxSkip" style="padding-top:{{statusBarHeight}}px">
+  <view class="cfx-pill">
+    <text class="cfx-num">0{{coinPhase}}</text>
+    <text class="cfx-sep">·</text>
+    <text class="cfx-name">{{coinPhaseName}}</text>
+  </view>
+  <view class="cfx-skip">轻触任意处可跳过</view>
+</view>
+
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd ask-hd">
+      <text class="pt">问事签</text>
+      <view class="quota-pill">
+        <view class="qp-ico"></view>
+        <text class="qp-txt">今日剩余 {{remaining}}/{{limit}}</text>
+      </view>
+    </view>
+
+    <view class="ask-qcard">
+      <textarea class="ask-qinput" value="{{question}}" maxlength="100"
+        bindinput="onQuestionInput" cursor-spacing="20" adjust-position="{{true}}" />
+      <view class="ask-qph" wx:if="{{!question}}">
+        <view class="ask-qph-1">你纠结的是……（≤100字）</view>
+        <view class="ask-qph-2">写下你想问的事，例如：要不要联系他？</view>
+      </view>
+      <view class="ask-qcount">{{question.length}}/100</view>
+    </view>
+
+    <view class="rit-pill">
+      <view class="rit-sel {{rit==='qian'?'on':''}}" data-rit="qian" bindtap="pickRit">抽签</view>
+      <view class="rit-sel {{rit==='tarot'?'on':''}}" data-rit="tarot" bindtap="pickRit">翻牌</view>
+      <view class="rit-sel {{rit==='coin'?'on':''}}" data-rit="coin" bindtap="pickRit">铜钱</view>
+    </view>
+
+    <view wx:if="{{!result && rit === 'qian'}}" class="ask-zone-wrap">
+      <view class="zone-body">
+        <view class="qian-zone">
+          <view class="qian-stage">
+            <!-- 写实金竹签筒：点击或「求一签」进入光聚凝签过场 -->
+            <view class="new-tube {{condensing ? 'tube-out' : ''}}" bindtap="drawRit">
+              <view class="nt-aura"></view>
+              <view class="nt-sticks">
+                <view class="nt-stick n1"><text>一</text></view>
+                <view class="nt-stick n2"><text>二</text></view>
+                <view class="nt-stick n3"><text>三</text></view>
+                <view class="nt-stick n4"><text>四</text></view>
+                <view class="nt-stick n5"><text>五</text></view>
+                <view class="nt-stick n6"><text>六</text></view>
+                <view class="nt-stick n7"><text>七</text></view>
+                <view class="nt-stick n8"><text>八</text></view>
+                <view class="nt-stick n9"><text>九</text></view>
+              </view>
+              <view class="nt-mouth"></view>
+              <view class="nt-rim"></view>
+              <view class="nt-body">
+                <view class="nt-band"></view>
+              </view>
+              <view class="nt-string"></view>
+              <view class="nt-tag"><text>谕</text></view>
+            </view>
+          </view>
+          <view class="zone-hint" wx:if="{{!condensing}}">◆ 点击签筒 · 摇签落定 · 静候片刻 ◆</view>
+        </view>
+        <button class="pbtn gold ask-go" bindtap="drawRit" wx:if="{{!condensing}}">求一签</button>
+      </view>
+    </view>
+
+    <!-- 翻牌区：独立于 !result，翻开后显示真实抽中的牌 -->
+    <view class="zone-body {{result?'is-result':''}}" wx:if="{{rit==='tarot'}}">
+      <view class="zone-center">
+        <view class="tarot-grid">
+          <view class="tarot-card {{tarotFlipping ? 'flip' : ''}}" style="transition-delay:{{0}}ms">
+            <view class="t-back"><text class="t-back-yu">谕</text></view>
+            <view class="t-front" wx:if="{{tarotCards.length}}">
+              <view class="t-sym">{{tarotCards[0].sym}}</view>
+              <view class="t-name">{{tarotCards[0].name}}</view>
+              <view class="t-meta">过去 · {{tarotCards[0].ori}}</view>
+            </view>
+          </view>
+          <view class="tarot-card t2 {{tarotFlipping ? 'flip' : ''}}" style="transition-delay:{{180}}ms">
+            <view class="t-back"><text class="t-back-yu">谕</text></view>
+            <view class="t-front" wx:if="{{tarotCards.length}}">
+              <view class="t-sym">{{tarotCards[1].sym}}</view>
+              <view class="t-name">{{tarotCards[1].name}}</view>
+              <view class="t-meta">现在 · {{tarotCards[1].ori}}</view>
+            </view>
+          </view>
+          <view class="tarot-card t3 {{tarotFlipping ? 'flip' : ''}}" style="transition-delay:{{360}}ms">
+            <view class="t-back"><text class="t-back-yu">谕</text></view>
+            <view class="t-front" wx:if="{{tarotCards.length}}">
+              <view class="t-sym">{{tarotCards[2].sym}}</view>
+              <view class="t-name">{{tarotCards[2].name}}</view>
+              <view class="t-meta">未来 · {{tarotCards[2].ori}}</view>
+            </view>
+          </view>
+        </view>
+        <view class="zone-hint" wx:if="{{!result}}">三张连读 · 过去 → 现在 → 未来</view>
+      </view>
+      <button class="pbtn gold ask-go" bindtap="drawRit" wx:if="{{!result}}">翻牌 · 三张连读</button>
+    </view>
+
+    <!-- 铜钱区：品字三钱，掷钱过场走 Canvas（聚气→腾空→凝空→落定） -->
+    <view class="zone-body {{result?'is-result':''}}" wx:if="{{rit==='coin'}}">
+      <view class="zone-center">
+        <view class="cx-stage {{coinFx?'is-fx':''}}" id="coinStage">
+          <view class="cx-aura"></view>
+          <view class="cx-ring"><view class="cx-ring-in"></view></view>
+          <view class="cx-floor"></view>
+          <view class="cx-slot" wx:for="{{coinSlots}}" wx:key="pos" style="left:{{item.l}}rpx;top:{{item.t}}rpx">
+            <view class="cx-coin {{item.big?'big':''}}">
+              <block wx:if="{{item.face==='正'}}">
+                <text class="cx-ch cx-t">谕</text><text class="cx-ch cx-r">心</text>
+                <text class="cx-ch cx-b">通</text><text class="cx-ch cx-l">宝</text>
+                <view class="cx-hole"></view>
+              </block>
+              <text wx:else class="cx-yu">谕</text>
+            </view>
+          </view>
+        </view>
+        <!-- 固定高度交接区：组合名与提示语互换时不推动舞台 -->
+        <view class="cx-foot">
+          <view class="cx-combo" wx:if="{{coinCombo && !result}}">{{coinCombo}}</view>
+          <view class="zone-hint cx-hint" wx:elif="{{!result}}">三钱问路 · 落定知天意</view>
+        </view>
+      </view>
+      <button class="pbtn gold ask-go" bindtap="drawRit" wx:if="{{!result}}">掷钱问路</button>
+    </view>
+
+    <view wx:if="{{result}}" class="result-wrap">
+      <view class="result-main">
+      <!-- 抽签结果：红绳竖签，竖排四字箴言 -->
+      <view wx:if="{{rit==='qian'}}" class="result-stick">
+        <view class="rs-glow"></view>
+        <view class="rs-hang">
+          <view class="rs-string"></view>
+          <view class="rs-cap"></view>
+          <view class="rs-stick-body">
+            <view class="rs-stick-line"></view>
+            <view class="rs-stick-text">
+              <text wx:for="{{stickText}}" wx:key="index" class="rs-char">{{item}}</text>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view class="result-card-wrap">
+        <view class="pcard ask-rescard">
+          <view class="crh">
+            <text class="cl">{{result.title}}</text>
+            <text class="seal">{{result.seal}}</text>
+          </view>
+          <view class="res-inner">
+            <view class="res-line">{{result.line}}</view>
+            <view class="res-read">{{result.read}}</view>
+            <view class="res-yj">
+              <view class="yj-item yj-good">
+                <text class="yj-tag">宜</text>
+                <text class="yj-val">{{result.good}}</text>
+              </view>
+              <view class="yj-item yj-bad">
+                <text class="yj-tag">忌</text>
+                <text class="yj-val">{{result.bad}}</text>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      </view>
+      <view class="btn-row">
+        <button class="pbtn ask-btn dark" bindtap="onFav"><text class="bi bi-star">☆</text>收藏</button>
+        <button class="pbtn ask-btn gold" bindtap="onShare"><text class="bi bi-card"></text>生成卡片</button>
+        <button class="pbtn ask-btn dark" bindtap="resetAsk">再求一次</button>
+      </view>
+    </view>
+
+    <view class="ask-foot">谕心仅供娱乐 · 不构成任何建议</view>
+  </view>
+  <view class="tab-space"></view>
+</view>

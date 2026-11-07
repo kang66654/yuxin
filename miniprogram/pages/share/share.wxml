@@ -1,0 +1,51 @@
+<view class="app-bg"></view>
+<view class="nav" style="padding-top:{{statusBarHeight}}px"></view>
+<view class="pbody">
+  <view class="page-view">
+    <view class="page-hd">
+      <text class="pt">分享卡</text>
+      <text class="sh-tag">{{isVip ? '金签典藏 · 会员专享' : '国潮式 · 夜色笺纸'}}</text>
+    </view>
+
+    <!-- 卡片预览 -->
+    <view class="sh-card">
+      <view class="sh-card-inner {{isVip?'vip':''}}">
+        <view class="sh-ribbon" wx:if="{{isVip}}">✦ 会员尊享 · 金签典藏 ✦</view>
+        <view class="sh-card-title">✦ {{isVip ? '谕心 · 金签' : title}} ✦</view>
+
+        <view class="sh-paper">
+          <view class="sh-watermark">谕</view>
+          <view class="sh-ptext">
+            <view class="sh-line1">{{line1}}</view>
+            <view class="sh-line2">{{line2}}</view>
+          </view>
+          <view class="sh-read" wx:if="{{read}}">{{read}}</view>
+          <view class="sh-vert" wx:if="{{isVip}}">
+            <text>岁次丙午</text>
+            <text>冬月既望</text>
+          </view>
+          <view class="sh-yj">
+            <view class="yj-item yj-good"><text class="yj-tag">宜</text><text class="yj-val">{{good}}</text></view>
+            <view class="yj-item yj-bad"><text class="yj-tag">忌</text><text class="yj-val">{{bad}}</text></view>
+          </view>
+          <view class="sh-meta">—— {{name}} · {{date}}<block wx:if="{{isVip}}"> · {{no}}</block></view>
+          <view class="sh-seal {{isVip?'gold':''}}">谕</view>
+          <view class="sh-qr" wx:if="{{qrCode}}">
+            <image class="sh-qr-img" src="{{qrCode}}" mode="aspectFit"></image>
+            <text class="sh-qr-tip">扫码测签</text>
+          </view>
+        </view>
+
+        <view class="sh-card-foot">{{isVip ? '谕心会员专享 · 高清无水印' : '谕心仅供娱乐 · 不构成任何建议'}}</view>
+      </view>
+    </view>
+
+    <button class="pbtn gold sh-btn-first" bindtap="saveCard">⬇ {{isVip ? '导出高清卡 · 4K' : '保存这张卡'}}</button>
+    <button class="pbtn ghost sh-btn-second" bindtap="onSecond">{{isVip ? '⇪ 分享给好友' : '返回首页'}}</button>
+    <view class="sh-foot">谕心仅供娱乐 · 不构成任何建议</view>
+  </view>
+  <view class="tab-space"></view>
+</view>
+
+<!-- 隐藏画布：用于导出保存 -->
+<canvas type="2d" id="saveCanvas" class="save-canvas"></canvas>

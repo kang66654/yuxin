@@ -1,0 +1,9 @@
+{
+  "name": "yuxin",
+  "version": "1.0.0",
+  "description": "谕心云函数主入口",
+  "main": "index.js",
+  "dependencies": {
+    "wx-server-sdk": "~4.0.2"
+  }
+}

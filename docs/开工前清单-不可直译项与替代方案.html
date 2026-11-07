@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>谕心复刻 · 开工前清单（不可直译项与替代方案）</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23070A12'/%3E%3Ctext x='16' y='22' font-size='18' text-anchor='middle' fill='%23E8CF97' font-family='serif'%3E谕%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --bg:#070A12; --panel:#0E1526; --panel2:#0B111F;
+    --line:rgba(201,162,79,.20); --line2:rgba(201,162,79,.10);
+    --gold:#C9A24F; --gold2:#E8CF97; --paper:#F2E8D5;
+    --text:#D8D2C3; --dim:#8B8477; --warn:#CBA79E; --ok:#8FA97A; --bad:#B4736A;
+    --mono:"SF Mono",Consolas,"Cascadia Mono",monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text)}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+    font-size:15px;line-height:1.78;
+    background:
+      radial-gradient(900px 520px at 82% -6%, rgba(201,162,79,.10), transparent 62%),
+      radial-gradient(700px 420px at 6% 8%, rgba(96,120,200,.08), transparent 60%),
+      var(--bg);
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:42px 24px 90px}
+  header.hero{border-bottom:1px solid var(--line);padding-bottom:26px;margin-bottom:30px}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.22em;color:var(--gold)}
+  h1{font-family:"Songti SC","SimSun",serif;font-size:clamp(27px,4vw,42px);line-height:1.26;color:var(--paper);margin:14px 0 10px;letter-spacing:.02em;font-weight:700}
+  .lede{color:var(--dim);max-width:78ch;font-size:15px;margin:0}
+  .lede b{color:var(--gold2);font-weight:600}
+
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:11px;margin:24px 0 0}
+  .stat{background:linear-gradient(160deg,#0F1729,#0A0F1C);border:1px solid var(--line);border-radius:13px;padding:14px 15px 12px}
+  .stat .n{font-family:"Songti SC",serif;font-size:24px;color:var(--gold2);line-height:1.1;font-variant-numeric:tabular-nums}
+  .stat .t{font-size:11.5px;color:var(--dim);margin-top:6px;letter-spacing:.04em}
+
+  nav.toc{display:flex;flex-wrap:wrap;gap:8px 18px;margin:26px 0 6px;font-size:12.5px}
+  nav.toc a{color:var(--dim);text-decoration:none;font-family:var(--mono);letter-spacing:.06em}
+  nav.toc a:hover{color:var(--gold2)}
+
+  section{margin:44px 0 0}
+  .snum{font-family:var(--mono);font-size:11px;color:var(--gold);letter-spacing:.2em}
+  h2{font-family:"Songti SC",serif;font-size:23px;color:var(--paper);margin:8px 0 12px;font-weight:700}
+  h3{font-size:14.5px;color:var(--gold2);margin:24px 0 9px;font-weight:600;letter-spacing:.03em}
+  p{margin:0 0 12px}
+  .hint{color:var(--dim);font-size:13px;margin:0 0 12px}
+
+  .tblwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+  table{width:100%;border-collapse:collapse;font-size:13.2px;min-width:880px}
+  th,td{padding:10px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line2)}
+  th{color:var(--gold2);font-weight:600;font-size:12px;letter-spacing:.05em;background:rgba(201,162,79,.06);white-space:nowrap}
+  td:first-child{color:var(--paper)}
+  tr:last-child td{border-bottom:0}
+  .mono{font-family:var(--mono);font-size:12.2px;color:var(--gold2)}
+  .id{font-family:var(--mono);font-size:12px;color:var(--gold);white-space:nowrap}
+  .tag{display:inline-block;font-family:var(--mono);font-size:11px;padding:1px 7px;border-radius:4px;white-space:nowrap}
+  .t-ok{color:var(--ok);background:rgba(143,169,122,.12);border:1px solid rgba(143,169,122,.3)}
+  .t-mid{color:var(--gold);background:rgba(201,162,79,.10);border:1px solid rgba(201,162,79,.28)}
+  .t-bad{color:var(--bad);background:rgba(180,115,106,.12);border:1px solid rgba(180,115,106,.32)}
+
+  .dec{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:13px}
+  .card{background:linear-gradient(165deg,#0F1729,#0A0F1C);border:1px solid var(--line);border-radius:13px;padding:16px 17px}
+  .card .hd{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .card .hd .k{font-family:var(--mono);font-size:11.5px;color:var(--gold);letter-spacing:.14em}
+  .card .hd .r{font-size:11px;color:var(--ok);font-family:var(--mono)}
+  .card .q{font-size:13.5px;color:var(--paper);margin:0 0 9px;font-weight:600}
+  .card ol{margin:0;padding-left:17px;font-size:12.8px;color:var(--dim)}
+  .card ol li{margin:0 0 7px}
+  .card ol li b{color:var(--gold2);font-weight:600}
+  .card .rec{margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);font-size:12.6px;color:var(--text)}
+  .card .rec b{color:var(--ok)}
+
+  .warnbox{border:1px solid rgba(180,115,106,.35);background:rgba(140,90,74,.08);border-radius:12px;padding:15px 17px}
+  .warnbox .h{color:var(--warn);font-size:12.5px;letter-spacing:.1em;font-family:var(--mono);margin-bottom:7px}
+  .warnbox ol{margin:0;padding-left:19px;font-size:13.2px}
+  .warnbox ol li{margin:0 0 8px}
+
+  .checks{display:grid;gap:9px}
+  .chk{display:flex;gap:10px;align-items:flex-start;background:var(--panel2);border:1px solid var(--line);border-left:2px solid var(--gold);border-radius:8px;padding:11px 14px;font-size:13.3px}
+  .chk .i{font-family:var(--mono);font-size:11.5px;color:var(--gold);flex:0 0 34px}
+  .chk .c b{color:var(--gold2)}
+
+  footer{border-top:1px solid var(--line);margin-top:34px;padding-top:16px;color:var(--dim);font-size:12.4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">YUXIN · A0 PRE-FLIGHT CHECKLIST</div>
+    <h1>开工前清单：不可直译项与替代方案</h1>
+    <p class="lede">这份清单只回答一件事：<b>原型里有哪些东西，照抄 CSS 是抄不过来的</b>，以及每一项我准备怎么替代、代价是什么、会不会改到视觉。<br>
+    所有数值都从 <span class="mono">谕心夜色神谕签筒完整可演示Demo.html</span> 源码读出（附行号），没有一条是目测。等你逐项确认后我才动手写 WXML/WXSS。</p>
+    <div class="stats">
+      <div class="stat"><div class="n">14</div><div class="t">原型视图</div></div>
+      <div class="stat"><div class="n">25</div><div class="t">基准图文件（序号 01–23）</div></div>
+      <div class="stat"><div class="n">32</div><div class="t">不可直译项</div></div>
+      <div class="stat"><div class="n">6</div><div class="t">需你拍板的决策</div></div>
+      <div class="stat"><div class="n">19</div><div class="t">当前空壳页（js 10B）</div></div>
+    </div>
+    <nav class="toc">
+      <a href="#s0">00 一页结论</a>
+      <a href="#s1">01 事实纠正</a>
+      <a href="#s2">02 六项决策</a>
+      <a href="#s3">03 清单正文</a>
+      <a href="#s4">04 动效参数</a>
+      <a href="#s5">05 不做与保留</a>
+      <a href="#s6">06 A1 基线</a>
+      <a href="#s7">07 推进顺序</a>
+      <a href="#s8">08 确认清单</a>
+    </nav>
+  </header>
+
+  <main>
+
+    <section id="s0">
+      <div class="snum">00 / SUMMARY</div>
+      <h2>一页结论</h2>
+      <p>原型是「单屏 306×640 + 14 个 <span class="mono">.page</span> 同屏切换 + 1 张 canvas + 5 组内联 SVG + 7 个 DOM 签条 rAF 动画」。小程序的差异不是"样式写法"，而是四层：<b>容器（手机壳/状态栏/胶囊/安全区）</b>、<b>图形载体（无 SVG 元素）</b>、<b>动画载体（无逐帧改 DOM 能力）</b>、<b>字体资产（Android 无 Songti SC）</b>。这四层各有确定的替代方案，但其中 6 处会实质改变实现路径，必须由你定。</p>
+      <p class="hint">一句话：<b>能 1:1 的部分很多，但"顶部状态栏条 + 胶囊"和"签筒 5.6 秒逐帧"这两处，是全项目仅有的两处必须做工程性替代的地方</b>；其余 30 项都是"换载体、不动像素"。</p>
+    </section>
+
+    <section id="s1">
+      <div class="snum">01 / CORRECTION</div>
+      <h2>先纠正六处事实（这一条不纠正，后面必返工）</h2>
+      <p class="hint">任务描述与源码/工程实际有出入。以源码为准，逐条列出，避免我用错误的假设开工。</p>
+      <div class="tblwrap">
+        <table>
+          <colgroup><col style="width:14%"><col style="width:26%"><col style="width:38%"><col style="width:22%"></colgroup>
+          <tr><th>项</th><th>任务描述</th><th>源码 / 工程实际</th><th>影响</th></tr>
+          <tr>
+            <td>动画载体</td>
+            <td>"canvas 类（签筒摇签、星轨、分享卡）在 canvas 2D 重画"</td>
+            <td>三样里<b>只有分享卡是 canvas</b>（<span class="mono">&lt;canvas id="shCanvas" width="1080" height="1440"&gt;</span>，全文件唯一一个 canvas）。<br>星轨是 <b>5 组内联 SVG</b>（<span class="mono">viewBox 0 0 188 188</span>，L655–671，每组 4–6 条 <span class="mono">pathLength="100"</span> 的 path + 12 个 circle）。<br>签筒是 <b>7 个 DOM <span class="mono">.q-stick</span> + rAF 逐帧改 transform</b>（L1146–1209）。</td>
+            <td>A5 的写法要按"三种载体三种策略"拆，不能统一丢进 canvas。签筒改 canvas 反而会丢像素（见 NT-09）。</td>
+          </tr>
+          <tr>
+            <td>textarea</td>
+            <td>"textarea 原生层级问题单独处理"</td>
+            <td>原型里 <b>textarea 数量为 0</b>。只有 4 个 <span class="mono">input</span>：心情词（≤6 字）、称呼（≤12）、月、日（L-a: <span class="mono">#moodInput / #obName / #obM / #obD</span>）。</td>
+            <td>要处理的是 input 的层级与键盘遮挡，不是 textarea。工作量与方案都不同。</td>
+          </tr>
+          <tr>
+            <td>基准图数量</td>
+            <td>"23 张 984×1986"</td>
+            <td><b>实际 25 个文件</b>（04 与 05 各有"过程图 + 结果图"两张），序号到 23。且 <span class="mono">04-问事-翻牌.png</span>、<span class="mono">05-问事-铜钱.png</span> 的修改时间是 <b>19:48</b>，其余 23 张是 19:31——两张疑似后补/重拍。</td>
+            <td>基线版本不一致会导致 2 页 diff 永远对不上。建议重跑一次全量（见 §06）。</td>
+          </tr>
+          <tr>
+            <td>数据契约</td>
+            <td>"22 个 action / 8 个 yx_ 集合，以 cloudfunctions/yuxin/index.js 与 utils/api.js 为唯一真源"</td>
+            <td>这两个文件<b>都不存在</b>：<span class="mono">cloudfunctions/</span> 下只有 QuickStart 的 <span class="mono">quickstartFunctions</span>；<span class="mono">miniprogram/utils/</span> 目录没有。v0.15 文档实际定义 <b>13 个集合</b>（§16.1），且没有"22 个 action"的清单表。</td>
+            <td>"唯一真源"目前是空的。必须先由我把 api.js + 云函数落下来，才能谈三方一致（见 D6）。</td>
+          </tr>
+          <tr>
+            <td>工程骨架</td>
+            <td>"15 页 app.json、custom 导航、custom tabBar 已就绪"（上一版方案文档的说法）</td>
+            <td><span class="mono">app.json</span> 仍是 QuickStart 的 2 页；19 个页面目录存在但 <b>js 全是 10 字节、wxml 是 100 字节占位</b>；<span class="mono">custom-tab-bar/</span> 空、<span class="mono">styles/</span> 空、<span class="mono">components/</span> 只有 QuickStart 的 cloudTipModal。</td>
+            <td>这不是"补视觉"，是"从零写 14 视图"。A3 起步，不是 A4。</td>
+          </tr>
+          <tr>
+            <td>竖排文本</td>
+            <td>（隐含）签文竖排要处理</td>
+            <td>全文 <span class="mono">writing-mode / vertical-rl / text-orientation</span> 命中 <b>0 处</b>。DOM 里没有任何竖排文本；竖排只出现在分享卡 canvas 的 <span class="mono">shV()</span>（逐字 <span class="mono">fillText</span>，按 step 步进，L1526）。</td>
+            <td>竖排不是问题，不用为它改布局。真正要复刻的是 canvas 的逐字绘制。</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="s2">
+      <div class="snum">02 / DECISIONS</div>
+      <h2>六项决策：我先给推荐，你确认或改</h2>
+      <p class="hint">这六项都会改变实现路径，选错要返工。其余 32 项我按推荐方案执行，你在 §08 一次性过一遍即可。</p>
+
+      <div class="dec">
+        <div class="card">
+          <div class="hd"><span class="k">D1 · 路由模型</span><span class="r">REC: X3</span></div>
+          <p class="q">14 个视图怎么落到小程序页面体系？</p>
+          <ol>
+            <li><b>X1 全 overlay</b>：1 个壳页 + 14 个视图全做组件。像素最像，但 tabBar 无法自定义到 5 个真实 tab。</li>
+            <li><b>X2 全真实路由</b>：5 个 tab 页 + 9 个 <span class="mono">navigateTo</span> 页。符合平台习惯，但<b>系统转场（约 250ms 右滑）无法关闭</b>，与原型 <span class="mono">pageIn</span>（0.3s 淡入上移 9px）不是一回事。</li>
+            <li><b>X3 混合</b>：5 个 tab 用真实页面（强制要求），9 个次级视图（share / intro 1-3 / mt / records / fav / lv / vipbuy）做成全屏 overlay 组件，复用原型的 <span class="mono">pageIn .3s</span>。</li>
+          </ol>
+          <div class="rec"><b>推荐 X3</b>：tabBar 只能是真实 tab 页；次级页用 overlay 才能 100% 复用 pageIn 与整屏布局。代价：overlay 没有系统返回手势，需内置返回按钮 + 安卓物理返回拦截。</div>
+        </div>
+
+        <div class="card">
+          <div class="hd"><span class="k">D2 · 比对口径</span><span class="r">REC: B1</span></div>
+          <p class="q">顶部状态栏条与胶囊，怎么算进 2%？</p>
+          <ol>
+            <li><b>B1 双口径</b>：回归截图时走"基准对齐模式"（nav 固定 41.55px、内容区 598.45px、胶囊区域 mask），另出一份"真机模式"差异作旁证。</li>
+            <li><b>B2 只按真机几何</b>：顶部必然下移 16.45px，<b>2% 阈值不可能达标</b>（整页错位）。</li>
+          </ol>
+          <div class="rec"><b>推荐 B1</b>。理由：顶部条 306×56 = 17,136px，占整屏 8.7%；刘海机型安全区再占 5.3%——这两块不计入分母，2% 才有意义。报告里会同时标注 mask 面积与原因。</div>
+        </div>
+
+        <div class="card">
+          <div class="hd"><span class="k">D3 · 支付</span><span class="r">REC: P1</span></div>
+          <p class="q">会员开通（vipbuy）真接微信支付，还是先闭环？</p>
+          <ol>
+            <li><b>P1 订单闭环 + 支付通道预留</b>：建 <span class="mono">orders</span> 集合、云函数下单/回调/查单，前端保留 <span class="mono">wx.requestPayment</span> 分支；无商户号时走"沙箱开通"开关。</li>
+            <li><b>P2 真支付</b>：需企业主体 + 微信支付商户号 + API 证书 + 回调验签 + 后台发货。任何一环缺失都无法跑通。</li>
+          </ol>
+          <div class="rec"><b>推荐 P1</b>。若你已有商户号，直接告诉我，我按 P2 写并在 A6 一起验。</div>
+        </div>
+
+        <div class="card">
+          <div class="hd"><span class="k">D4 · 大模型</span><span class="r">REC: M1/M2</span></div>
+          <p class="q">签文解读、香语、星语、树洞回响，文案从哪来？</p>
+          <ol>
+            <li>原型里这些全是<b>硬编码常量</b>（22 条签文库 + 4 组铜钱解读 + 香语/星语模板）。要做到"无假数据"，必须真调模型。</li>
+            <li><b>M1 云函数直连</b>：Key 放云函数环境变量，前端不可见。需你提供 provider 与 Key。</li>
+            <li><b>M2 云开发 AI 能力</b>：<span class="mono">wx.cloud.extend.AI</span>，需在小程序后台开通并配模型。</li>
+          </ol>
+          <div class="rec"><b>推荐 M1</b>（可控、可换模型、可加提示词版本号）。请给我：provider（OpenAI 兼容 / 豆包 / 其他）、模型名、Key 存放方式。</div>
+        </div>
+
+        <div class="card">
+          <div class="hd"><span class="k">D5 · 字体</span><span class="r">REC: F1</span></div>
+          <p class="q">Android 上没有 Songti SC，标题会静默变黑体。</p>
+          <ol>
+            <li><b>F1 思源宋体子集</b>：按全量文案字符集（去重后约 400–700 字）子集化 woff2，约 60–120KB，托管云存储 https 链接，<span class="mono">wx.loadFontFace({global:true})</span> 启动预载 + 本地缓存 URL。</li>
+            <li><b>F2 系统 serif 兜底</b>：Android 多数机型 serif 仍是黑体，<b>不满足"字体不回退"</b>。</li>
+          </ol>
+          <div class="rec"><b>推荐 F1</b>。需你确认：允许把字体文件放云存储（会占约 100KB 空间，且首次启动多 300–800ms 等待，我用启动页/骨架屏盖住）。</div>
+        </div>
+
+        <div class="card">
+          <div class="hd"><span class="k">D6 · 集合口径</span><span class="r">REC: C1</span></div>
+          <p class="q">8 个集合，还是文档里的 13 个？</p>
+          <ol>
+            <li><b>C1 按 v0.15 §16 的 13 个</b>，统一加 <span class="mono">yx_</span> 前缀：users / sign_daily / asks / favorites / treehole / mutual / rituals / orders / quota / events / config（+ 备份归档）。字段、索引、权限文档里都有。</li>
+            <li><b>C2 压成 8 个</b>：今日签、问事、仪式可合并，但查询模式不同（按人按天取一条 / 按人倒序分页 / 按类型取最近 N 条），合并会让索引失效——文档 §16.1 明确反对。</li>
+          </ol>
+          <div class="rec"><b>推荐 C1</b>（13 个，带 <span class="mono">yx_</span> 前缀）。"22 个 action"文档里没有清单，我会按 14 视图的实际动作倒推并写成 <span class="mono">utils/api.js</span> 常量表，届时给你一份 action 清单复核。</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="s3">
+      <div class="snum">03 / NON-TRANSLATABLE</div>
+      <h2>清单正文：32 项，逐项给替代</h2>
+      <p class="hint">列含义：<b>原型事实</b>（源码位置与数值）→ <b>小程序约束</b> → <b>替代方案</b> → <b>视觉影响</b>（"不动"= 替代后像素一致）→ <b>风险</b>。</p>
+
+      <h3>3.1 骨架与系统件（6 项，全部涉及 D2）</h3>
+      <div class="tblwrap">
+        <table>
+          <colgroup><col style="width:6%"><col style="width:30%"><col style="width:20%"><col style="width:28%"><col style="width:8%"><col style="width:8%"></colgroup>
+          <tr><th>编号</th><th>原型事实</th><th>小程序约束</th><th>替代方案</th><th>视觉</th><th>风险</th></tr>
+
+          <tr>
+            <td class="id">NT-01</td>
+            <td>演示用手机壳 <span class="mono">.phone</span>：宽 306、padding 10、边框 1、圆角 38、外阴影 <span class="mono">0 24px 60px</span>（L46）。基准图 984×1986 = 328×662@3x，<b>含壳</b>。</td>
+            <td>小程序没有"壳"这一层，也不该有。</td>
+            <td>比对脚本裁内屏矩形：截图坐标 <span class="mono">(33,33)–(951,1953)</span>（即 11×3 偏移，918×1920）；壳与阴影不参与 diff。</td>
+            <td>不动（裁剪口径）</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-02</td>
+            <td><span class="mono">.screen{height:640px}</span>（L47），内容区 = 640 − 41.55 = <b>598.45px</b>。</td>
+            <td>真机高度不固定；写死 640 会在刘海机溢出、在小屏压缩。</td>
+            <td>内容区 <span class="mono">flex:1; min-height:1466.7rpx</span>（=598.45×2.4509）；基准对齐模式下强制 598.45px。</td>
+            <td>不动（对齐模式下）</td>
+            <td><span class="tag t-mid">中</span> 与 NT-03 联动，见 D2</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-03</td>
+            <td>自绘状态栏 <span class="mono">.status</span>：padding 14/15/8 + 字号 11.5×行高1.7 → 总高 <b>41.55px</b>。内含：假时钟「21:41」、base64 头像（18×18）、右端 <span class="mono">#statusTag</span>（动态显示当前页别名：今日 / 问事 / 树洞 / 仪式 / 我的 / 夜安…）。</td>
+            <td>真机有系统状态栏（20 / 44px）+ 右上胶囊（约 87×32，top = statusBarHeight+4）。胶囊会压住右端 <span class="mono">statusTag</span>。</td>
+            <td>自定义导航：nav 总高 = <span class="mono">statusBarHeight + 32 + 6</span>（非刘海 ≈58px）；去掉假时钟/电量/头像（系统绘制）；<b>文案不能删</b>（约束「不改文案」），把 <span class="mono">statusTag</span> 移到胶囊左侧同一行，右内边距 = 胶囊宽 + 8。</td>
+            <td><span class="tag t-bad">必然不同</span> 顶部 0–56px 记入 mask</td>
+            <td><span class="tag t-bad">高</span> 全项目唯一"物理不可能零差"的地方</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-04</td>
+            <td><span class="mono">.screen{border-radius:30px;overflow:hidden}</span>（L47），四角切掉圆弧。</td>
+            <td>真机圆角由硬件遮罩给；页面再画 30px 圆角会在四角漏出底色/露白。</td>
+            <td>页面不画圆角；仅在"基准对齐模式"由截图脚本按半径 73.5rpx 做圆形 mask，模拟原型四角。</td>
+            <td>不动（mask 口径）</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-05</td>
+            <td><span class="mono">.pnav</span> 吸底 + <span class="mono">background:var(--nav-bg)</span> + <b><span class="mono">backdrop-filter:blur(8px)</span></b>（L95）。</td>
+            <td>WXSS 不支持 <span class="mono">backdrop-filter</span>（iOS 部分版本可，Android WebView 无效）。</td>
+            <td>nav 下方是固定的天空渐变 + 星点层，模糊结果<b>可离线烘焙</b>：导出 1 张 306×58@3x 的 nav 背景 PNG（渐变+模糊已合成）；若 <span class="mono">--nav-bg</span> 自身 alpha ≥ 0.9，直接用 rgba 纯色即可。首页 diff 后二选一。</td>
+            <td>不动（烘焙等价）</td>
+            <td><span class="tag t-mid">中</span> 需首屏比对确认</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-06</td>
+            <td>nav 内边距 9/5/7，<b>无安全区</b>；原型 640 高也不含 home indicator。</td>
+            <td>iPhone X 类机型底部 34px 安全区；不处理则按钮被横条压住。</td>
+            <td><span class="mono">padding-bottom:calc(17.2rpx + env(safe-area-inset-bottom))</span>；基准对齐模式用无刘海设备（env=0）。</td>
+            <td>不动（设备相关）</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>3.2 图形与质感（10 项）</h3>
+      <div class="tblwrap">
+        <table>
+          <colgroup><col style="width:6%"><col style="width:30%"><col style="width:20%"><col style="width:28%"><col style="width:8%"><col style="width:8%"></colgroup>
+          <tr><th>编号</th><th>原型事实</th><th>小程序约束</th><th>替代方案</th><th>视觉</th><th>风险</th></tr>
+
+          <tr>
+            <td class="id">NT-07</td>
+            <td>5 个 tabBar 图标：内联 <span class="mono">data:image/svg+xml</span>（stroke #AAA，<span class="mono">.ic-home::before</span> 等，L102–106）；灰态 <span class="mono">filter:grayscale(1) brightness(1.2)</span>，选中态 <span class="mono">grayscale(0) brightness(1.1) sepia(.4) saturate(3) hue-rotate(-8deg)</span>（把灰描边染成金）。</td>
+            <td>WXML 无 <span class="mono">&lt;svg&gt;</span>；<span class="mono">&lt;image src="data:image/svg+xml,…"&gt;</span> 在 Android 上不可靠；WXSS <span class="mono">filter</span> 在 Android 端版本差异大（部分无效）。</td>
+            <td>5 个 path 原样保留为 <span class="mono">assets/icons/*.svg</span>（真源）；构建脚本用 Chromium 离屏渲染两次（原滤镜链 / 选中滤镜链），导出 <b>灰/金两套 @3x PNG（10 张）</b>。像素由同一滤镜产出，等价；不引入任何图标库。</td>
+            <td>不动</td>
+            <td><span class="tag t-mid">中</span> 需你点头"内联 SVG 允许烘焙成 PNG"（约束原文是"内联 SVG 或雪花 PNG"）</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-08</td>
+            <td><b>星轨 = 5 组内联 SVG</b>（L655–671，glow / wind / clear / lost / full）。每组 4–6 条 <span class="mono">path pathLength="100"</span> + 12 个 <span class="mono">circle</span>，每个元素带 <span class="mono">style="--d:.30s"</span> 类逐级延迟（0/.14/.28…/0.70）；<span class="mono">.cline</span> 用 <span class="mono">stroke-dasharray:100</span> + <span class="mono">drawSeg .45s linear forwards</span> 描线，<span class="mono">.cstar</span> 用 <span class="mono">starIn .5s</span>，光晕 <span class="mono">drop-shadow(0 0 4px)</span>。</td>
+            <td>WXML 没有 SVG 元素，<b>不能</b>用 <span class="mono">&lt;svg&gt;</span>；也不能靠 WXSS 按段驱动线条。</td>
+            <td><b>canvas 2D 重画</b>（460.8×460.8rpx 对应 564px 缓冲，@3x）：坐标从 <span class="mono">d="M38 132 L72 104"</span> 直接解析，延迟从 <span class="mono">--d</span> 解析；描线用 <span class="mono">按进度绘制线段</span>（等价 stroke-dashoffset）；星点用 <span class="mono">shadowBlur=12</span> 做 halo。时序图与原型逐项对齐（见 §04）。</td>
+            <td>不动（逐帧可控）</td>
+            <td><span class="tag t-mid">中</span> halo 的发光柔和度需逐帧核对</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-09</td>
+            <td><b>签筒 = DOM + rAF</b>：<span class="mono">.qian-tube</span> 150×178；7 根签 14×58、<span class="mono">bottom:150px</span>、<span class="mono">--dx</span> −24…24、<span class="mono">--ang</span> −32…32、<span class="mono">--d</span> 30…；筒体 <span class="mono">border-radius:12 12 22 22</span> + 双重 inset 阴影 + 金色渐变，口沿 <span class="mono">.t-rim</span> 122×20。时序 8 段、总 <b>5.60s</b>（T=[0.90,0.40,0.50,1.00,1.20,0.70,0.30,0.60]），逐帧改 <span class="mono">tube.style.transform</span> + 7 根签的 <span class="mono">translateX/Y/rotate</span>（L1146–1209）。</td>
+            <td>小程序不能每帧 setData（每帧 8 次 → 中低端安卓必掉帧）；也没有 rAF 直改 DOM 的通道。</td>
+            <td><b>构建期烘焙 @keyframes</b>：把 <span class="mono">apply(t)</span> 的分段数学原样跑一遍，按 20ms 采样，为每根签生成一条 keyframes（约 75–85 个百分比节点），筒体 1 条；静态外观仍用 WXSS 原样画（渐变/inset 阴影/圆角 1:1），结束用 <span class="mono">forwards</span> 停在 <span class="mono">x=62,y=150,r=18</span> 终态。<br>体积预估 7×80×38B ≈ <b>21KB</b>。</td>
+            <td>不动（采样 20ms，sin 周期 0.4–0.5s，肉眼看不出差别）</td>
+            <td><span class="tag t-mid">中</span> 备选：整筒 canvas 重画（阴影会失像素）；每帧 setData（掉帧，不达标）——两条都不如烘焙</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-10</td>
+            <td>3D 翻牌：<span class="mono">perspective:700px</span> + <span class="mono">transform-style:preserve-3d</span> + <span class="mono">rotateY(180deg)</span> + <span class="mono">.7s cubic-bezier(.3,.8,.4,1)</span>；3 张，间隔 700ms（L230–232、L1221）。</td>
+            <td>WebView 支持 3D，但低端 Android 上 <span class="mono">preserve-3d</span> 与 <span class="mono">backface-visibility</span> 偶发失效，背面会透出来。</td>
+            <td>保留 3D 原样；准备降级实现（正反两面绝对定位，90° 瞬间切面 + 轻微 scale 补偿），由运行时开关控制，只在检测到异常渲染时启用。</td>
+            <td>不动（主路径）</td>
+            <td><span class="tag t-mid">中</span> 三机型体检时确认</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-11</td>
+            <td>铜钱 58×58：<span class="mono">radial-gradient(circle at 35% 30%,#E8CF97,#9C7B3C)</span> + 双 inset 阴影 + <span class="mono">coinToss .5s</span>（0/40%/70%/100% 位移 + rotate 160/300/360）。</td>
+            <td>无（WXSS 可直译）。</td>
+            <td>逐条搬 WXSS，数值不改。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-12</td>
+            <td>燃香烟雾：<span class="mono">radial-gradient(ellipse at 50% 100%,rgba(232,207,151,.5),transparent 70%)</span> + <b><span class="mono">filter:blur(3px)</span></b> + <span class="mono">smoke 3.2s ease-in-out infinite</span>（L143–144）；火星 <span class="mono">ember 1.2s</span>。</td>
+            <td><span class="mono">filter:blur</span> 在 Android 端常失效或极耗电（每帧软件模糊）。</td>
+            <td>把同一个 radial-gradient <b>离线烘焙成 96×192 带 alpha 的 PNG</b>（模糊已烘进图里），动画仍用原 keyframes（translate/scale/opacity），参数一字不改。</td>
+            <td>不动（烘焙等价）</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-13</td>
+            <td><span class="mono">.sq-card{aspect-ratio:1/1}</span>（分享卡预览方块，L114）。</td>
+            <td>WXSS 对 <span class="mono">aspect-ratio</span> 支持不稳（低版本忽略 → 方块塌成 0 高）。</td>
+            <td>写死高度：卡宽 = 306 − 30 = 276px → 676.4rpx，高度同值。等比不变。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-14</td>
+            <td>星空点 <span class="mono">.stars i:nth-child(1..6){left:14%;top:12%}</span>（L50 起），各自带闪烁延迟。</td>
+            <td>WXSS <b>不支持 :nth-child 选择器</b>。</td>
+            <td>改用显式 class <span class="mono">.star-1 … .star-6</span>，百分比与延迟照抄。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-15</td>
+            <td>签号「一…七」用 <span class="mono">.q-stick::after{content:attr(data-n)}</span>（L205）。</td>
+            <td>WXSS 的 <span class="mono">content</span> 只吃字符串，<b>不支持 attr()</b>。</td>
+            <td>7 个真实文本子节点（或 7 条 <span class="mono">::after{content:"一"}</span> 规则，逐条写）。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-16</td>
+            <td>7 根签的 <span class="mono">--dx/--ang/--d</span> 与 z-index 由 <span class="mono">:nth-child(n)</span> 逐条定义（L207–213）。</td>
+            <td>同上，:nth-child 不可用；且 <span class="mono">var()</span> 在 keyframes 里插值不可靠。</td>
+            <td>改成 <span class="mono">.stick-1 … .stick-7</span> 逐条写死数值（照抄原值），keyframes 里直接用字面量。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>3.3 字体与文本（4 项）</h3>
+      <div class="tblwrap">
+        <table>
+          <colgroup><col style="width:6%"><col style="width:30%"><col style="width:20%"><col style="width:28%"><col style="width:8%"><col style="width:8%"></colgroup>
+          <tr><th>编号</th><th>原型事实</th><th>小程序约束</th><th>替代方案</th><th>视觉</th><th>风险</th></tr>
+
+          <tr>
+            <td class="id">NT-17</td>
+            <td>4 个字族：<span class="mono">"Songti SC","SimSun",serif</span>（标题 18px / 签文 26px 级）、<span class="mono">"Songti SC","STZhongsong",serif</span>、<span class="mono">"PingFang SC","Microsoft YaHei",sans-serif</span>（正文）、<span class="mono">"SF Mono",Consolas,monospace</span>（编号/小标）。</td>
+            <td>Android 无 Songti SC / STZhongsong / SF Mono，<b>静默回退黑体</b>——整页气质当场变。</td>
+            <td>子集化思源宋体（家名 <span class="mono">YXSong</span>），所有 Songti 声明统一为 <span class="mono">"YXSong","Songti SC",serif</span>；PingFang 用系统默认（Android 的思源黑体质量够）；等距用 <span class="mono">monospace</span> 兜底。</td>
+            <td>不动（需先把字体加载完）</td>
+            <td><span class="tag t-bad">高</span> 首屏空窗 300–800ms，需启动预载 + 骨架屏</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-18</td>
+            <td>分享卡 canvas 里 <span class="mono">ctx.font = shF(52)</span> 等，字体串写的是 <span class="mono">'Songti SC'</span>。</td>
+            <td>canvas 里未注册的字体同样会回退，且<b>不会报错</b>（只会画成黑体，肉眼才发现）。</td>
+            <td>canvas 里改 <span class="mono">'YXSong'</span>，且必须等 <span class="mono">loadFontFace</span> 成功后再 <span class="mono">shDraw()</span>；在字体就绪前画一版到离屏、就绪后重画。</td>
+            <td>不动</td>
+            <td><span class="tag t-mid">中</span> 需在 A5 首帧截图核对</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-19</td>
+            <td>（澄清项）DOM 竖排 <b>0 处</b>；竖排只用 canvas <span class="mono">shV()</span> 逐字 <span class="mono">fillText</span>（L1526），非会员水印也是逐字竖排（L1576–1583）。</td>
+            <td>WXSS 不支持 <span class="mono">writing-mode</span>（若将来要 DOM 竖排才有此问题）。</td>
+            <td>本轮无需处理；canvas 逐字绘制原样搬。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-20</td>
+            <td>4 个 <span class="mono">input</span>：心情词（maxlength 6）、称呼（12）、月（number 1–12）、日（number 1–31），日期输入触发 <span class="mono">syncZod()</span> 算星座；样式含 <span class="mono">outline:none</span>、自定义 placeholder 色。</td>
+            <td><span class="mono">outline</span> 无效；placeholder 需 <span class="mono">placeholder-class</span>；<span class="mono">type="number"</span> 不理会 min/max；input 仍是原生组件，弹层/键盘遮挡需处理。</td>
+            <td><span class="mono">bindinput</span> 过滤 + 范围校验（替代 min/max）；<span class="mono">placeholder-class</span> 搬原色值；<span class="mono">cursor-spacing</span> + <span class="mono">bindfocus</span> 里把 scroll-view 滚到输入框；弹层出现时对该 input 加 <span class="mono">hidden</span>。</td>
+            <td>不动</td>
+            <td><span class="tag t-mid">中</span> 键盘弹起时布局位移需实机确认</td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>3.4 交互与页面（5 项）</h3>
+      <div class="tblwrap">
+        <table>
+          <colgroup><col style="width:6%"><col style="width:30%"><col style="width:20%"><col style="width:28%"><col style="width:8%"><col style="width:8%"></colgroup>
+          <tr><th>编号</th><th>原型事实</th><th>小程序约束</th><th>替代方案</th><th>视觉</th><th>风险</th></tr>
+
+          <tr>
+            <td class="id">NT-21</td>
+            <td>14 个视图是同一个 <span class="mono">.screen</span> 里的 14 个 <span class="mono">.page</span>，<span class="mono">display:none/block</span> 切换，每次 <span class="mono">pageIn</span>（0.3s / 0.35s，<span class="mono">translateY(9px)+opacity</span>）。</td>
+            <td>小程序是路由模型；<span class="mono">navigateTo</span> 的系统转场无法关闭；tab 切换无动画。</td>
+            <td>按 <b>D1</b> 定：X3 = 5 个 tab 真实页（onShow 里手动跑 pageIn 入场）+ 9 个次级视图 overlay 组件（复用 pageIn）。</td>
+            <td>不动（X3）</td>
+            <td><span class="tag t-mid">中</span> overlay 的返回交互（见 NT-25）</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-22</td>
+            <td><span class="mono">.page{overflow:hidden}</span>（L57）；只有 <span class="mono">ritual</span> 页 <span class="mono">overflow-y:auto</span> 且带 <b>5px 金色 thin 滚动条</b>（<span class="mono">scrollbar-width:thin; ::-webkit-scrollbar{width:5px}</span> 共 7 条规则，L59–61）。</td>
+            <td>小程序不渲染滚动条（<span class="mono">scroll-view</span> 也没有）；页面级滚动会带动整页，破坏"整屏固定"。</td>
+            <td>可滚区域一律 <span class="mono">scroll-view</span> <span class="mono">show-scrollbar="{{false}}"</span>；页面 json 加 <span class="mono">disableScroll:true</span>，避免整页 bounce。</td>
+            <td><span class="tag t-bad">条状差异</span> 仅"滚动条"这一条 5px 竖条消失，记入"允许差异"</td>
+            <td><span class="tag t-ok">低</span> 需确认基准图里该条是否可见</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-23</td>
+            <td>5 个 tab（首页/问事/树洞/仪式/我的）+ 选中态金线 <span class="mono">::after{top:-9px;width:22px;height:2px}</span>（L88）+ 图标染色（见 NT-07）。</td>
+            <td>原生 tabBar 不能自定义图标染色与金线，只能 <span class="mono">custom-tab-bar</span>。</td>
+            <td>写 <span class="mono">custom-tab-bar</span> 组件；切换后各页 onShow 里同步选中态，避免"点了不变色"的闪烁。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-24</td>
+            <td><span class="mono">.confirm</span>：<span class="mono">opacity+scale(.94→1)</span> 0.22s；<span class="mono">toast</span>：<span class="mono">#F2E8D5</span> 底、13px、999 圆角、上移 12px。</td>
+            <td><span class="mono">wx.showToast</span> 样式不可定制（白底/黑字/固定尺寸）。</td>
+            <td>两件都做自定义组件，样式照搬原型；toast 用单例队列避免叠层。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-25</td>
+            <td>原型是"单屏内切页"，没有返回栈概念（返回 = 点 tabBar 或页内返回）。</td>
+            <td>X3 的 overlay 没有系统返回；X2 的真页有返回但转场不同。</td>
+            <td>X3 下：每个 overlay 带原型同款返回按钮；安卓物理返回用 <span class="mono">wx.onBackPress</span>（部分版本）+ 页面栈兜底，iOS 侧滑不适用（overlay 不在栈上）。</td>
+            <td>不动</td>
+            <td><span class="tag t-mid">中</span> 这是 X3 主要代价，选 X2 可避开</td>
+          </tr>
+        </table>
+      </div>
+
+      <h3>3.5 资源与云侧（7 项）</h3>
+      <div class="tblwrap">
+        <table>
+          <colgroup><col style="width:6%"><col style="width:30%"><col style="width:20%"><col style="width:28%"><col style="width:8%"><col style="width:8%"></colgroup>
+          <tr><th>编号</th><th>原型事实</th><th>小程序约束</th><th>替代方案</th><th>视觉</th><th>风险</th></tr>
+
+          <tr>
+            <td class="id">NT-26</td>
+            <td>分享卡右下"小程序码"是<b>占位</b>：<span class="mono">shQr()</span> 只画一个 127×127 的虚线框 + 居中文字「小程序码」（L1564–1569）。</td>
+            <td>真码要 <span class="mono">openapi.wxacode.getUnlimited</span>（云调用），需 <span class="mono">scene</span>、<span class="mono">env_version</span>、且小程序需已发布/体验版；返回 Buffer 还要落到云存储才能给 canvas 用。</td>
+            <td>云函数 <span class="mono">shareCode</span>：<span class="mono">getUnlimited({scene:"s=xxx",page:"pages/share/share"})</span> → <span class="mono">uploadFile</span> → 返回 fileID；前端 <span class="mono">getTempFileURL</span> → <span class="mono">canvas.createImage()</span> → <span class="mono">drawImage</span> 贴右下（127×127 @1080 画布）。失败降级：仍画原型同款虚线框，但写清"码生成失败"而非静默。</td>
+            <td>占位 → 真码（预期唯一"改善性差异"）</td>
+            <td><span class="tag t-bad">高</span> 未发布的小程序可能调不通，需 A6 先验一次</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-27</td>
+            <td>分享卡两版：非会员逐字竖排水印（60 字上限）+ 单框；会员双框烫金 + 方印 + 无水印；会员版导出 <span class="mono">2160</span> 宽。只有屏幕预览，<b>没有"保存/分享"动作</b>。</td>
+            <td>需 <span class="mono">canvasToTempFilePath</span> + <span class="mono">saveImageToPhotosAlbum</span>（授权拒绝要兜底 <span class="mono">openSetting</span>）；原型没有这两个按钮。</td>
+            <td>画布与绘制逻辑原样搬；新增"保存到相册 / 分享给朋友"两个动作（<span class="mono">onShareAppMessage</span> 用卡面图作封面）。</td>
+            <td>新增按钮（不改原有像素）</td>
+            <td><span class="tag t-mid">中</span> 新增交互需你认可</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-28</td>
+            <td>卡面 <span class="mono">NO. + String(card.no||'0000').slice(-4)</span>，<span class="mono">card.no</span> 在原型里是常量；日期 2026.11.05、持签 47 次也是常量。</td>
+            <td>真实数据需 <span class="mono">shareCode</span> 返回编号，否则重复编号。</td>
+            <td>编号 = <span class="mono">yyMMdd + 自增序号</span>（6 位，取后 4 位显示），由云函数生成；日期取 <span class="mono">sign_daily.date</span>。</td>
+            <td>文案结构不变，值变真</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-29</td>
+            <td>原型所有"结果文案"都是硬编码常量（22 条签文库 / 4 组铜钱解读 / 香语 / 星语 / 树洞回响）。</td>
+            <td>"功能闭环、无假数据"要求真生成。</td>
+            <td>按 <b>D4</b>：云函数 <span class="mono">interpret</span> 调模型，提示词与返回 JSON 结构照 v0.15 §11 的约束（≤18 字签文、宜/忌各 ≤8 字、只输出 JSON）；失败重试 1 次后回落模板库，<b>并在结果里标注来源</b>（model / fallback），不静默。</td>
+            <td>不动（文案由模型产出）</td>
+            <td><span class="tag t-bad">高</span> 需 Key 与额度，非我能独立完成</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-30</td>
+            <td>v0.15 文档定义 <b>13 个集合</b>（§16.1），并给了字段、索引、安全规则（§16.2–16.4），<b>但没有 22 个 action 的清单</b>。</td>
+            <td>"三方一致"要求代码先存在。</td>
+            <td>按 <b>D6</b>：建 <span class="mono">utils/api.js</span>（action 常量 + 错误码 + 空态文案）与 <span class="mono">cloudfunctions/yuxin/index.js</span>（switch 分发 22 个 action），作为唯二真源；随后给出 action 清单供你复核。</td>
+            <td>不涉及</td>
+            <td><span class="tag t-mid">中</span> action 数量以我实际倒推为准</td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-31</td>
+            <td><span class="mono">gap</span> 37 处、<span class="mono">display:grid</span> 8 处、<span class="mono">flex</span> 43 处。</td>
+            <td>新系统内核都支持；但老 Android X5 对 <span class="mono">flex gap</span> 支持差（会塌成 0 间距）。</td>
+            <td>先在真机三机型上验；若塌陷，改为子元素 <span class="mono">margin-right</span> 模拟（数值 = gap，最后一个用 <span class="mono">:last-child</span> 不行就显式 class）。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+
+          <tr>
+            <td class="id">NT-32</td>
+            <td><span class="mono">inset</span> 8 处（如 <span class="mono">.stars{inset:0}</span>、<span class="mono">.ring::before{inset:24px}</span>）。</td>
+            <td><span class="mono">inset</span> 简写在部分内核不识别。</td>
+            <td>统一展开成 <span class="mono">top/right/bottom/left</span> 四边写法，值不变。</td>
+            <td>不动</td>
+            <td><span class="tag t-ok">低</span></td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="s4">
+      <div class="snum">04 / MOTION SPEC</div>
+      <h2>动效原始参数（源码唯一口径，含两处任务描述的更正）</h2>
+      <p class="hint">A5 的验收表就用这张。时长、间隔、缓动全部照抄，不做"感觉差不多"的微调。</p>
+      <div class="tblwrap">
+        <table style="min-width:820px">
+          <colgroup><col style="width:15%"><col style="width:22%"><col style="width:31%"><col style="width:32%"></colgroup>
+          <tr><th>动效</th><th>源码参数</th><th>时序（实测口径）</th><th>小程序实现</th></tr>
+          <tr>
+            <td>燃香</td>
+            <td class="mono">setTimeout(…, 2400)</td>
+            <td>点香 → <b>2400ms</b> 后切结果（L1331）；期间火星 <span class="mono">ember 1.2s infinite</span>、烟 <span class="mono">smoke 3.2s infinite</span>、香灰高度增长</td>
+            <td>keyframes 直搬 + 烟雾用烘焙 PNG（NT-12）</td>
+          </tr>
+          <tr>
+            <td>翻牌</td>
+            <td><span class="mono">i*700</span> 启动；<span class="mono">.7s cubic-bezier(.3,.8,.4,1)</span>；<span class="mono">finishRit(…,2200)</span></td>
+            <td><b>更正</b>：不是"700×3 后 2200ms"。实际是 3 张分别在 0 / 700 / 1400ms 开始，各翻 700ms（最后一枚 2100ms 翻完）；<b>结果在 2200ms 出现</b>，总时长 2200ms。</td>
+            <td>3 张卡片 <span class="mono">animation-delay:0/700/1400ms</span>；结果定时 2200ms</td>
+          </tr>
+          <tr>
+            <td>铜钱</td>
+            <td><span class="mono">i*400</span> 起飞；每枚 <span class="mono">500ms</span> 后 <span class="mono">520ms</span> 落定；第 3 枚落定即结算</td>
+            <td><b>更正</b>：3 枚在 0 / 400 / 800ms 起抛，各 520ms；<b>第 1320ms 结算</b>（不是"400×3 后 520 结算"=1720）。</td>
+            <td>3 枚 <span class="mono">animation-delay</span> + 结算定时 1320ms</td>
+          </tr>
+          <tr>
+            <td>签筒八拍</td>
+            <td><span class="mono">T=[.90,.40,.50,1.00,1.20,.70,.30,.60]</span>，累计 <span class="mono">S[7]=5.60s</span></td>
+            <td>①静 0–0.90 ②拨散 0.90–1.30 ③预旋 1.30–1.80 ④慢摇 1.80–2.80 ⑤稳摇+顶高回落 2.80–4.00 ⑥出签 4.00–4.70 ⑦顿住 4.70–5.00 ⑧承接 5.00–5.60；出签终态 <span class="mono">x=62,y=150,r=18°</span></td>
+            <td>逐帧数学烘焙成 keyframes（NT-09），20ms 采样</td>
+          </tr>
+          <tr>
+            <td>星轨</td>
+            <td><span class="mono">--d</span>: .30/.52/.74/.96 + 星点递增 <span class="mono">0/.14/.28…</span>；<span class="mono">drawSeg .45s linear</span>；<span class="mono">starIn .5s</span></td>
+            <td>每条线段在各自延迟后 450ms 内从 0 描到 100%；星点/光晕在延迟后 500ms 淡入；总约 1.4s 画完</td>
+            <td>canvas rAF 逐帧按进度画线段 + 圆点 alpha 插值（NT-08）</td>
+          </tr>
+          <tr>
+            <td>页面入场</td>
+            <td><span class="mono">pageIn .3s ease</span>（部分页 <span class="mono">.35s</span>）</td>
+            <td><span class="mono">translateY(9px) + opacity 0 → 1</span></td>
+            <td>tab 页 onShow / overlay 打开时挂同名 keyframes</td>
+          </tr>
+          <tr>
+            <td>弹层</td>
+            <td><span class="mono">opacity .22s + scale(.94→1)</span>，<span class="mono">translateY(-50%)</span> 居中</td>
+            <td>0.22s</td>
+            <td>confirm 组件照搬</td>
+          </tr>
+          <tr>
+            <td>签筒抖动（触发态）</td>
+            <td><span class="mono">stickShake .62s ease-in-out</span>，<span class="mono">animation-delay:var(--d)</span></td>
+            <td>0.62s，7 根各自延迟 30ms 起</td>
+            <td>与八拍同一条烘焙链，避免两套时序</td>
+          </tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="s5">
+      <div class="snum">05 / SCOPE</div>
+      <h2>本轮不做 / 一定保留</h2>
+      <div class="dec">
+        <div class="card">
+          <div class="hd"><span class="k">不做</span><span class="r">WHY</span></div>
+          <ol>
+            <li><b>不引入 UI 组件库</b>（vant / TDesign）——自带圆角阴影语汇，一混就不是这套视觉。</li>
+            <li><b>不用 Taro / uni-app / Tailwind</b>——类名与单位会被改写，"逐行对照"失效。</li>
+            <li><b>不用整页截图贴图</b>冒充复刻——那是"看起来一样"，不是实现。</li>
+            <li><b>不删动效</b>：星轨、八拍、翻牌、铜钱、燃香一个都不省。</li>
+            <li><b>不改文案/色值/间距</b>迁就实现；平台强制项（胶囊让位、安全区）单独标注在差异报告里，不算"改设计"。</li>
+            <li><b>首轮不做 Skyline</b>——WebView 与浏览器渲染最接近，1:1 代价最小；像素达标后再单页试点。</li>
+          </ol>
+        </div>
+        <div class="card">
+          <div class="hd"><span class="k">保留</span><span class="r">NON-NEGOTIABLE</span></div>
+          <ol>
+            <li>页脚「谕心仅供娱乐 · 不构成任何建议」逐页保留。</li>
+            <li>树洞「严重情绪困扰请寻求专业帮助 · 心理援助热线 12356」保留。</li>
+            <li>分享卡非会员水印、会员双框烫金两版都保留。</li>
+            <li>5 个 tab 的金线与灰/金图标双态保留。</li>
+            <li>已有 <span class="mono">assets/snow.png</span>（11,627B）作为雪花质感资产继续用，不换图。</li>
+            <li>所有动效时长按 §04 表，一个 ms 都不改。</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="s6">
+      <div class="snum">06 / BASELINE</div>
+      <h2>A1 基线冻结（已记录，待你确认两张图）</h2>
+      <div class="tblwrap">
+        <table style="min-width:760px">
+          <colgroup><col style="width:22%"><col style="width:78%"></colgroup>
+          <tr><th>对象</th><th>指纹 / 状态</th></tr>
+          <tr><td>视觉真源</td><td><span class="mono">谕心夜色神谕签筒完整可演示Demo.html</span> · 150,928 B · SHA256 <span class="mono">4873B0D4…F7F41D</span></td></tr>
+          <tr><td>对照文档</td><td><span class="mono">…v0.15.html</span> · 329,342 B · SHA256 <span class="mono">C4387392…1C4D69</span></td></tr>
+          <tr><td>基准图</td><td>25 个 PNG，984×1986（328×662@3x）；序号 01–23，其中 04 与 05 各两张（过程 + 结果）</td></tr>
+          <tr><td>时间戳</td><td>23 张为 <b>2026-11-06 19:31</b>；<span class="mono">04-问事-翻牌.png</span>、<span class="mono">05-问事-铜钱.png</span> 为 <b>19:48</b></td></tr>
+          <tr><td>待确认</td><td>那两张 19:48 的图是否与其余 23 张同一版本？<b>建议我用无头浏览器按同一脚本重跑全量 25 张</b>，一并覆盖（约 2 分钟，不动原型文件）。</td></tr>
+          <tr><td>工程现状</td><td><span class="mono">app.json</span> 仍是 QuickStart 2 页；19 个页面 js 均 10 B；<span class="mono">custom-tab-bar/</span>、<span class="mono">styles/</span>、<span class="mono">utils/</span> 为空或缺失；云函数仅有 <span class="mono">quickstartFunctions</span></td></tr>
+        </table>
+      </div>
+    </section>
+
+    <section id="s7">
+      <div class="snum">07 / EXECUTION</div>
+      <h2>确认后的推进顺序（每步有产出）</h2>
+      <div class="tblwrap">
+        <table style="min-width:820px">
+          <colgroup><col style="width:8%"><col style="width:30%"><col style="width:34%"><col style="width:28%"></colgroup>
+          <tr><th>步</th><th>动作</th><th>产出</th><th>卡点</th></tr>
+          <tr><td class="id">A2</td><td>抽 tokens：110 个 hex + 103 个 rgba + 809 处 px 声明，归一化成变量与 keyframes 表</td><td><span class="mono">styles/tokens.json</span> + 《视觉规格表》（px→rpx 对照，含字族/行高/阴影）</td><td>无</td></tr>
+          <tr><td class="id">A3</td><td>骨架：自定义 nav（状态栏/胶囊避让）+ 内容区 flex + custom tabBar + 字体预载</td><td>首页可编译、截图；<b>首页整页 diff 达标</b></td><td>D2 口径、D5 字体</td></tr>
+          <tr><td class="id">A4</td><td>按 01→23 顺序逐页复刻，"写 → 截 → diff → 修"，该页 <2% 才进下一页</td><td>14 视图 WXML/WXSS + 每页 diff 图</td><td>NT-05 / NT-07 / NT-13 这类"像素级取巧"要逐页验</td></tr>
+          <tr><td class="id">A5</td><td>三类载体分别落：CSS 直搬 6 个 / 烘焙 keyframes（签筒）/ canvas 重画（星轨、分享卡）</td><td>动效对齐表 + 每个动效 ≥3 帧对照图</td><td>NT-08 / NT-09 / NT-10</td></tr>
+          <tr><td class="id">A6</td><td>云侧：建 13 集合与索引 → 写 <span class="mono">utils/api.js</span> 与 <span class="mono">cloudfunctions/yuxin</span> → <span class="mono">tcb fn deploy</span> → 验 <span class="mono">shareCode</span> / <span class="mono">getUnlimited</span></td><td>可查的云端记录 + 真小程序码贴进卡面</td><td>D3 支付、D4 模型、NT-26 发布态</td></tr>
+          <tr><td class="id">A7</td><td>全量回归：25 基准 × 逐页 diff + 三机型（iOS 大屏 / Android 中屏 / 320 窄屏）</td><td>差异报告 + <span class="mono">README</span>（部署与建集合步骤）</td><td>真机只能人工抽查，模拟器为准</td></tr>
+        </table>
+      </div>
+
+      <div class="warnbox" style="margin-top:16px">
+        <div class="h">回归方法论里的一个硬事实（先说清，免得后期扯皮）</div>
+        <ol>
+          <li><b>2% 不是"任何像素都不许差"，是"结构性差异 ≤2%"</b>。文字抗锯齿（CoreText vs FreeType）必然产生 1px 边缘差异：一行 40 个字、每个字边缘约 30px，合计就可能破 2%。所以 pixelmatch 设 <span class="mono">threshold:0.15, includeAA:false</span>，并把"文字边缘"与"结构错位"分开统计。</li>
+          <li><b>分母不含 mask 区域</b>：顶部 0–56px（胶囊+状态栏）与刘海安全区、四角圆角、滚动条竖条，逐项在报告里列出面积与原因。</li>
+          <li><b>模拟器尺寸必须是 306×640</b>（开发者工具自定义设备）。若工具不允许这么小的宽度，我会退到 375×667 并按 rpx 比例核对，但那份结果只能当"结构对照"，<b>不能算进 2%</b>——到时会提前告诉你，不偷偷换口径。</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="s8">
+      <div class="snum">08 / SIGN-OFF</div>
+      <h2>请你确认的清单</h2>
+      <p class="hint">回复格式最省事：<span class="mono">D1=X3 D2=B1 D3=P1 D4=M1(provider/模型) D5=F1 D6=C1；图标PNG=同意；字体上云=同意；基准图=重跑</span>。只回编号也行，我按推荐项执行。</p>
+      <div class="checks">
+        <div class="chk"><span class="i">D1</span><span class="c"><b>路由模型</b>：X1 全 overlay / <b>X3 混合（推荐）</b> / X2 全真实路由</span></div>
+        <div class="chk"><span class="i">D2</span><span class="c"><b>比对口径</b>：<b>B1 双口径（推荐）</b> / B2 只按真机几何（2% 不可能）</span></div>
+        <div class="chk"><span class="i">D3</span><span class="c"><b>支付</b>：<b>P1 订单闭环+通道预留（推荐）</b> / P2 真支付（请给商户号）</span></div>
+        <div class="chk"><span class="i">D4</span><span class="c"><b>大模型</b>：<b>M1 云函数直连（推荐，请给 provider/模型/Key 方式）</b> / M2 云开发 AI</span></div>
+        <div class="chk"><span class="i">D5</span><span class="c"><b>字体</b>：<b>F1 思源宋体子集上云（推荐）</b> / F2 系统 serif 兜底（不达标）</span></div>
+        <div class="chk"><span class="i">D6</span><span class="c"><b>集合口径</b>：<b>C1 13 个 + yx_ 前缀（推荐）</b> / C2 压成 8 个</span></div>
+        <div class="chk"><span class="i">Y1</span><span class="c">5 个 tabBar 图标的<b>内联 SVG 允许烘焙成灰/金两套 PNG</b>（仍为雪花 PNG 体系，无第三方库）</span></div>
+        <div class="chk"><span class="i">Y2</span><span class="c">同意把<b>思源宋体子集（约 100KB）放云存储</b>，接受首屏 300–800ms 字体等待（用骨架屏盖住）</span></div>
+        <div class="chk"><span class="i">Y3</span><span class="c">基准图：<b>同意我按同一脚本重跑 25 张</b>（解决 04/05 两张 19:48 的版本疑虑）／ 保持现状</span></div>
+        <div class="chk"><span class="i">N1</span><span class="c">NT-27 会在分享卡下<b>新增"保存到相册 / 分享"两个动作</b>（原型没有），是否接受</span></div>
+        <div class="chk"><span class="i">N2</span><span class="c">NT-03 会把右上角页别名（今日/问事/…）<b>左移让开胶囊</b>，文案不改、位置微调，是否接受</span></div>
+      </div>
+    </section>
+
+    <footer>
+      真源：谕心夜色神谕签筒完整可演示Demo.html（150,928 B，14 视图，SHA256 4873B0D4…F7F41D）· 基准：demo-screenshots（25 个 PNG，984×1986）· 云环境 YOUR_CLOUD_ENV_ID · 工程 E:\miniprogram\yuxin<br>
+      本清单所有数值来自源码行号与工程文件实测；未做任何代码改动，等你确认后再进入 A2。
+    </footer>
+  </main>
+</div>
+</body>
+</html>
